@@ -5,7 +5,7 @@
 
 @section('content')
 	<div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
-		<h2>Zahtjev</h2>
+		<h2>Zahtjev - Obavijest</h2>
 		<div class="panel-body">
 			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}"  onsubmit="return validateForm()">
 				@if (Sentinel::inRole('administrator'))

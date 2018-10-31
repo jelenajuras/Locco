@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\Registration;
 use App\Models\VacationRequest;
 use App\Models\AfterHour;
+use App\Models\Kid;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -280,5 +281,23 @@ class GodisnjiController extends Controller
 		}
 
 		return $dan;
+	}
+	
+	public function djeca($user){
+		$kids = Kid::where('employee_id', $user->id)->get();
+		$datum = new DateTime('now');    /* današnji dan */
+		$danGOdijete = 0;
+		
+		foreach($kids as $kid){
+			$datum_rodjenja = new DateTime($kid->datum_rodjenja);  /* datum rođenja djeteta */
+			$godinaDijete = $datum_rodjenja->diff($datum); 
+			if((int)$godinaDijete->y < 7){
+				$djeca += 1;
+			}
+			if($djeca >= 2) {
+				$danGOdijete = 1;
+			}
+		}
+		return $danGOdijete;
 	}
 }

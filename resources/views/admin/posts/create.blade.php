@@ -16,12 +16,10 @@
 						<select class="form-control" name="to_employee_id" id="sel1" value="{{ old('to_employee_id') }}">
 							<option selected="selected" value="">Prima...</option>
 							<option name="uprava" value="uprava">Uprava</option>
-							<option name="svi" value="svi">Svi zaposlenici</option>
-							@foreach ($registrations as $djelatnik)
-								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
-									<option name="to_employee_id" value="{{ $djelatnik->employee_id }}">{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}</option>
-								@endif
-							@endforeach	
+							<option name="pravni" value="pravni">Pravna služba</option>
+							<option name="it" value="it">IT služba</option>
+							<option name="racunovodstvo" value="racunovodstvo">Računovodstvo</option>
+						
 						</select>
 					</div>
 					<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">

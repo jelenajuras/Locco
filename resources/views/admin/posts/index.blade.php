@@ -39,7 +39,19 @@
 										</a>
 									</td>
 									<td>{{ $post->user['first_name'] . ' ' . $post->user['last_name']}}</td>
-									<td>{!! $post->to_employee['first_name'] == '' ? 'Uprava' : $post->to_employee['first_name'] . ' ' . $post->to_employee['last_name'] !!}</td>
+									<?php 
+									if($post->to_employee_id == '877282'){
+										$to = 'Uprava';
+									}elseif($post->to_employee_id == '772864'){
+										$to = 'Pravni';
+									}elseif($post->to_employee_id == '72286'){
+										$to = 'Racunovodstvo';
+									}elseif($post->to_employee_id == '48758322'){
+										$to = 'IT služba';
+									}
+
+									?>
+									<td>{!! $to !!}</td>
 									  <td>
 										<a href="{{ route('admin.posts.edit', $post->id) }}" class="{{ Sentinel::getUser()->id != $post->employee_id ? 'disabled' : '' }}">
 											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

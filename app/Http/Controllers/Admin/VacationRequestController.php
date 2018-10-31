@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\GodisnjiController;
 use Sentinel;
 use App\Models\Employee;
+use App\Models\Kid;
 use App\Models\Registration;
 use App\Models\Works;
 use App\Models\AfterHour;
@@ -382,7 +383,7 @@ class VacationRequestController extends GodisnjiController
 			
 		$message = session()->flash('success', 'Podaci su ispravljeni');
 		
-		return redirect()->route('admin.dashboard')->withFlashMessage($message);
+		return redirect()->route('home')->withFlashMessage($message);
 		
     }
 
@@ -487,7 +488,7 @@ class VacationRequestController extends GodisnjiController
 		$message = session()->flash('success', 'Zahtjev je odobren');
 		
 		//return redirect()->back()->withFlashMessage($messange);
-		return redirect()->route('admin.dashboard')->withFlashMessage('Zahtjev je odobren');
+		return redirect()->route('home')->withFlashMessage('Zahtjev je odobren');
     }
 
 }

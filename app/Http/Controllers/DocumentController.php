@@ -106,15 +106,19 @@ class DocumentController extends Controller
 			return redirect()->back()->with('danger', 'Sorry, file already exists.');  
 			$uploadOk = 0;
 		}
-		// Check file size
+		/* Check file size
 		if ($_FILES["fileToUpload"]["size"] > 500000) {
 			return redirect()->back()->with('danger', 'Sorry, your file is too large.');  
 			$uploadOk = 0;
-		}
-		// Allow certain file formats
+		}*/
+		/* Allow certain file formats
 		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 		&& $imageFileType != "gif" && $imageFileType != "pdf") {
-			return redirect()->back()->with('danger', 'Dozvoljen unos samo jpg, png, gif');  
+			return redirect()->back()->with('danger', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+			$uploadOk = 0;
+		}*/
+		if($imageFileType == "exe" || $imageFileType == "bin") {
+			return redirect()->back()->with('danger', 'Nije dozvoljen unos exe, bin dokumenta');  
 			$uploadOk = 0;
 		}
 		// Check if $uploadOk is set to 0 by an error

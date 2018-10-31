@@ -15,7 +15,7 @@
             <div class="panel-heading">
 				<h3>{{ $notice->subject }}</h3>
 				
-				<small><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ $notice->user->email }} | <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ \Carbon\Carbon::createFromTimeStamp(strtotime($notice->created_at))->diffForHumans() }} </small>
+				<small><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ 'Uprava@duplico.hr' }} | <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ \Carbon\Carbon::createFromTimeStamp(strtotime($notice->created_at))->diffForHumans() }} </small>
 			</div>
             <div class="panel-body">
 			{!! $notice->notice !!}

@@ -3,7 +3,7 @@
 @section('title')
 Ispravi {{ $post->title }}
 @stop
-
+							
 @section('content')
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
@@ -16,11 +16,11 @@ Ispravi {{ $post->title }}
                 <fieldset>
                     <div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
 						<select class="form-control" name="to_employee_id" id="sel1" value="{{ old('to_employee_id') }}">
-							@foreach ($registrations as $djelatnik)
-								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
-									<option name="employee_id" value="{{ $djelatnik->employee_id }}" {!! ($djelatnik->employee_id == $post->employee['id'] ? 'selected ': '') !!}>{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}</option>
-								@endif
-							@endforeach	
+							<option name="uprava" value="uprava" {!! ($post->to_employee_id =='877282' ? 'selected ': '') !!} >Uprava</option>
+							<option name="pravni" value="pravni"  {!! ($post->to_employee_id =='772864' ? 'selected ': '') !!}>Pravna služba</option>
+							<option name="it" value="it"  {!! ($post->to_employee_id =='it' ? '48758322 ': '') !!}>IT služba</option>
+							<option name="racunovodstvo" value="racunovodstvo"  {!! ($post->to_employee_id =='72286' ? 'selected ': '') !!}>Računovodstvo</option>
+
 						</select>
 					</div>
 					<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">

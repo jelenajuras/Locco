@@ -30,12 +30,6 @@
 	}
 	</style>
 	<body>
-		<h4>Obavijest</h4>
-
-		<div><b><a href="{{ route('admin.notices.show', $poruka_id) }}">{{ $subject }}</a></b></div>
-		<div class="marg_20">
-		
-		</div>
-
+		<h4>Na portalu <a href="http://administracija.duplico.hr/">administracija.duplico.hr</a> je objavljena nova obavijest uprave</h4>
 	</body>
 </html>

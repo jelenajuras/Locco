@@ -30,7 +30,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        
+ 		
 		if(Sentinel::inRole('administrator')) {
 			$posts = Post::orderBy('created_at','DESC')->get();
 		} else {
@@ -38,7 +38,7 @@ class PostController extends Controller
 			$posts = Post::where('employee_id', $user_id)->orderBy('created_at','DESC')->get();
 		}
 		
-	return view('admin.posts.index',['posts'=>$posts]);
+		return view('admin.posts.index',['posts'=>$posts]);
     }
 
     /**
@@ -70,11 +70,14 @@ class PostController extends Controller
 		
 		if($input['to_employee_id'] == 'uprava'){
 			$to_employee_id = '877282';
-		} elseif($input['to_employee_id'] == 'svi'){
-			$to_employee_id = '784';
-		} else {
-			$to_employee_id = $input['to_employee_id'];
+		} elseif($input['to_employee_id'] == 'pravni'){
+			$to_employee_id = '772864';
+		} elseif($input['to_employee_id'] == 'racunovodstvo'){
+			$to_employee_id = '72286';
+		} elseif($input['to_employee_id'] == 'it'){
+			$to_employee_id = '48758322';
 		}
+		
 		$data = array(
 			'employee_id'  	  => $user_id,
 			'to_employee_id'  => $to_employee_id,

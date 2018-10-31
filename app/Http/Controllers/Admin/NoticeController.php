@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Sentinel;
 use App\Models\Notice;
+use App\Models\Registration;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
 use Mail;
@@ -54,8 +55,8 @@ class NoticeController extends Controller
     public function store(NoticeRequest $request)
     {
         $input = $request->except(['_token']);
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name','employees.email')->orderBy('employees.last_name','ASC')->get();
 		
-	
 		$data = array(
 			'employee_id'  => $input['employee_id'],
 			'subject'   => $input['subject'],
@@ -64,24 +65,23 @@ class NoticeController extends Controller
 		
 		$notice = new Notice();
 		$notice->saveNotice($data);
+
+		$poruka = $notice->subject;
 		
-		// $to = 'svi@duplico.hr';
-		// $to = 'jelena.juras@duplico.hr';
-		$to = 'zeljko.rendulic@duplico.hr';
-		$subject = $input['subject'];
-		$user = Sentinel::getUser()->email;
-		$poruka_id = $notice->id;
-		
-		Mail::queue(
-			'email.notice',
-			['subject' => $subject, 'poruka_id' => $poruka_id ],
-			function ($message) use ($to , $subject) {
-				$message->to($to)
-					->from('info@duplico.hr', 'Duplico')
-					->subject('Obavijest');
+		foreach($registrations as $registration){
+			if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() ){
+				$to = $registration->email;
+				Mail::queue(
+					'email.notice',
+					['poruka' => $poruka],
+					function ($message) use ($to , $poruka) {
+						$message->to($to)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Obavijest uprave');
+					}
+				);
 			}
-		);
-			
+		}
 			
 		$message = session()->flash('success', 'Obavijest je poslana');
 		

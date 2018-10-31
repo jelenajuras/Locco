@@ -41,23 +41,24 @@
 		</header>
 		<section class="Body_section">
 			<input type="hidden" id="rola" {!! Sentinel::inRole('basic') ? 'value="basic"' : '' !!} />
-			
 			<nav class="topnav col-xs-12 col-sm-2 col-md-2 col-lg-2" id="myTopnav">
 				@if(Sentinel::check() && Sentinel::inRole('administrator') || Sentinel::inRole('basic') ||  Sentinel::inRole('uprava'))
 					<a href="{{ route('home') }}" class="active naslov">Naslovnica</a>
-					<a href="">Kalandar</a>
-					<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.documents.index') }}">Dokumenti</a>
+					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
 					@if(Sentinel::inRole('administrator'))
-						<button class="poruke" data-toggle="collapse" data-target="#link1">Opći podaci<i class="fas fa-caret-down"></i></button>
+					<a href="{{ route('admin.gantt') }}" >Kalendar</a>
+					<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.documents.index') }}">Dokumenti</a>
+					
+						<button class="poruke" data-toggle="collapse" data-target="#link1"><span>Opći podaci<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link1">
-							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('users.index') }}">Korisnici</a></li>
+							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('users.index') }}">Korisnici</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('roles.index') }}">Uloge</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.works.index') }}">Radna mjesta</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.terminations.index') }}">Otkazi</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.equipments.index') }}" >Radna oprema</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.cars.index') }}">Vozila</a>	
 						</div>
-						<button class="poruke" data-toggle="collapse" data-target="#link2">Administracija<i class="fas fa-caret-down"></i></button>
+						<button class="poruke" data-toggle="collapse" data-target="#link2"><span>Administracija<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link2">
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.job_interviews.index') }}">Razgovori za posao</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employees.index') }}">Kandidati za posao</a>
@@ -66,18 +67,18 @@
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.kids.index') }}">Djeca zaposlenika</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employee_terminations.index') }}">Odjavljeni radnici</a>
 						</div>
-						<button class="poruke" data-toggle="collapse" data-target="#link3">Izostanci<i class="fas fa-caret-down"></i></button>
+						<button class="poruke" data-toggle="collapse" data-target="#link3"><span>Izostanci<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link3">
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.vacation_requests.index') }}">Zahtjevi za godišnji odmor</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.afterHours.index') }}">Prekovremeni rad</a>
 							<a class="" href="{{ route('admin.shedulers.index') }}">Raspored izostanaka</a>	
 						</div>
-						<button class="poruke" data-toggle="collapse" data-target="#link4">Projekti<i class="fas fa-caret-down"></i></button>
+						<button class="poruke" data-toggle="collapse" data-target="#link4"><span>Projekti<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link4">
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.customers.index') }}">Klijenti</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.projects.index') }}">Projekti</a>
 						</div>
-						<button class="poruke" data-toggle="collapse" data-target="#link5">Ostalo<i class="fas fa-caret-down"></i></button>
+						<button class="poruke" data-toggle="collapse" data-target="#link5"><span>Ostalo<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link5">
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.notices.index') }}">Obavijesti</a>
 							<a class="" href="{{ route('admin.showKalendar') }}">Kalendar sastanaka</a>
@@ -87,21 +88,17 @@
 							@endif
 						</div>
 					@endif
-					
-					<button class="poruke" data-toggle="collapse" data-target="#poruke1">Obavijesti uprave<i class="fas fa-caret-down"></i></button>
+					@if(DB::table('notices')->take(5)->get())
+					<button class="poruke" data-toggle="collapse" data-target="#poruke1"><span>Obavijesti uprave<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="poruke1">
 							@foreach(DB::table('notices')->take(5)->get() as $notice)
 								<a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a>
 							@endforeach
 						</div>
-					<button class="poruke" data-toggle="collapse" data-target="#poruke2">Poruke zaposlenika<i class="fas fa-caret-down"></i></button>
-						<div class="collapse " id="poruke2">
-							@foreach(DB::table('posts')->where('to_employee_id','784')->take(5)->get() as $post_Svima)
-								<a href="{{ route('admin.posts.show', $post_Svima->id ) }}">{{ $post_Svima->title }}</a>
-							@endforeach
-						</div>
+					@endif
+					
 					@if(Sentinel::inRole('uprava'))
-					<button class="poruke" data-toggle="collapse" data-target="#poruke3">Prijedlozi upravi<i class="fas fa-caret-down"></i></button>
+					<button class="poruke" data-toggle="collapse" data-target="#poruke3"><span>Prijedlozi upravi<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="poruke3">
 							@foreach(DB::table('posts')->where('to_employee_id','877282')->take(5)->get() as $prijedlozi)
 								<a href="{{ route('admin.posts.show', $prijedlozi->id ) }}">{{ $prijedlozi->title }}</a>
@@ -109,9 +106,9 @@
 						</div>
 					@endif
 				@endif
-				 <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+				<!-- <a href="javascript:void(0);" class="icon" onclick="myFunction()">
 					<i class="fa fa-bars"></i>
-				  </a>
+				  </a>-->
 			</nav>
 			<article class="col-xs-12 col-sm-10 col-md-10 col-lg-10" style="text-align:center;">
 					@include('notifications')

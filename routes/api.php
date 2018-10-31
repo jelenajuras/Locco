@@ -25,4 +25,3 @@ Route::resource('task', 'TaskController');
 Route::get('/data', 'GanttController@get');
 Route::resource('task', 'TaskController');
 Route::resource('link', 'LinkController');
-

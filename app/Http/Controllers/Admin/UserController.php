@@ -154,19 +154,22 @@ class UserController extends Controller
             'email' => 'required|email|max:255|unique:users,email,'.$id,
             'password' => 'confirmed|min:6',
         ]);
-
+		
+		
+		
         // Assemble the updated attributes
         $attributes = [
             'email' => trim($request->get('email')),
             'first_name' => $request->get('first_name', null),
             'last_name' => $request->get('last_name', null)
         ];
-
+		
+		
         // Do we need to update the password as well?
         if ($request->has('password')) {
             $attributes['password'] = $request->get('password');
         }
-
+		
         // Fetch the user object
         $user = $this->userRepository->findById($id);
         if (!$user) {
@@ -176,21 +179,28 @@ class UserController extends Controller
             session()->flash('error', 'Invalid user.');
             return redirect()->back()->withInput();
         }
-
+		
         // Update the user
         $user = $this->userRepository->update($user, $attributes);
-
+		
         // Update role assignments
         $roleIds = array_values($request->get('roles', []));
         $user->roles()->sync($roleIds);
-
+		
+		
         // All done
         if ($request->ajax()) {
             return response()->json(['user' => $user], 200);
         }
 
         session()->flash('success', "{$user->email} has been updated.");
-        return redirect()->route('users.index');
+       
+		if(Sentinel::inRole('basic')) {
+			return redirect()->route('home');
+		} else {
+			return redirect()->route('users.index');
+		}
+		
     }
 
     /**

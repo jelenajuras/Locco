@@ -6,11 +6,12 @@
 <div class="">
     @if(Sentinel::check())
 		<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
+		<h4><b>Efektivna cijena sata: </b>{{  number_format($registration->ech['effective_cost'],2,",",".") . ' kn' }}</h4>
+		<h4><b>Godišnja brutto plaća: </b>{{  number_format($registration->ech['brutto'],2,",",".") . ' kn' }}</h4>
 		<div class="dashboard_box1">
 			<div class="BTNbox">
 				<div class="dashboard_box2">
-					<a href="{{ route('admin.registrations.show', $registration->id) }}">
-						<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
+					<a class="" href=""  ><span>Oglasna ploča</span></a>
 				</div>
 			</div>
 			<div class="BTNbox">
@@ -20,12 +21,19 @@
 			</div>
 			<div class="BTNbox">
 				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
+					<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
 				</div>
 			</div>
 			<div class="BTNbox">
 				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.posts.index') }}"  ><span>Poruke</span></a>
+					<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
+				</div>
+			</div>
+			
+			<div class="BTNbox">
+				<div class="dashboard_box2">
+					<a href="{{ route('admin.registrations.show', $registration->id) }}">
+						<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
 				</div>
 			</div>
 		</div>
@@ -78,7 +86,7 @@
 	@if (Sentinel::inRole('administrator'))
 		<div class="dashboard_box" style="overflow-x:auto;">
 			<button class="collapsible">Odobreni zahtjevi zaposlenika</button>
-			<div class="content ">
+			<div class="content">
 				<table class="zahtjevi2">
 					<thead>
 						<tr>

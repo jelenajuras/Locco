@@ -43,6 +43,7 @@
 	float:left;
 	padding: 6px 0px;
     width: 10%;
+	text-align:center;
 }
 
 .datum input {
@@ -144,7 +145,6 @@ p {
 
 @media only screen and (max-width: 1465px) {
 	.datum {
-	clear:left;
 	margin-top: 10px;
 	}
 }

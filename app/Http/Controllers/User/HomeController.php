@@ -19,7 +19,7 @@ use DatePeriod;
 
 class HomeController extends GodisnjiController
 {
-  /**
+   /**
    * Set middleware to quard controller.
    *
    * @return void
@@ -37,14 +37,14 @@ class HomeController extends GodisnjiController
     public function index()
     {
 		$user = Sentinel::getUser();
-
+		dd($user);
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		
 		$comments = Comment::get();
 		$afterHours = AfterHour::get();
 		
 		$registration = Registration::where('registrations.employee_id', $employee->id)->first();
-
+		
 /* Staž prijašnji */
 		$stažY = 0;
 		$stažM = 0;
@@ -243,7 +243,5 @@ class HomeController extends GodisnjiController
 		$posts_Svima = Post::where('to_employee_id','784')->take(5)->get();
 		
 		return view('user.home')->with('user', $user)->with('registration', $registration)->with('employee', $employee)->with('stažY', $stažY)->with('stažM', $stažM)->with('stažD', $stažD)->with('godina', $godina)->with('mjeseci', $mjeseci)->with('dana', $dana)->with('danaUk', $danaUk)->with('mjeseciUk', $mjeseciUk)->with('godinaUk', $godinaUk)->with('danaUk_PG', $danaUk_PG)->with('mjeseciUk_PG', $mjeseciUk_PG)->with('godinaUk_PG', $godinaUk_PG)->with('GO', $GO)->with('GO_PG', $GO_PG)->with('zahtjevi', $zahtjevi)->with('zahtjeviD', $zahtjeviD)->with('ukupnoGO', $ukupnoGO)->with('ukupnoGO_PG', $ukupnoGO_PG)->with('ova_godina', $ova_godina)->with('prosla_godina', $prosla_godina)->with('posts', $posts)->with('posts2', $posts2)->with('posts2', $posts2)->with('comments', $comments)->with('afterHours', $afterHours);
-    }
-	
-	
+    }	
 }

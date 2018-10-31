@@ -51,6 +51,7 @@
 							<th onclick="sortTable(6)">Iskorišteni dani  {{ $ova_godina}}</th>
                             <th onclick="sortTable(7)">Neiskorišteno dana  {{ $ova_godina}}</th>
 							<th onclick="sortTable(8)">Neiskorišteni slobodni dani</th>
+							
                         </tr>
                     </thead>
                     <tbody id="myTable">
@@ -221,21 +222,34 @@
 								} else {
 									$razlika =0;
 								}
-
+								
+								
+								$kids = DB::table('kids')->where('employee_id', $registration->employee_id)->get();
+								$danGOdijete = 0;
+								$djeca = 0;
+								foreach($kids as $kid){
+									$datum_rodjenja = new DateTime($kid->datum_rodjenja);  /* datum rođenja djeteta */
+									$godinaDijete = $datum_rodjenja->diff($datum); 
+									if((int)$godinaDijete->y < 7){
+										$djeca += 1;
+									}
+									if($djeca >= 2) {
+										$danGOdijete = 1;
+									}
+								}
 								?>
 								@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
-								<tr>
-									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
-									<td style="width:10%;">{{ $godina . '-' . $mjeseci . '-' . $dana }}</td>
-									<td style="width:10%;">{{ $godinaUk . '-' . $mjeseciUk . '-' . $danaUk }}</td>
-									<td style="width:10%;">{{ $GO_PG }}</td>
-									<td style="width:10%;">{{ $ukupnoGO_PG }}</td>
-									<td style="width:10%;">{{ $GO }}</td>
-									<td style="width:10%;">{{ $ukupnoGO }}</td>
-									<td style="width:10%;">{{ $GO - $ukupnoGO}}</td>
-									<td style="width:10%;">{{ $razlika - $dan_SLD  }}</td>
-								</tr>
-
+									<tr>
+										<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
+										<td style="width:10%;">{{ $godina . '-' . $mjeseci . '-' . $dana }}</td>
+										<td style="width:10%;">{{ $godinaUk . '-' . $mjeseciUk . '-' . $danaUk }}</td>
+										<td style="width:10%;">{{ $GO_PG }}</td>
+										<td style="width:10%;">{{ $ukupnoGO_PG }}</td>
+										<td style="width:10%;">{{ $GO }}</td>
+										<td style="width:10%;">{{ $ukupnoGO }}</td>
+										<td style="width:10%;">{{ $GO - $ukupnoGO}}</td>
+										<td style="width:10%;">{{ $razlika - $dan_SLD  }}</td>
+									</tr>
 								@endif
 							@endif
 						 @endforeach
