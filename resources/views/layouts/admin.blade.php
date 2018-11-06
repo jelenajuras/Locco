@@ -88,23 +88,26 @@
 							@endif
 						</div>
 					@endif
-					@if(DB::table('notices')->take(5)->get())
-					<button class="poruke" data-toggle="collapse" data-target="#poruke1"><span>Obavijesti uprave<i class="fas fa-caret-down"></i></span></button>
-						<div class="collapse " id="poruke1">
-							@foreach(DB::table('notices')->take(5)->get() as $notice)
-								<a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a>
-							@endforeach
-						</div>
-					@endif
-					
-					@if(Sentinel::inRole('uprava'))
-					<button class="poruke" data-toggle="collapse" data-target="#poruke3"><span>Prijedlozi upravi<i class="fas fa-caret-down"></i></span></button>
-						<div class="collapse " id="poruke3">
-							@foreach(DB::table('posts')->where('to_employee_id','877282')->take(5)->get() as $prijedlozi)
-								<a href="{{ route('admin.posts.show', $prijedlozi->id ) }}">{{ $prijedlozi->title }}</a>
-							@endforeach
-						</div>
-					@endif
+					<div class="noticesHome">
+						@if(DB::table('notices')->take(5)->get())
+						<button class="poruke" data-toggle="collapse" data-target="#poruke1"><span>Obavijesti uprave<i class="fas fa-caret-down"></i></span></button>
+							<div class="collapse " id="poruke1">
+								@foreach(DB::table('notices')->take(5)->get() as $notice)
+									<a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a>
+								@endforeach
+							</div>
+						@endif
+						@if(Sentinel::inRole('uprava'))
+							@if(count(DB::table('posts')->where('to_employee_id','877282')->take(5)->get()))
+								<button class="poruke" data-toggle="collapse" data-target="#poruke3"><span>Prijedlozi upravi<i class="fas fa-caret-down"></i></span></button>
+								<div class="collapse " id="poruke3">
+									@foreach(DB::table('posts')->where('to_employee_id','877282')->take(5)->get() as $prijedlozi)
+										<a href="{{ route('admin.posts.show', $prijedlozi->id ) }}">{{ $prijedlozi->title }}</a>
+									@endforeach
+								</div>
+							@endif
+						@endif
+					</div>
 				@endif
 				<!-- <a href="javascript:void(0);" class="icon" onclick="myFunction()">
 					<i class="fa fa-bars"></i>
@@ -145,7 +148,7 @@
 			}
 		}
 		</script>
-				
+
 		<!-- jQuery Timepicker --> 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 		

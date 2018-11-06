@@ -10,28 +10,56 @@
                 <h3 class="panel-title">Prijava</h3>
             </div>
             <div class="panel-body">
-                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.login.attempt') }}">
-                <fieldset>
-                    <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}">
-                        {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
-                    </div>
-                    <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="Lozinka" name="password" type="password" value="">
-                        {!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input name="remember" type="checkbox" value="true" {{ old('remember') == 'true' ? 'checked' : ''}}> Zapamti me
-                        </label>
-                    </div>
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi me" id="stil1">
-                    <!--<p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">Zaboravio si lozinku?</a></p>-->
-                </fieldset>
+                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.login.attempt') }}" id="form">
+					<fieldset>
+						<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}" id="email">
+							{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="Lozinka" name="password" type="password" value="">
+							{!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="checkbox">
+							<label>
+								<input name="remember" type="checkbox" value="true" {{ old('remember') == 'true' ? 'checked' : ''}}> Zapamti me
+							</label>
+						</div>
+						<input name="_token" value="{{ csrf_token() }}" type="hidden">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi me" id="stil1">
+						<!--<p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">Zaboravio si lozinku?</a></p>-->
+					</fieldset>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+	var userValue = '';
+</script>
+<script>
+	window.onload = function loadStorage(){
+		if(typeof(Storage) !== 'undefined'){
+			function saveData(email){ //dohvaća varijable
+				//da li preglednik podržava lokalnu pohranu
+				if(typeof(Storage) !== 'undefined'){
+					localStorage['userEmail'] = email;
+				} else {
+					alert('Nema podrške za lokalnu pohranu!');
+				}
+			
+			};
+	
+			var form = document.getElementById('form');
+			form.addEventListener('submit',function(event){ //šalju se dva parametra, drugi je call back funkcija
+				var email = document.getElementById('email');
+				userValue = email.value;
+				saveData(userValue);
+			});
+		} else {
+			alert('Nema podrške za lokalnu pohranu!');
+		}
+	}
+</script>
 @stop

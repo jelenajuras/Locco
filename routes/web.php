@@ -279,6 +279,7 @@ Route::get('admin/confirmation', ['as' => 'admin.confirmation', 'uses' => 'Admin
 Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses' => 'Admin\AfterHoursController@storeConf']);
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
+Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
 
 // Gantt kalendar
 Route::get('admin/', function () {

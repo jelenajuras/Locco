@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Petit+Formal+Script');
+.noticeBoard > h1{
+	font-family: 'Petit Formal Script', cursive;
+	font-weight:bold;
+	color: #337ab7;
+	padding-bottom:20px;
+	border-bottom:1px solid #ccc;
+}
+
+.notices {
+	width:100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.notice {
+	width: 40%;
+	padding: 20px;
+	margin: 10px;
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 5px 5px #ccc;
+	min-height: auto !important;
+	color: black;
+}
+
+@media screen and (max-width: 420px){
+	.notice {
+	width: 100%;
+	}
+
+}

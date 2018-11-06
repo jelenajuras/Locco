@@ -11,7 +11,6 @@
 		</a>
 	</div>
 	<h1>Raspored izostanaka {{ $mjesec . '-' . $godina }}</h1>
-	
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="table-responsive">
@@ -53,6 +52,7 @@
 						</thead>
 						<tbody id="myTable">
 							@foreach($employees as $djelatnik)
+							@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
 							<?php 
 								$zahtjev="";
 							?>
@@ -99,15 +99,14 @@
 										?>
 									@endforeach
 								</tr>
+								@endif
 							@endforeach
 						</tbody>
 					</table>
 				</div>	
 			</div>
 		</div>
-					
-	
-	
 </div>
+
 
 @stop

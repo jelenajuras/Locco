@@ -87,19 +87,21 @@ class AfterHoursController extends GodisnjiController
 	
 		$employee = Employee::where('employees.id',$input['employee_id'])->first();
 		$registration = Registration::join('works','registrations.radnoMjesto_id','works.id')->where('registrations.employee_id', $input['employee_id'])->select('registrations.*','works.*')->first();
-		$nadređeni = Employee::where('employees.id',$registration->user_id)->value('email');
+		
+		$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email');
+		
 		$proba = array('jelena.juras@duplico.hr');
 		
-		$nadređeni1 = $registration->user_id; // id nadređene osobe
+		$nadredjeni1 = $registration->user_id; // id nadređene osobe
 		
 		$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
 		
-		if($nadređeni){
+		if($nadredjeni){
 			Mail::queue(
 				'email.zahtjevAfterHour',
-				['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadređeni1' => $nadređeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
-				function ($message) use ($proba, $employee) {
-					$message->to($nadređeni)
+				['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
+				function ($message) use ($nadredjeni, $employee) {
+					$message->to($nadredjeni)
 						->from('info@duplico.hr', 'Duplico')
 						->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
 				}
@@ -109,7 +111,7 @@ class AfterHoursController extends GodisnjiController
 		$message = session()->flash('success', 'Zahtjev je poslan');
 			
 		//return redirect()->back()->withFlashMessage($message);
-		return redirect()->route('admin.dashboard')->withFlashMessage($message);
+		return redirect()->route('home')->withFlashMessage($message);
     }
 
     /**

@@ -44,7 +44,7 @@
 			<input type="hidden" name="id" value="{{$afterHour->id}}"><br>
 			<input type="radio" name="odobreno" value="DA" checked> Potvrđeno
 			<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije potvrđeno<br>
-			<input type="hidden" name="user_id" value="{{ $nadređeni1 }}"><br>
+			<input type="hidden" name="user_id" value="{{ $nadredjeni1 }}"><br>
 			<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>
 
 			<input class="odobri" type="submit" value="Pošalji">

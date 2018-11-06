@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Sentinel;
 use App\Models\Notice;
+use App\Models\EmployeeTermination;
 use App\Models\Registration;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
 use Mail;
+use DB;
 
 class NoticeController extends Controller
 {
@@ -55,6 +57,7 @@ class NoticeController extends Controller
     public function store(NoticeRequest $request)
     {
         $input = $request->except(['_token']);
+		
 		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name','employees.email')->orderBy('employees.last_name','ASC')->get();
 		
 		$data = array(
@@ -69,7 +72,7 @@ class NoticeController extends Controller
 		$poruka = $notice->subject;
 		
 		foreach($registrations as $registration){
-			if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() ){
+			if(! EmployeeTermination::where('employee_id',$registration->employee_id)->first() ){
 				$to = $registration->email;
 				Mail::queue(
 					'email.notice',

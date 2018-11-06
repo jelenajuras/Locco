@@ -50,18 +50,19 @@ class SessionController extends Controller
             'email' => trim($request->get('email')),
             'password' => $request->get('password'),
         ];
-        $remember = (bool)$request->get('remember', false);
+        $remember = (bool)$request->get('remember', true);
 
         // Attempt the Login
         $result = $this->authManager->authenticate($credentials, $remember);
-
+		
         // Return the appropriate response
-       	if(Sentinel::check()){
-				return $result->dispatch(route('home'));
-		} else {
-			$result->setMessage('E-mail ili lozinka nisu ispravni.');
-			return $result->dispatch(route('auth.login.form'));
-		}
+        if(Sentinel::check())  {
+			  return $result->dispatch(route('index'));
+        } 
+		
+		$message = "Korisničko ime ili lozinka nisu ispravni!";
+		
+		return $result->dispatch(route('auth.login.form'))->with('message', $message);
     }
 
     /**

@@ -3,6 +3,7 @@
 @section('title', 'Duplico')
 
 @section('content')
+nešto 
 <div class="row">
     <div class="prijava col-md-4 col-md-offset-4" >
         <div class="panel panel-default">
@@ -34,6 +35,4 @@
         </div>
     </div>
 </div>
-
-
 @stop

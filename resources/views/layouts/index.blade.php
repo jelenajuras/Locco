@@ -8,7 +8,8 @@
 	<title>@yield('title')</title>
 
 	<!-- Bootstrap - Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -37,13 +38,13 @@
 				@include('notifications')
 				@yield('content')
 	</div>
-		
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('js/restfulizer.js') }}"></script>
+
 		
 		<!-- DataTables -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
@@ -53,6 +54,44 @@
 		 
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>+
+		<script>
+$(document).ready(function() {
+		var table = $('#table_id').DataTable( {
+		"paging": true,
+		language: {
+			paginate: {
+				previous: 'Prethodna',
+				next:     'Slijedeća',
+			},
+			"info": "Prikaz _START_ do _END_ od _TOTAL_ zapisa",
+			"search": "Filtriraj:",
+			"lengthMenu": "Prikaži _MENU_ zapisa"
+		},
+		 "lengthMenu": [ 25, 50, 75, 100 ],
+		 "pageLength": 50,
+		 dom: 'Bfrtip',
+			buttons: [
+				'copy', 'pdf', 'print',
+			/*{
+				extend: 'pdfHtml5',
+				text: 'Izradi PDF',
+				exportOptions: {
+					columns: ":not(.not-export-column)"
+					}
+				},*/
+				{
+			extend: 'excelHtml5',
+			text: 'Izradi XLS',
+			exportOptions: {
+				columns: ":not(.not-export-column)"
+			}
+			},
+			],
+	} );
+
+});
+
+</script>
 </body>
 </html> 

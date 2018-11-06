@@ -7,11 +7,13 @@ html {
 body {
     font-family: "Arial", sans-serif;
 	background: #fff;
-	min-height: 100vh;
+
 }
 
 .Body_section {
 	height: 100vh;
+    margin-top: -100px;
+    padding-top: 100px;
 }
 
 .page-header{
@@ -95,6 +97,7 @@ header {
     font-size: 35px;
     color: white;
 	position:relative;
+	min-height:100px;
 }
 
 header ul {
@@ -153,7 +156,6 @@ article:nth-child(2){
 }
 /* Clear floats after the columns */
 section:after {
-    content: "";
     display: table;
     clear: both;
 }
@@ -334,4 +336,8 @@ header ul li {
 }
 .collapse a {
 	padding-left:10px;
+}
+
+.noticesHome {
+	margin-top: 40px;
 }

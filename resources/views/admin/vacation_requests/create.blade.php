@@ -5,7 +5,7 @@
 
 @section('content')
 	<div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
-		<h2>Zahtjev - Obavijest</h2>
+		<h2 id="zahtjev">Zahtjev - Obavijest</h2>
 		<div class="panel-body">
 			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}"  onsubmit="return validateForm()">
 				@if (Sentinel::inRole('administrator'))
@@ -13,6 +13,7 @@
 						<label class="padd_10">Djelatnik</label>
 						<select name="employee_id" value="{{ old('employee_id') }}" id="sel1" autofocus>
 							<option selected="selected" value=""></option>
+							<option name="employee_id" value="svi">Svi djelatnici</option>
 							@foreach ($registrations as $djelatnik)
 								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
 									<option name="employee_id" value="{{ $djelatnik->employee_id }}">{{ $djelatnik->last_name  . ' ' . $djelatnik->first_name }}</option>
@@ -23,11 +24,10 @@
 					</div>
 					<p class="padd_10">moli da mu se odobri</p>
 				@else
-					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se odobri</p>
+					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} <span id="info">molim da mi se odobri</span></p>
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 				@endif
 				
-
 				<div class="form-group {{ ($errors->has('zahtjev')) ? 'has-error' : '' }}">
 					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()">
 						<option disabled selected value></option>
@@ -58,7 +58,6 @@
 						Nemoguće je poslati zahtjev za slobodni dan.
 					@endif
 				</p>
-				
 				<div class="datum form-group editOption1" style="display:none;">
 					<input name="GOpocetak" class="date form-control" type="text" value = "{{ old('GOpocetak')}}" id="date1" ><i class="far fa-calendar-alt" ></i>
 					{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
@@ -68,7 +67,6 @@
 					<input name="GOzavršetak" class="date form-control" type="text" value ="{{ old('GOzavršetak')}}"" id="date2"><i class="far fa-calendar-alt" ></i>
 					{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-				<p id="demo"></p>
 				<div class="datum2 form-group editOption3" style="display:none;">
 					<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value="08:00">
 					<span>do</span><input 	type="time" name="vrijeme_do" class="vrijeme" value="16:00" >
@@ -83,6 +81,7 @@
 				<input class="btn btn-lg btn-block editOption5" type="submit" value="Pošalji zahtjev" id="stil1" onclick="GO_dani()">
 			</form>
 		</div>
+
 	</div>
 		
 		<script type="text/javascript">
@@ -125,14 +124,25 @@
 			function GO_value(){
 				if(document.getElementById("prikaz").value == "GO" ){
 					document.getElementById("napomena").value = "GO" ;
+					document.getElementById("zahtjev").innerHTML = "Zahtjev";
 				}else {
 					document.getElementById("napomena").value = "" ;
 				}
+				if(document.getElementById("prikaz").value == "Bolovanje" ){
+					document.getElementById("zahtjev").innerHTML = "Obavijest";
+				}
+				if(document.getElementById("prikaz").value == "Izlazak"){
+					document.getElementById("zahtjev").innerHTML = "Zahtjev";
+				}
+				if(document.getElementById("prikaz").value == "NPL"){
+					document.getElementById("zahtjev").innerHTML = "Zahtjev";
+				}
+				if(document.getElementById("prikaz").value == "SLD"){
+					document.getElementById("zahtjev").innerHTML = "Zahtjev";
+				}
+				
 			}
 		</script>
-		
-		
-		<!-- display  -->
 		<script>
 			$('#prikaz').change(function(){
 			var selected = $('option:selected', this).attr('class');

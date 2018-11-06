@@ -24,10 +24,10 @@ class SentinelGuest
                 return response()->json(['error' =>  'Unauthorized'], 401);
             } else {
                 if(Sentinel::check() && Sentinel::inRole('administrator')) {
-                  return redirect()->route('admin.dashboard');
+                  return redirect()->route('home');
                 } else {
                     return redirect()->route('home');
-                  }
+                }
             }
         }
 
