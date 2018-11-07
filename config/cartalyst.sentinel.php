@@ -154,7 +154,7 @@ return [
 
         'model' => 'Cartalyst\Sentinel\Activations\EloquentActivation',
 
-        'expires' => 259200,
+        'expires' => 14400,
 
         'lottery' => [2, 100],
 

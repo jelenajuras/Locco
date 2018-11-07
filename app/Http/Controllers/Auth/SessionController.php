@@ -30,7 +30,7 @@ class SessionController extends Controller
      */
     public function getLogin()
     {
-        return view('auth.login');
+		return view('auth.login');
     }
 
     /**
@@ -39,7 +39,7 @@ class SessionController extends Controller
      */
     public function postLogin(Request $request)
     {
-        // Validate the Form Data
+		// Validate the Form Data
         $result = $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required'
@@ -50,15 +50,16 @@ class SessionController extends Controller
             'email' => trim($request->get('email')),
             'password' => $request->get('password'),
         ];
-        $remember = (bool)$request->get('remember', true);
-
+		
+        $remember = (bool)$request->get('remember', false);
+		
         // Attempt the Login
         $result = $this->authManager->authenticate($credentials, $remember);
 		
-        // Return the appropriate response
+		// Return the appropriate response
         if(Sentinel::check())  {
 			  return $result->dispatch(route('index'));
-        } 
+        }	
 		
 		$message = "Korisničko ime ili lozinka nisu ispravni!";
 		

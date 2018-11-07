@@ -30,7 +30,6 @@ class PostController extends Controller
      */
     public function index()
     {
- 		
 		if(Sentinel::inRole('administrator')) {
 			$posts = Post::orderBy('created_at','DESC')->get();
 		} else {
