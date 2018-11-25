@@ -40,24 +40,24 @@
 									@else
 										<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.effective_hours.store') }}">
 									@endif
-											<input name="employee_id" type="hidden" value="{{ $registration->employee_id}}" /><span>{{ $registration->first_name . ' ' . $registration->last_name }}</span>
-											@foreach($effectiveHours as $effectiveHour)
-												<?php 
-												 if($effectiveHour->employee_id == $registration->employee_id){
-													 $ech = str_replace('.',',', $effectiveHour->effective_cost);
-													 $brutto = str_replace('.',',', $effectiveHour->brutto);
-												 } 
-												?>
-												
-											@endforeach
-												<input class="{{ ($errors->has('effective_cost')) ? 'has-error' : '' }}" placeholder="ECH" name="effective_cost" type="text" value="{{ $ech }}" title="Unesi iznos efektivne cijene sata"/>
-												<input class="{{ ($errors->has('brutto')) ? 'has-error' : '' }}" placeholder="brutto" name="brutto" type="text" value="{{  $brutto }}"  title="Unesi iznos brutto godišnje plaće"/>
-												<input name="_token" value="{{ csrf_token() }}" type="hidden">
+										<input name="employee_id" type="hidden" value="{{ $registration->employee_id}}" /><span>{{ $registration->first_name . ' ' . $registration->last_name }}</span>
+										@foreach($effectiveHours as $effectiveHour)
+											<?php 
+												if($effectiveHour->employee_id == $registration->employee_id){
+													$ech = str_replace('.',',', $effectiveHour->effective_cost);
+													$brutto = str_replace('.',',', $effectiveHour->brutto);
+												} 
+											?>
 											
-											<input type="submit" value="&#10004" title="click to save datas">
-											{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
-											{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
-										</form>
+										@endforeach
+											<input class="{{ ($errors->has('effective_cost')) ? 'has-error' : '' }}" placeholder="ECH" name="effective_cost" type="text" value="{{ $ech }}" title="Unesi iznos efektivne cijene sata"/>
+											<input class="{{ ($errors->has('brutto')) ? 'has-error' : '' }}" placeholder="brutto" name="brutto" type="text" value="{{  $brutto }}"  title="Unesi iznos brutto godišnje plaće"/>
+											<input name="_token" value="{{ csrf_token() }}" type="hidden">
+										
+										<input type="submit" value="&#10004" title="click to save datas">
+										{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
+										{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
+									</form>
 								</td>
 							</tr>
 							

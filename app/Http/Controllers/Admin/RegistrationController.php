@@ -61,7 +61,7 @@ class RegistrationController extends Controller
     public function store(RegistrationRequest $request)
     {
         $input = $request->except(['_token']);
-		
+		dd($input);
 		if($input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'] == '--'){
 			$staz = '0-0-0';
 		}else {
@@ -76,7 +76,8 @@ class RegistrationController extends Controller
 			'staz'   			=> $staz,
 			'lijecn_pregled'    => date("Y-m-d", strtotime($input['lijecn_pregled'])),
 			'ZNR'      			=> date("Y-m-d", strtotime($input['ZNR'])),
-			'napomena'  	    => $input['napomena']
+			'napomena'  	    => $input['napomena'],
+			'slDani'  	    	=> $input['slDani']
 		);
 		
 		
@@ -94,7 +95,7 @@ class RegistrationController extends Controller
 		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','matija.barberic@duplico.hr');
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
-		
+	/*	
 		foreach($zaduzene_osobe as $key => $zaduzena_osoba){
 			Mail::queue(
 			'email.prijava3',
@@ -117,7 +118,7 @@ class RegistrationController extends Controller
 			$message->to($zaduzen)
 				->subject('Novi djelatnik - prijava');
 		}
-		);
+		);*/
 		
 		// Create directory
 		$path = 'storage/' . $prezime . '_' . $ime;
@@ -177,34 +178,18 @@ class RegistrationController extends Controller
     {
         $registration = Registration::find($id);
 		$input = $request->except(['_token']);
-		
-		//if(!$input['datum_odjave']){
-			$data = array(
-				'employee_id'  		=> $input['employee_id'],
-				'radnoMjesto_id'    => $input['radnoMjesto_id'],
-				'datum_prijave'		=> date("Y-m-d", strtotime($input['datum_prijave'])),
-				'probni_rok'  		=> $input['probni_rok'],
-				'staz'   			=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
-				'lijecn_pregled'    => date("Y-m-d", strtotime($input['lijecn_pregled'])),
-				'ZNR'      			=> date("Y-m-d", strtotime($input['ZNR'])),
-				'napomena'  	    => $input['napomena']
-			);
-		/*} else {
+
 		$data = array(
 			'employee_id'  		=> $input['employee_id'],
 			'radnoMjesto_id'    => $input['radnoMjesto_id'],
 			'datum_prijave'		=> date("Y-m-d", strtotime($input['datum_prijave'])),
 			'probni_rok'  		=> $input['probni_rok'],
-			'staz'   			=> $input['staz'],
+			'staz'   			=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
 			'lijecn_pregled'    => date("Y-m-d", strtotime($input['lijecn_pregled'])),
 			'ZNR'      			=> date("Y-m-d", strtotime($input['ZNR'])),
 			'napomena'  	    => $input['napomena'],
-			'datum_odjave'		=> date("Y-m-d", strtotime($input['datum_odjave'])),
-			'otkaz_id'   		=> $input['otkaz_id'],
-			'otkazni_rok'   	=> $input['otkazni_rok']
-	
+			'slDani'  	    	=> $input['slDani']
 		);
-		}*/
 		
 		$registration->updateRegistration($data);
 		

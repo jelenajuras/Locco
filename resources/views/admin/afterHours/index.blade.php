@@ -66,10 +66,11 @@
 						{{'Nema neodobrenih evidencija!'}}
 					@endif
 				@endif
-				
+				@if($registration->slDani == 1)
 				<p class="SLD">Ukupan broj slobodnih dana  {{  $slobodni_dani }}</p>
 				<p class="SLD">Iskorišteno slobodnih dana  {{  $koristeni_slobodni_dani }}</p>
 				<p class="SLD">Preostali slobodni dani  {{  $slobodni_dani - $koristeni_slobodni_dani }}</p>
+				@endif
             </div>
         </div>
     </div>

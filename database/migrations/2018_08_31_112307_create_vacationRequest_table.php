@@ -16,15 +16,13 @@ class CreateVacationRequestTable extends Migration
         Schema::create('vacation_requests', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('employee_id');
-			$table->date('GOpocetak')->nullable();
-			$table->date('GOzavršetak')->nullable();
+			$table->date('GOpocetak')->nullable($value = true);
+			$table->date('GOzavršetak')->nullable($value = true);
 			$table->string('napomena')->nullable($value = true);
 			$table->string('odobreno')->nullable($value = true);
 			$table->integer('odobrio_id');
-			$table->date('datum_odobrenja')->nullable();
+			$table->date('datum_odobrenja')->nullable($value = true);
             $table->timestamps();
-			$table->foreign('employee_id')->references('id')->on('employees');
-			$table->foreign('odobrio_id')->references('id')->on('employees');
         });
     }
 

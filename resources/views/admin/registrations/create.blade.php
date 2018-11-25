@@ -41,7 +41,7 @@
 					</div>
 					<div class="form-group {{ ($errors->has('probni_rok'))  ? 'has-error' : '' }}">
 						<span><b>Probni rok (mjeseci):</b></span>
-						<input name="probni_rok" type="text" class="form-control">
+						<input name="probni_rok" type="text" class="form-control" value="6">
 					</div>
 						{!! ($errors->has('probni_rok') ? $errors->first('probni_rok', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('staz'))  ? 'has-error' : '' }}">
@@ -68,6 +68,13 @@
 					<div class="form-group">
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena"></textarea>
+					</div>
+					<div class="form-group">
+						<label>Obračun prekovremenih kao: </label>
+						<select class="form-control" name="slDani" value="{{ old('slDani')}}">
+							<option name="slDani" value="1">Slobodni dani</option>
+							<option name="slDani" value="0">Isplata</option>
+						</select>
 					</div>
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi radnika" id="stil1">

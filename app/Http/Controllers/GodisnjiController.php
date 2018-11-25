@@ -16,53 +16,53 @@ use DatePeriod;
 
 class GodisnjiController extends Controller
 {
-   // Računa broj neiskorištenih dana godišnjeg
-   
-   public function godišnji($user)
+   // Računa broj neiskorištenih dana godišnjeg ova godina
+    
+   public static function godisnji($user)
 	{
 		$registration = Registration::where('registrations.employee_id', $user->id)->first();
 		
-		/* Staž prijašnji */
-		$stažY = 0;
-		$stažM = 0;
-		$stažD = 0;
+		/* staz prijašnji */
+		$stazY = 0;
+		$stazM = 0;
+		$stazD = 0;
 		if($registration->staz) {
-			$staž = $registration->staz;
-			$staž = explode('-',$registration->staz);
-			$stažY = $staž[0];
-			$stažM = $staž[1];
-			$stažD = $staž[2];
+			$staz = $registration->staz;
+			$staz = explode('-',$registration->staz);
+			$stazY = $staz[0];
+			$stazM = $staz[1];
+			$stazD = $staz[2];
 		}
 		
-/* Staž Duplico */	
-		$stažDuplico = 0;
+/* staz Duplico */	
+		$stazDuplico = 0;
 		$datum = new DateTime('now');    /* današnji dan */
 		$datum_1 = new DateTime($registration->datum_prijave);  /* datum prijave */
-		$stažDuplico = $datum_1->diff($datum);  /* staž u Duplicu*/
+		$stazDuplico = $datum_1->diff($datum);  /* staz u Duplicu*/
 
-		$godina = $stažDuplico->format('%y');  
-		$mjeseci = $stažDuplico->format('%m');
-		$dana = $stažDuplico->format('%d');
+		$godina = $stazDuplico->format('%y');  
+		$mjeseci = $stazDuplico->format('%m');
+		$dana = $stazDuplico->format('%d');
 		
-/* Staž ukupan */
+/* staz ukupan */
 		$danaUk=0;
 		$mjeseciUk=0;
 		$godinaUk=0;
 		
-		if(($dana+$stažD) > 30){
-			$danaUk = ($dana+$stažD) -30;
+		if(($dana+$stazD) > 30){
+			$danaUk = ($dana+$stazD) -30;
 			$mjeseciUk = 1;
 		}else {
-			$danaUk = ($dana+$stažD);
+			$danaUk = ($dana+$stazD);
 		}
 		
-		if(($mjeseci+$stažM) > 12){
-			$mjeseciUk += ($mjeseci+$stažM) -12;
+		if(($mjeseci+$stazM) > 12){
+			$mjeseciUk += ($mjeseci+$stazM) -12;
 			$godinaUk = 1;
 		}else {
-			$mjeseciUk += ($mjeseci+$stažM);
+			$mjeseciUk += ($mjeseci+$stazM);
 		}
-		$godinaUk += ($godina + $stažY);
+		$godinaUk += ($godina + $stazY);
 
 	
 /* Godišnji odmor - dani*/
@@ -78,7 +78,7 @@ class GodisnjiController extends Controller
 			$GO = $GO;
 		}
 		
-/* Staž prošle godine */
+/* staz prošle godine */
 		$datumPG = new DateTime($prosla_godina .'-12-31');    /* zadnji dan prošle godine */
 		$godina_prijave = date_format($datum_1,'Y');  /* godina prijave */
 		
@@ -90,27 +90,27 @@ class GodisnjiController extends Controller
 		$godinaUk_PG=0;
 			
 		if($godina_prijave < $ova_godina){
-			$stažDuplicoPG = $datum_1->diff($datumPG);  /* staž u Duplicu do 31.12*/
-			$godinaPG = $stažDuplicoPG->format('%y');  
-			$mjeseciPG = $stažDuplicoPG->format('%m');
-			$danaPG = $stažDuplicoPG->format('%d');
+			$stazDuplicoPG = $datum_1->diff($datumPG);  /* staz u Duplicu do 31.12*/
+			$godinaPG = $stazDuplicoPG->format('%y');  
+			$mjeseciPG = $stazDuplicoPG->format('%m');
+			$danaPG = $stazDuplicoPG->format('%d');
 		}
 		
-/* Staž ukupan do 31.12.*/
-			if(($danaPG+$stažD) > 30){
-				$danaUk_PG = ($danaPG+$stažD) -30;
+/* staz ukupan do 31.12.*/
+			if(($danaPG+$stazD) > 30){
+				$danaUk_PG = ($danaPG+$stazD) -30;
 				$mjeseciUk_PG = 1;
 			} else {
-				$danaUk_PG = ($danaPG+$stažD);
+				$danaUk_PG = ($danaPG+$stazD);
 			}
 			
-			if(($mjeseciPG+$stažM) > 12){
-				$mjeseciUk_PG += ($mjeseciPG+$stažM) -12;
+			if(($mjeseciPG+$stazM) > 12){
+				$mjeseciUk_PG += ($mjeseciPG+$stazM) -12;
 				$godinaUk_PG = 1;
 			} else {
-				$mjeseciUk_PG += ($mjeseciPG+$stažM);
+				$mjeseciUk_PG += ($mjeseciPG+$stazM);
 			}
-			$godinaUk_PG += ($godinaPG + $stažY);
+			$godinaUk_PG += ($godinaPG + $stazY);
 			$GO_PG = 20;
 			$GO_PG += (int)($godinaUk_PG/ 4) ;
 		
@@ -120,7 +120,7 @@ class GodisnjiController extends Controller
 				$GO_PG = $GO_PG;
 			}
 
-/* Zahtjevi */		
+/* Zahtjevi ova godina */		
 		$zahtjevi = VacationRequest::where('employee_id',$user->id)->get();
 		
 		/* ukupno iskorišteno godišnji zaposlenika*/
@@ -166,10 +166,121 @@ class GodisnjiController extends Controller
 		}
 		
 		return $dani_GO = $GO - $ukupnoGO;
+		
 	}
+
+	// Računa broj dana godišnjeg ova godina
+	public static function godisnjiUser($user)
+	{
+		$registration = $user;
+		
+/* staz prijašnji */
+		$stazY = 0;
+		$stazM = 0;
+		$stazD = 0;
+		if($registration->staz) {
+			$staz = $registration->staz;
+			$staz = explode('-',$registration->staz);
+			$stazY = $staz[0];
+			$stazM = $staz[1];
+			$stazD = $staz[2];
+		}
+		
+/* staz Duplico */	
+		$stazDuplico = 0;
+		$datum = new DateTime('now');    /* današnji dan */
+		$datum_1 = new DateTime($registration->datum_prijave);  /* datum prijave */
+		$stazDuplico = $datum_1->diff($datum);  /* staz u Duplicu*/
+
+		$godina = $stazDuplico->format('%y');  
+		$mjeseci = $stazDuplico->format('%m');
+		$dana = $stazDuplico->format('%d');
+		
+/* staz ukupan */
+		$danaUk=0;
+		$mjeseciUk=0;
+		$godinaUk=0;
+		
+		if(($dana+$stazD) > 30){
+			$danaUk = ($dana+$stazD) -30;
+			$mjeseciUk = 1;
+		}else {
+			$danaUk = ($dana+$stazD);
+		}
+		
+		if(($mjeseci+$stazM) > 12){
+			$mjeseciUk += ($mjeseci+$stazM) -12;
+			$godinaUk = 1;
+		}else {
+			$mjeseciUk += ($mjeseci+$stazM);
+		}
+		$godinaUk += ($godina + $stazY);
 	
+/* Godišnji odmor - dani*/
+		$ova_godina = date_format($datum,'Y');
+		$prosla_godina = date_format($datum,'Y')-1;
+		
+		$GO = 20;
+		$GO += (int)($godinaUk/ 4) ;
+		
+		If($GO > 25){
+			$GO = 25;
+		} else {
+			$GO = $GO;
+		}
+
+		return $GO;
+	}
+
+	//računa iskorištene dane godišnjeg odmora ova godina
+	public static function daniZahtjevi($user)
+	{
+		/* Zahtjevi ova godina */		
+		$zahtjevi = VacationRequest::where('employee_id',$user->employee_id)->get();
+		$datum = new DateTime('now');    /* današnji dan */
+		$ova_godina = date_format($datum,'Y');
+		$prosla_godina = date_format($datum,'Y')-1;
+
+		/* ukupno iskorišteno godišnji zaposlenika*/
+		$ukupnoGO = 0;
+		$ukupnoGO_PG = 0;
+		foreach($zahtjevi as $zahtjev){
+			if($zahtjev->zahtjev == 'GO' && $zahtjev->odobreno == 'DA' ){
+				$begin = new DateTime($zahtjev->GOpocetak);
+				$end = new DateTime($zahtjev->GOzavršetak);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+				foreach ($period as $dan) {
+					if(date_format($dan,'N') < 6 ){
+						if(date_format($dan,'Y') == $ova_godina ){
+							$ukupnoGO += 1;
+						}
+					}
+					if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+						date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+						date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+						date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+						date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+						date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+						date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+						date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+						date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
+						date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018'){
+							if(date_format($dan,'Y') == $ova_godina ){
+								$ukupnoGO -= 1;
+							}
+					}
+				}	
+			}
+		}
+		return $ukupnoGO;
+	}
+
 	// Računa broj dana između dva datuma
-	
 	public static function daniGO($zahtjev)
 	{
 		$datum = new DateTime('now');    /* današnji dan */
@@ -299,5 +410,16 @@ class GodisnjiController extends Controller
 			}
 		}
 		return $danGOdijete;
+	}
+	/* Računa staz u Duplicu */	
+	public static function stazDuplico($user)
+	{
+		$datum = new DateTime('now');    /* današnji dan */
+		$stazDuplico = 0;
+		$datum_1 = new DateTime($user->datum_prijave);  /* datum prijave - registracija */
+		
+		$stazDuplico = $datum_1->diff($datum);  /* staz u Duplicu*/
+		
+		return $stazDuplico;
 	}
 }

@@ -12,10 +12,6 @@ th {
 td {
     font-size: 14px;
 } 
-table, td, th, tr {
-    vertical-align: center;
-	table-layout: fixed;
-} 
 input {
 	border: 1px solid;
 	border-color: d9d9d9;
@@ -39,6 +35,9 @@ input {
 							<th width="80" onclick="sortTable(1)">Datum prijave</th>
                             <th width="80" onclick="sortTable(2)">Datum rođenja</th>
 							<th width="150" onclick="sortTable(3)">Radno mjesto</th>
+							<th width="150" onclick="sortTable(4)">
+								Obračun<br>prokovremenih
+							</th>
                             <th width="150" class="not-export-column">Opcije</th>
                         </tr>
                     </thead>
@@ -58,7 +57,20 @@ input {
                                 <td>{{ date('d.m.Y.', strtotime($registration->datum_prijave)) }}</td>
 								<td>{{ date('d.m.Y.', strtotime($registration->employee['datum_rodjenja'])) }}</td>
 								<td>{{ $registration->work['odjel'] . ' - ' . $registration->work['naziv'] }}</td>
-								
+								<td>{!! $registration->slDani === 1 ? 'Slobodan dan' : '' !!} 
+									{!! $registration->slDani === 0 ? 'Isplata' : '' !!} 
+									<!--<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.registrations.update', $registration->id ) }}">
+										<select class="form-control" name="slDani" value="{{ $registration->slDani }}">
+											<option name="slDani" value="0" {!! $registration->slDani == "" ? 'selected' : '' !!}></option>
+											<option name="slDani" value="1" {!! $registration->slDani == "1" ? 'selected' : '' !!}>Slobodni dani</option>
+											<option name="slDani" value="0" {!! $registration->slDani == "0" ? 'selected' : '' !!} >Isplata</option>
+										</select>
+										{{ csrf_field() }}
+										{{ method_field('PUT') }}
+										<input name="_token" value="{{ csrf_token() }}" type="hidden">
+										<input class="check" type="submit" value="&#10004" title="Snimi podatak">	
+									</form>-->
+								</td>
 								<td>
 									<a class="btn btn-block" role="button" data-toggle="collapse" href="#collapseExample{{$i}}" aria-expanded="false" aria-controls="collapseExample{{$i}}" id="stil1">
 									  Opcije

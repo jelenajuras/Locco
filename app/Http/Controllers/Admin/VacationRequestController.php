@@ -90,7 +90,7 @@ class VacationRequestController extends GodisnjiController
 			$input['GOzavršetak'] = $input['GOpocetak'];
 		}
 		
-		if($input['employee_id'] = 'svi'){
+		if($input['employee_id'] == 'svi'){
 			$registrations = Registration::get();
 			foreach($registrations as $registration){
 				if(! EmployeeTermination::where('employee_id',$registration->employee_id)->first() ){
@@ -179,7 +179,7 @@ class VacationRequestController extends GodisnjiController
 				if($prvi_nadređeni){
 					array_push($nadređene_osobe, $prvi_nadređeni, 'jelena.juras@duplico.hr');
 				}
-
+				
 				Mail::queue(
 					'email.zahtjevGO',
 					['employee' => $employee,'vacationRequest' => $vacationRequest,'nadređene_osobe' => $nadređene_osobe,'dani_GO' => $dani_GO ,'napomena' => $input['napomena'],'nadređeni1' => $nadređeni1,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak'], 'slobodni_dani' => $slobodni_dani],

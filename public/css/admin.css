@@ -334,10 +334,32 @@ header ul li {
 	position:absolute;
 
 }
+
 .collapse a {
 	padding-left:10px;
 }
 
 .noticesHome {
 	margin-top: 40px;
+}
+
+#table_id thead tr:first-child td{
+	text-align: center;
+}
+
+.check{
+	border:none;
+	background-color:inherit;
+	color:green;
+	width:10%;
+}
+
+form {
+	margin:0;
+}
+
+.slDani{
+	width:80%;
+	border:none;
+	padding: 10px 0;
 }

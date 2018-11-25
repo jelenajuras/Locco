@@ -11,7 +11,7 @@ class Registration extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','radnoMjesto_id','datum_prijave','probni_rok','staz','lijecn_pregled','ZNR','napomena'];
+	protected $fillable = ['employee_id','radnoMjesto_id','datum_prijave','probni_rok','staz','lijecn_pregled','ZNR','napomena','slDani'];
 	
 	/*
 	* The Eloquent employee model name

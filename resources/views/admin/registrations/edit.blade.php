@@ -72,7 +72,14 @@
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena">{{ $registration->napomena }}</textarea>
 					</div>
-					
+					<div class="form-group">
+						<label>Obračun prekovremenih kao: </label>
+						<select class="form-control" name="slDani" value="{{ $registration->slDani }}">
+							<option name="slDani" value="0" {!! $registration->slDani == "" ? 'selected' : '' !!}></option>
+							<option name="slDani" value="1" {!! $registration->slDani == "1" ? 'selected' : '' !!}>Slobodni dani</option>
+							<option name="slDani" value="0" {!! $registration->slDani == "0" ? 'selected' : '' !!} >Isplata</option>
+						</select>
+					</div>
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
