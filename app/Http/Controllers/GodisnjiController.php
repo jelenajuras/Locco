@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
@@ -17,7 +16,6 @@ use DatePeriod;
 class GodisnjiController extends Controller
 {
    // Računa broj neiskorištenih dana godišnjeg ova godina
-    
    public static function godisnji($user)
 	{
 		$registration = Registration::where('registrations.employee_id', $user->id)->first();
@@ -158,7 +156,11 @@ class GodisnjiController extends Controller
 							}
 					}
 					if(date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018'){
+						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+						date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
 						$ukupnoGO -= 1;
 					}
 				}
@@ -169,7 +171,7 @@ class GodisnjiController extends Controller
 		
 	}
 
-	// Računa broj dana godišnjeg ova godina
+	// Računa broj dana godišnjeg ova godina              /************ RADI!!!!!!! ***************/
 	public static function godisnjiUser($user)
 	{
 		$registration = $user;
@@ -232,7 +234,7 @@ class GodisnjiController extends Controller
 		return $GO;
 	}
 
-	//računa iskorištene dane godišnjeg odmora ova godina
+	//računa iskorištene dane godišnjeg odmora ova godina  /************ RADI!!!!!!! ***************/
 	public static function daniZahtjevi($user)
 	{
 		/* Zahtjevi ova godina */		
@@ -269,7 +271,11 @@ class GodisnjiController extends Controller
 						date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
 						date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
 						date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018'){
+						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+						date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
 							if(date_format($dan,'Y') == $ova_godina ){
 								$ukupnoGO -= 1;
 							}
@@ -319,7 +325,11 @@ class GodisnjiController extends Controller
 					}
 			}
 			if(date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-				date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018'){
+				date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+				date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+				date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+				date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+				date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
 				$ukupnoGO -= 1;
 			}
 		}
@@ -352,11 +362,12 @@ class GodisnjiController extends Controller
 		return $ukupnoDana;
 	}
 	
-	/* računa broj slobodnih dana prema prekovremenim satima */
-	public function slobodni_dani($user)
+	/* računa broj slobodnih dana prema prekovremenim satima */   /************ RADI!!!!!!! ***************/
+	public static function slobodni_dani($user)
 	{
-		$registration = Registration::where('registrations.employee_id', $user->id)->first();
-		$prekovremeniEmpl = AfterHour::where('employee_id',$registration->employee_id)->get();
+		// $user = $registration
+		// $registration = Registration::where('registrations.employee_id', $user->id)->first();
+		$prekovremeniEmpl = AfterHour::where('employee_id',$user->employee_id)->get();
 		
 		$razlika =0;
 		foreach($prekovremeniEmpl as $prekovremeni){
@@ -377,23 +388,56 @@ class GodisnjiController extends Controller
 		return $razlika;
 	}
 	
-	/* računa iskorištene slobodne dane  - odobrene */
-	public function koristeni_slobodni_dani($user)
+	/* računa iskorištene slobodne dane  - odobrene */          /************ RADI!!!!!!! ***************/
+	public static function koristeni_slobodni_dani($user)
 	{
-		$registration = Registration::where('registrations.employee_id', $user->id)->first();
+		// $user = $registration
+		//$registration = Registration::where('registrations.employee_id', $user->id)->first();
 
-		$sl_dani = VacationRequest::where('employee_id',$registration->employee_id)->where('zahtjev','SLD')->get();
+		$sl_dani = VacationRequest::where('employee_id',$user->employee_id)->where('zahtjev','SLD')->get();
 		
-		$dan = 0;
+		$SLdan = 0;
 		foreach($sl_dani as $sl_dan){
 			if($sl_dan->odobreno == 'DA'){
-				$dan += 1;
+				$begin = new DateTime($sl_dan->GOpocetak);
+				$end = new DateTime($sl_dan->GOzavršetak);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+				foreach ($period as $dan) {
+					if(date_format($dan,'N') < 6 ){
+						$SLdan += 1;
+					}
+					if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+						date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+						date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+						date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+						date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+						date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+						date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+						date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+						date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
+						date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+						date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
+							if(date_format($dan,'Y') == $ova_godina ){
+								$SLdan -= 1;
+							}
+					}
+				}
+				
 			}
 		}
 
-		return $dan;
+		return $SLdan;
 	}
 	
+	/* Računa dane GO za djecu*/	
 	public function djeca($user){
 		$kids = Kid::where('employee_id', $user->id)->get();
 		$datum = new DateTime('now');    /* današnji dan */
@@ -411,7 +455,8 @@ class GodisnjiController extends Controller
 		}
 		return $danGOdijete;
 	}
-	/* Računa staz u Duplicu */	
+	
+	/* Računa staz u Duplicu */	                /************ RADI!!!!!!! ***************/
 	public static function stazDuplico($user)
 	{
 		$datum = new DateTime('now');    /* današnji dan */
@@ -421,5 +466,93 @@ class GodisnjiController extends Controller
 		$stazDuplico = $datum_1->diff($datum);  /* staz u Duplicu*/
 		
 		return $stazDuplico;
+	}
+	
+	/* Računa ukupan staž */	
+	public static function stazUkupno($user)   /************ RADI!!!!!!! ***************/
+	{
+		
+		$stazDuplico = GodisnjiController::stazDuplico($user);
+		$godina = $stazDuplico->format('%y');  
+		$mjeseci = $stazDuplico->format('%m');
+		$dana = $stazDuplico->format('%d');
+		
+		$stazY = 0;
+		$stazM = 0;
+		$stazD = 0;
+		if($user->staz) {
+			$stazPrijasnji = $user->staz;
+			$stazPrijasnji = explode('-',$user->staz);
+			$stazY = $stazPrijasnji[0];
+			$stazM = $stazPrijasnji[1];
+			$stazD = $stazPrijasnji[2];
+		} 
+		
+		/* Staž ukupan */
+		$danaUk=0;
+		$mjeseciUk=0;
+		$godinaUk=0;
+		
+		if(($dana+$stazD) > 30){
+			$danaUk = ($dana+$stazD) -30;
+			$mjeseciUk = 1;
+		}else {
+			$danaUk = ($dana+$stazD);
+		}
+		
+		if(($mjeseci+$stazM) > 12){
+			$mjeseciUk += ($mjeseci+$stazM) -12;
+			$godinaUk = 1;
+		}else {
+			$mjeseciUk += ($mjeseci+$stazM);
+		}
+		$godinaUk += ($godina + $stazY);
+								
+		$staz = array($godinaUk,$mjeseciUk,$danaUk);
+		
+		return $staz;
+	}
+
+	/*  računa razmjeran GO */
+	public static function razmjeranGO($user)
+	{
+		$datum = new DateTime('now');    /* današnji dan */
+		$ova_godina = date_format($datum,'Y');
+		$ovaj_mjesec = date_format($datum,'m');
+		$ovaj_dan = date_format($datum,'d');
+		if($ovaj_dan >= 15){
+			$ovaj_mjesec +=1;
+		}
+		$GO  = GodisnjiController::godisnjiUser($user);
+
+		if($user->datum_prijave) {
+			$datum_prijave = $user->datum_prijave;
+			$datum_prijave = explode('-',$user->datum_prijave);
+			$prijavaGodina = $datum_prijave[0];
+			$prijava = new DateTime($user->datum_prijave);
+			$staz = $prijava->diff($datum);   /* staz u Duplicu*/
+			$mjesec = $staz->format('%m');
+			$dan = $staz->format('%d');
+			if($dan >= 15){
+				$mjesec +=1;
+			}
+			if($prijavaGodina < $ova_godina){
+				$razmjeranGO = round($GO/12 * $ovaj_mjesec, 0, PHP_ROUND_HALF_UP);
+			} else {
+				if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
+					if($mjesec >= 6){
+						$razmjeranGO = $GO;
+					} else {
+						$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+					}
+				} else {
+					$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+				}
+			}
+			
+		} else {
+			$razmjeranGO = 0;
+		}
+		return $razmjeranGO;
 	}
 }

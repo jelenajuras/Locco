@@ -21,7 +21,7 @@
 		
 		<link rel="stylesheet" href="{{ URL::asset('css/admin.css') }}" type="text/css" >
 		<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
-
+		
 		<!-- jQuery Timepicker --> 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 		
@@ -29,10 +29,10 @@
     </head>
     <body>
 		<header>
-			<h1><img src="{{ asset('img/Duplico_logo_white.png') }}" /> portal za zaposlenike</h1>
+			<h1><img src="{{ asset('img/Logo_Duplico.png') }}" /><span>portal za zaposlenike</span></h1>
 			<ul class="">
 				@if(Sentinel::check())
-					<a href="{{ route('auth.logout') }}">Odjava</a></li>
+					<li><a href="{{ route('auth.logout') }}">Odjava</a></li>
 				@else
 					<li><a href="{{ route('auth.login.form') }}">Login</a></li>
 					<li><a href="{{ route('auth.register.form') }}">Register</a></li>
@@ -41,7 +41,7 @@
 		</header>
 		<section class="Body_section">
 			<input type="hidden" id="rola" {!! Sentinel::inRole('basic') ? 'value="basic"' : '' !!} />
-			<nav class="topnav col-xs-12 col-sm-2 col-md-2 col-lg-2" id="myTopnav">
+			<nav class="topnav col-xs-12 col-sm-3 col-md-3 col-lg-2" id="myTopnav">
 				@if(Sentinel::check() && Sentinel::inRole('administrator') || Sentinel::inRole('basic') ||  Sentinel::inRole('uprava'))
 					<a href="{{ route('home') }}" class="active naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
@@ -92,13 +92,13 @@
 						@if(DB::table('notices')->take(5)->get())
 						<button class="poruke" data-toggle="collapse" data-target="#poruke1"><span>Obavijesti uprave<i class="fas fa-caret-down"></i></span></button>
 							<div class="collapse " id="poruke1">
-								@foreach(DB::table('notices')->take(5)->get() as $notice)
+								@foreach(DB::table('notices')->orderBy('created_at','DESC')->take(5)->get() as $notice)
 									<a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a>
 								@endforeach
 							</div>
 						@endif
 						@if(Sentinel::inRole('uprava'))
-							@if(count(DB::table('posts')->where('to_employee_id','877282')->take(5)->get()))
+							@if(count(DB::table('posts')->where('to_employee_id','877282')->orderBy('created_at','DESC')->take(5)->get()))
 								<button class="poruke" data-toggle="collapse" data-target="#poruke3"><span>Prijedlozi upravi<i class="fas fa-caret-down"></i></span></button>
 								<div class="collapse " id="poruke3">
 									@foreach(DB::table('posts')->where('to_employee_id','877282')->take(5)->get() as $prijedlozi)
@@ -113,7 +113,7 @@
 					<i class="fa fa-bars"></i>
 				  </a>-->
 			</nav>
-			<article class="col-xs-12 col-sm-10 col-md-10 col-lg-10" style="text-align:center;">
+			<article class="col-xs-12 col-sm-9 col-md-9 col-lg-10" style="text-align:center;">
 					@include('notifications')
 					@yield('content')
 			</article>
@@ -149,9 +149,6 @@
 		}
 		</script>
 
-		<!-- jQuery Timepicker --> 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-		
 		@stack('script')
     </body>
 </html>

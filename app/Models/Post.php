@@ -27,7 +27,7 @@ class Post extends Model
 	* 
 	* @var string
 	*/
-	protected static $userModel = 'App\Models\Users'; /* putanja do modela user
+	protected static $userModel = 'App\Models\Employee'; /* putanja do modela user
 	
 	/*
 	* The Eloquent comments model name

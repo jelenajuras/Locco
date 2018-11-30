@@ -40,77 +40,58 @@
 							<th onclick="sortTable(3)">Dani GO {{ $prosla_godina }}</th>
 							<th  onclick="sortTable(4)">Iskorišteni dani {{ $prosla_godina }}</th>
 							<th onclick="sortTable(5)">Dani GO  {{ $ova_godina}}</th>
-							<th onclick="sortTable(6)">Iskorišteni dani  {{ $ova_godina}}</th>
-                            <th onclick="sortTable(7)">Neiskorišteno dana  {{ $ova_godina}}</th>
-							<th onclick="sortTable(8)">Neiskorišteni slobodni dani</th>
+							<th onclick="sortTable(6)">Razmjeran dio GO  {{ $ova_godina}}</th>
+							<th onclick="sortTable(7)">Iskorišteni dani  {{ $ova_godina}}</th>
+                            <th onclick="sortTable(8)">Neiskorišteno dana  {{ $ova_godina}}</th>
+							<th onclick="sortTable(9)">Neiskorišteni slobodni dani</th>
 							
                         </tr>
                     </thead>
                     <tbody id="myTable">
 						@foreach ($registrations as $registration)
-						
 							@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
 								<?php 
-								$employee = Employee::where('id',$registration->employee_id)->first();
-								$godisnji = GodisnjiController::godisnji($employee);
-
 								/* Staž Duplico */
 								$stazDuplico = GodisnjiController::stazDuplico($registration);
 								$godina = $stazDuplico->format('%y');  
 								$mjeseci = $stazDuplico->format('%m');
 								$dana = $stazDuplico->format('%d');
-
-								/* Staž prijašnji */
-								$stazY = 0;
-								$stazM = 0;
-								$stazD = 0;
-								if($registration->staz) {
-									$staz = $registration->staz;
-									$staz = explode('-',$registration->staz);
-									$stazY = $staz[0];
-									$stazM = $staz[1];
-									$stazD = $staz[2];
-								} 
-								/* Staž ukupan */
-								$danaUk=0;
-								$mjeseciUk=0;
-								$godinaUk=0;
 								
-								if(($dana+$stazD) > 30){
-									$danaUk = ($dana+$stazD) -30;
-									$mjeseciUk = 1;
-								}else {
-									$danaUk = ($dana+$stazD);
-								}
+								$stazUkupno = GodisnjiController::stazUkupno($registration);
+								$godinaUk = $stazUkupno[0];  
+								$mjeseciUk = $stazUkupno[1];
+								$danaUk = $stazUkupno[2];
 								
-								if(($mjeseci+$stazM) > 12){
-									$mjeseciUk += ($mjeseci+$stazM) -12;
-									$godinaUk = 1;
-								}else {
-									$mjeseciUk += ($mjeseci+$stazM);
-								}
-								$godinaUk += ($godina + $stazY);
-
 								$godisnjiUser  = GodisnjiController::godisnjiUser($registration);
+								
 								$daniZahtjevi = GodisnjiController::daniZahtjevi($registration);
+								$slDani = GodisnjiController::slobodni_dani($registration);
+								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);
+								
+								$razmjeranGO = GodisnjiController::razmjeranGO($registration);
+								
 								?>
 								@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
+								
 									<tr>
 										<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
 										<td style="width:10%;">{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td>
 										<td style="width:10%;">{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td>
-										<td style="width:10%;"> </td>
 										<td style="width:10%;"></td>
-										<td style="width:10%;">{{  $godisnjiUser }}</td>
-										<td style="width:10%;">{{ $daniZahtjevi }}</td>
-										<td style="width:10%;">{{ $godisnjiUser - $daniZahtjevi }}</td>
 										<td style="width:10%;"></td>
+										<td style="width:10%;">{{  $godisnjiUser }}</td> <!-- ukuno GO -->
+										<td style="width:10%;">{{ $razmjeranGO }}</td> <!-- Razmjerni dani GO-->
+										<td style="width:10%;">{{ $daniZahtjevi }}</td> <!-- // iskorišteni dani godišnjeg odmora ova godina -->
+										<td style="width:10%;">{{ $razmjeranGO - $daniZahtjevi }}</td>  <!-- // neiskorišteni dani godišnjeg odmora ova godina -->
+										<td style="width:10%;">{{ $slDani - $koristeni_slDani  }}</td>
 									</tr>
 								@endif
 							@endif
 						 @endforeach
                     </tbody>
                 </table>
+				
+				
 				@else
 					{{'Nema podataka!'}}
 				@endif
@@ -118,4 +99,16 @@
         </div>
     </div>
 </div>
+<!--
+<div class="uputa">
+	<p>*** Napomena:</p>
+	<p>Sukladno radnopravnim propisima RH:<br>
+		- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
+		- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
+		- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
+		- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+
+	Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
+	</p>
+</div>-->
 @stop

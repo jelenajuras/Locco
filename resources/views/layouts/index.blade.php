@@ -21,13 +21,18 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="{{ URL::asset('css/admin.css') }}" type="text/css" >
+		
+	<!-- Date picker-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
 </head>
 <body>
 	<header>
-			<h1><img src="{{ asset('img/Duplico_logo_white.png') }}" /> portal za zaposlenike</h1>
+			<h1><img src="{{ asset('img/Logo_Duplico.png') }}" /><span>portal za zaposlenike</span></h1>
 			<ul class="">
 				@if(Sentinel::check())
-					<a href="{{ route('auth.logout') }}">Odjava</a></li>
+					<li><a href="{{ route('auth.logout') }}">Odjava</a></li>
 				@else
 					<li><a href="{{ route('auth.login.form') }}">Login</a></li>
 					<li><a href="{{ route('auth.register.form') }}">Register</a></li>
@@ -54,7 +59,7 @@
 		 
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>+
+		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
 		<script>
 $(document).ready(function() {
 		var table = $('#table_id').DataTable( {

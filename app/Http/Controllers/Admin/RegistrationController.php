@@ -61,7 +61,7 @@ class RegistrationController extends Controller
     public function store(RegistrationRequest $request)
     {
         $input = $request->except(['_token']);
-		dd($input);
+		
 		if($input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'] == '--'){
 			$staz = '0-0-0';
 		}else {
@@ -80,6 +80,13 @@ class RegistrationController extends Controller
 			'slDani'  	    	=> $input['slDani']
 		);
 		
+		if($request['prekidStaza']){
+			$data += ['prekidStaza' => $input['prekidStaza']];
+		}
+		if($request['prvoZaposlenje'] != ''){
+			$data += ['prvoZaposlenje' => $input['prvoZaposlenje']];
+		}
+		
 		
 		$registration = new Registration();
 		$registration->saveRegistration($data);
@@ -95,7 +102,7 @@ class RegistrationController extends Controller
 		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','matija.barberic@duplico.hr');
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
-	/*	
+		
 		foreach($zaduzene_osobe as $key => $zaduzena_osoba){
 			Mail::queue(
 			'email.prijava3',
@@ -118,7 +125,7 @@ class RegistrationController extends Controller
 			$message->to($zaduzen)
 				->subject('Novi djelatnik - prijava');
 		}
-		);*/
+		);
 		
 		// Create directory
 		$path = 'storage/' . $prezime . '_' . $ime;
@@ -162,8 +169,7 @@ class RegistrationController extends Controller
 		$stažM = $staž[1];
 		$stažD = $staž[2];
 		}
-		
-		
+
 		return view('admin.registrations.edit', ['registration' => $registration])->with('stažY', $stažY)->with('stažM', $stažM)->with('stažD', $stažD);
     }
 
@@ -176,9 +182,11 @@ class RegistrationController extends Controller
      */
     public function update(RegistrationRequest $request, $id)
     {
-        $registration = Registration::find($id);
+		$registration = Registration::find($id);
 		$input = $request->except(['_token']);
-
+		$prvoZaposlenje = null;
+		$prekidStaza = null;
+		
 		$data = array(
 			'employee_id'  		=> $input['employee_id'],
 			'radnoMjesto_id'    => $input['radnoMjesto_id'],
@@ -190,6 +198,17 @@ class RegistrationController extends Controller
 			'napomena'  	    => $input['napomena'],
 			'slDani'  	    	=> $input['slDani']
 		);
+		
+		if($request['prekidStaza']){
+			$data += ['prekidStaza' => $input['prekidStaza']];
+		} else {
+			$data += ['prekidStaza' => null];
+		}
+		if($request['prvoZaposlenje'] != ''){
+			$data += ['prvoZaposlenje' => $input['prvoZaposlenje']];
+		} else {
+			$data += ['prvoZaposlenje' => null];
+		}
 		
 		$registration->updateRegistration($data);
 		
@@ -216,8 +235,8 @@ class RegistrationController extends Controller
 	
 	public function generate_pdf($id) 
 	{
-	$registration = Registration::find($id);
-	$pdf = PDF::loadView('admin.registrations.show', compact('registration'));
-	return $pdf->download('djelatnik_'. $registration->id .'.pdf');
+		$registration = Registration::find($id);
+		$pdf = PDF::loadView('admin.registrations.show', compact('registration'));
+		return $pdf->download('djelatnik_'. $registration->id .'.pdf');
 	}
 }

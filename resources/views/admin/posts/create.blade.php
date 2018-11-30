@@ -23,7 +23,7 @@
 						</select>
 					</div>
 					<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
-                        <input class="form-control" name="title" list="post">
+                        <input class="form-control" name="title" list="post" placeholder="Subjekt">
 							<datalist id="post">
 								<option value="Poruka zaposleniku">
 								<option value="Prijedlog upravi">

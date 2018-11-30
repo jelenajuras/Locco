@@ -15,7 +15,7 @@ class NoticeBoardController extends Controller
      */
     public function index()
     {
-        $notices = Notice::get();
+        $notices = Notice::orderBy('created_at','DESC')->take(10)->get();
 		
 		return view('admin.noticeBoard',['notices'=>$notices]);
     }

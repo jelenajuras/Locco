@@ -16,7 +16,7 @@
             <div class="panel-heading">
 				<h3>{{ $post->title }}</h3>
 				
-				<small><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ $post->user->email }} | <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ \Carbon\Carbon::createFromTimeStamp(strtotime($post->created_at))->diffForHumans() }} </small>
+				<small><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ $post->user['first_name'] . ' ' . $post->user['last_name'] }} | <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ \Carbon\Carbon::createFromTimeStamp(strtotime($post->created_at))->diffForHumans() }} </small>
 			</div>
             <div class="panel-body">
 			{!! $post->content !!}

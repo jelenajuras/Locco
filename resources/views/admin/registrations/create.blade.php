@@ -66,6 +66,12 @@
 								 });  
 					</script> 
 					<div class="form-group">
+						<input type="checkbox" name="prekidStaza" value="DA" > Prekid radnog odnosa više od 8 dana
+					</div>
+					<div class="form-group">
+						<input type="checkbox" name="prvoZaposlenje" value="DA" > Prvo zaposlenje
+					</div>
+					<div class="form-group">
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena"></textarea>
 					</div>

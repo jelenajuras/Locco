@@ -22,9 +22,13 @@
 						</select>
 						{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<p class="padd_10">moli da mu se odobri</p>
+					<p class="padd_10 text1" style="display:none;">moli da mu se odobri</p>
+					<p class="padd_10 text2" style="display:none;">javio je da otvara</p>
 				@else
-					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} <span id="info">molim da mi se odobri</span></p>
+					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} 
+						<span class="text1" style="display:none;" >molim da mi se odobri</span>
+						<span class="text2" style="display:none;">obavještavam da otvaram</span>
+					</p>
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 				@endif
 				
@@ -35,22 +39,21 @@
 						<option class="editable2" value="Bolovanje">bolovanje</option>
 						<option class="editable3"  value="Izlazak">izlazak</option>
 						<option class="editable4" value="NPL">korištenje neplaćenog odmora za period od</option>
+						<option class="editable6" value="VIK">oslobođenje od planiranog radnog vikenda</option>
 						<option class="editable5" value="SLD"  {{ ($slobodni_dani-$koristeni_slobodni_dani <= 0 ? 'disabled' : '' )  }} >korištenje slobodnih dana za period od</option>
 					</select> 
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
 				<p class="editOption4 iskorišteno" style="display:none;">
-				<input type="hidden" value="{{ $dani_GO }}" name="Dani" />
-					@if($dani_GO > 0)
-						Neiskorišteno {{ $dani_GO }} dana godišnjeg odmora 
+					<input type="hidden" value="{{ $razmjeranGO - $daniZahtjevi }}" name="Dani" />
+					@if($razmjeranGO - $daniZahtjevi > 0)
+						Neiskorišteno {{ $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
 					@else
 						Svi dani godišnjeg odmora su iskorišteni! <br>
 						Nemoguće je poslati zahtjev za godišnji odmor.
-						
 					@endif
 				</p>
 				<p class="editOption5 iskorišteno" style="display:none;">
-				<input type="hidden" value="{{ $dani_GO }}" name="Dani2" />
 					@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
 						Neiskorišteno {{ $slobodni_dani }} slobodnih dana
 					@else
@@ -78,12 +81,23 @@
 				</div>
 				
 				<input name="_token" value="{{ csrf_token() }}" type="hidden">
-				<input class="btn btn-lg btn-block editOption5" type="submit" value="Pošalji zahtjev" id="stil1" onclick="GO_dani()">
+				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" onclick="GO_dani()">
 			</form>
 		</div>
 
 	</div>
-		
+	<!--<div class="uputa">
+		<p>*** Napomena:</p>
+		<p>Sukladno radnopravnim propisima RH:<br>
+			- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
+			- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
+			- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
+			- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+
+		Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
+		</p>
+	</div>-->
+
 		<script type="text/javascript">
 			$('.date').datepicker({  
 			   format: 'yyyy-mm-dd',
@@ -140,6 +154,9 @@
 				if(document.getElementById("prikaz").value == "SLD"){
 					document.getElementById("zahtjev").innerHTML = "Zahtjev";
 				}
+				if(document.getElementById("prikaz").value == "Vik"){
+					document.getElementById("zahtjev").innerHTML = "Zahtjev";
+				}
 				
 			}
 		</script>
@@ -155,30 +172,52 @@
 			  $('.editOption2').show();
 			  $('.editOption3').hide();
 			  $('.editOption4').show();
+			  $('.text1').show();
+			  $('.text2').hide();
 			}
-			if(selected == "editable2" || selected == "editable4" || selected == "editable5"){
+			if(selected == "editable4" || selected == "editable5"){
 			  $('.editOption1').show();
 			  $('.editOption2').show();
 			  $('.editOption3').hide();
 			  $('.editOption4').hide();
+			  $('.text1').show();
+			  $('.text2').hide();
+			}
+			if(selected == "editable6"){
+			  $('.editOption1').show();
+			  $('.editOption2').show();
+			  $('.editOption3').hide();
+			  $('.editOption5').hide();
+			  $('.editOption4').hide();
+			  $('.text1').show();
+			  $('.text2').hide();
 			}
 			if(selected == "editable5"){
 			  $('.editOption1').show();
 			  $('.editOption2').show();
 			  $('.editOption3').hide();
 			  $('.editOption5').show();
+			  $('.text1').show();
+			  $('.text2').hide();
 			}
+			
 			if(selected == "editable3"){
 			  $('.editOption1').show();
 			  $('.editOption2').hide();
 			  $('.editOption3').show();
 			  $('.editOption4').hide();
+			  $('.text1').show();
+			  $('.text2').hide();
 			}
-			
-			
-			
+			if(selected == "editable2"){
+			  $('.editOption1').show();
+			  $('.editOption2').show();
+			  $('.editOption3').hide();
+			  $('.editOption4').hide();
+			  $('.text1').hide();
+			  $('.text2').show();
+			}
 			});
 		</script>
 		
 @stop
-

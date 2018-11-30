@@ -23,11 +23,9 @@ class SentinelGuest
                 //$message = $this->translate('unauthorized', 'Unauthorized');
                 return response()->json(['error' =>  'Unauthorized'], 401);
             } else {
-                if(Sentinel::check() && Sentinel::inRole('administrator')) {
+               
                   return redirect()->route('home');
-                } else {
-                    return redirect()->route('home');
-                }
+               
             }
         }
 

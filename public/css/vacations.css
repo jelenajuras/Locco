@@ -22,18 +22,19 @@
 #tblData div a:not(.paginate_button) {
 	display:block;
 	width: 12%;
-	min-height: 40px;
+
 	line-height:15px;
 	padding:5px;
 	float:left;
 	border: 1px solid #ccc;
 	background-color:#eee;
-	color:black;
+	color:#333;
 	text-align:center;
 	margin:5px 0.25%;
 	cursor:pointer;
-	font-size:12px;
+	font-size:15px;
 }
+
 #tblData div a:first-child {
 	text-align:left;
 }
@@ -74,4 +75,23 @@ td {
 .raspored .date{
 	display: inline;
     width: auto;
+}
+
+.filter {
+	margin: 20px 0;
+	text-align:left;
+	float:right;
+}
+
+.filter h4 {
+	display:inline-block;
+}
+
+input[id^="myInput"], input[Type="search"]{
+	padding: 5px;
+	border-radius: 5px;
+}
+
+#table1 tr {
+	border-bottom: 1px solid #ccc;
 }

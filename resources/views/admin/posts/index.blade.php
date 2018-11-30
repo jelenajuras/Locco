@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Poruke')
-<link rel="stylesheet" href="{{ URL::asset('css/vacations.css') }}" type="text/css" >
+<link rel="stylesheet" href="{{ URL::asset('css/vacations.css') }}" type="text/css" />
 @section('content')
 <a class="btn btn-md pull-left" href="{{ url()->previous() }}">
 		<i class="fas fa-angle-double-left"></i>
@@ -52,13 +52,11 @@
 
 									?>
 									<td>{!! $to !!}</td>
-									  <td>
-										<a href="{{ route('admin.posts.edit', $post->id) }}" class="{{ Sentinel::getUser()->id != $post->employee_id ? 'disabled' : '' }}">
+									<td>
+										<a href="{{ route('admin.posts.edit', $post->id)}}">
 											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 										</a>
-										<a href="{{ route('admin.posts.destroy', $post->id) }}" class="action_confirm  {{ Sentinel::getUser()->id != $post->employee_id ? 'disabled' : '' }}" data-method="delete" data-token="{{ csrf_token() }}">
-											<i class="far fa-trash-alt"></i>
-										</a>
+									
 									</td>
 								</tr>
 							@endforeach
@@ -68,7 +66,6 @@
 					{{'Nema poruka!'}}
 				@endif
             </div>
-			
         </div>
     </div>
 </div>

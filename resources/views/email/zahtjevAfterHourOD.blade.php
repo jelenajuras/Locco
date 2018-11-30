@@ -31,10 +31,13 @@ body {
 }
 </style>
 	<body>
-		<h4>Zahtjev za potvrdu rada van radnog vremena za
-			{{ date("d.m.Y", strtotime($afterHour->datum)) . ' od ' . $afterHour->vrijeme_od . ' do ' . $afterHour->vrijeme_do }}</h4>
+		<h4><!--Zahtjev za potvrdu rada van radnog vremena za
+			{{ date("d.m.Y", strtotime($afterHour->datum)) . ' od ' . $afterHour->vrijeme_od . ' do ' . $afterHour->vrijeme_do }}-->
+				Zaprimili smo zahtjev!
+			
+		</h4>
 		<br/> 
-		<div><b>{{ $odobrenje }}</b></div>
-		<div><b>{{ $razlog }}</b></div>
+		<!--<div><b>{{ $odobrenje }}</b></div>
+		<div><b>{{ $razlog }}</b></div>-->
 	</body>
 </html>

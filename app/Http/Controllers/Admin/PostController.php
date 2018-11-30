@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Post;
 use App\Models\Registration;
+use App\Models\Employee;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePostRequest;
 use Sentinel;
-
+use Mail;
 
 class PostController extends Controller
 {
@@ -33,8 +34,9 @@ class PostController extends Controller
 		if(Sentinel::inRole('administrator')) {
 			$posts = Post::orderBy('created_at','DESC')->get();
 		} else {
-			$user_id= Sentinel::getUser()->id;
-			$posts = Post::where('employee_id', $user_id)->orderBy('created_at','DESC')->get();
+			$user= Sentinel::getUser();
+			$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
+			$posts = Post::where('employee_id', $employee->id)->orderBy('created_at','DESC')->get();
 		}
 		
 		return view('admin.posts.index',['posts'=>$posts]);
@@ -60,12 +62,10 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $user_id = Sentinel::getUser()->id;
+        $user = Sentinel::getUser();
 		$input = $request->except(['_token']);
 		
-		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name','employees.email')->orderBy('employees.last_name','ASC')->get();
-		$uprava = array();
-		$svi = array();
+		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		
 		if($input['to_employee_id'] == 'uprava'){
 			$to_employee_id = '877282';
@@ -78,7 +78,7 @@ class PostController extends Controller
 		}
 		
 		$data = array(
-			'employee_id'  	  => $user_id,
+			'employee_id'  	  => $employee->id,
 			'to_employee_id'  => $to_employee_id,
 			'title'    		  => trim($input['title']),
 			'content'  		  => $input['content']
@@ -86,7 +86,61 @@ class PostController extends Controller
 		
 		$post = new Post();
 		$post->savePost($data);
-			
+		
+		$proba = 'jelena.juras@duplico.hr';
+		$uprava = 'uprava@duplico.hr';
+		$pravni = 'pravni@duplico.hr';
+		$it = 'itpodrska@duplico.hr';
+		$racunovodstvo = 'racunovodstvo@duplico.hr';
+		
+		$post_id = $post->id;
+		$poruka = 'http://localhost:8000/admin/posts/' . $post_id;
+				   
+		if($input['to_employee_id'] == 'uprava'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'uprava' => $uprava],
+				function ($message) use ($uprava, $employee) {
+					$message->to($uprava)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Poruka upravi - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'pravni'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'pravni' => $pravni],
+				function ($message) use ($pravni, $employee) {
+					$message->to($pravni)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Poruka pravnom odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'it'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'it' => $it],
+				function ($message) use ($it, $employee) {
+					$message->to($it)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Poruka IT odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'racunovodstvo'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'proba' => $proba],
+				function ($message) use ($racunovodstvo, $employee) {
+					$message->to($racunovodstvo)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Poruka racunovodstvu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		
 		$message = session()->flash('success', 'Poruka je poslana');
 		
 		//return redirect()->back()->withFlashMessage($message);
@@ -115,9 +169,8 @@ class PostController extends Controller
     public function edit($id)
     {
        $post = Post::find($id);
-	   $registrations = Registration::get();
-		
-		return view('admin.posts.edit', ['post' => $post])->with('registrations', $registrations);
+
+		return view('admin.posts.edit', ['post' => $post]);
     }
 
     /**
@@ -127,17 +180,71 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePostRequest $request, $id)
+    public function update(PostRequest $request, $id)
     {
 		$post = Post::find($id);
 		$input = $request->except(['_token']);
-
+		
 		$data = array(
 			'title'    => trim($input['title']),
 			'content'  => $input['content']
 		);
-		
+
 		$post->updatePost($data);
+		
+		$proba = 'jelena.juras@duplico.hr';
+		$uprava = 'uprava@duplico.hr';
+		$pravni = 'pravni@duplico.hr';
+		$it = 'itpodrska@duplico.hr';
+		$racunovodstvo = 'racunovodstvo@duplico.hr';
+		
+		$post_id = $post->id;
+		$poruka = 'http://localhost:8000/admin/posts/' . $post_id;
+				   
+		if($input['to_employee_id'] == 'uprava'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'uprava' => $uprava],
+				function ($message) use ($uprava, $employee) {
+					$message->to($uprava)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Ispravak poruke upravi - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'pravni'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'pravni' => $pravni],
+				function ($message) use ($pravni, $employee) {
+					$message->to($pravni)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Ispravak poruke pravnom odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'it'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'it' => $it],
+				function ($message) use ($it, $employee) {
+					$message->to($it)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Ispravak poruke IT odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
+		if($input['to_employee_id'] == 'racunovodstvo'){
+			Mail::queue(
+				'email.post',
+				['employee' => $employee, 'poruka' => $poruka, 'proba' => $proba],
+				function ($message) use ($racunovodstvo, $employee) {
+					$message->to($racunovodstvo)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Ispravak poruke racunovodstvu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		}
 		
 		$message = session()->flash('success', 'Poruka je promijenjena');
 		

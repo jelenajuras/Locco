@@ -46,13 +46,11 @@
 					</div>
 						{!! ($errors->has('probni_rok') ? $errors->first('probni_rok', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('staz'))  ? 'has-error' : '' }}">
-
  						<span><b>Staž kod prošlog poslodavca (broj godina-mjeseci-dana):</b></span><br>
 						<input name="stazY" type="text" class="staž" value="{{ $stažY }}">-
 						<input name="stazM" type="text" class="staž" value="{{ $stažM}}">-
 						<input name="stazD" type="text" class="staž" value="{{ $stažD }}">
 					</div>
-
 					<div class="form-group {{ ($errors->has('lijecn_pregled'))  ? 'has-error' : '' }}">
 						<label>Datum liječničkog pregleda: </label>
 						<input name="lijecn_pregled" class="date form-control" type="text" value ="{{ date('d-m-Y', strtotime($registration->lijecn_pregled)) }}">
@@ -64,10 +62,16 @@
 					</div>
 					{!! ($errors->has('ZNR') ? $errors->first('ZNR', '<p class="text-danger">:message</p>') : '') !!}
 					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-						</script> 
+						$('.date').datepicker({  
+						   format: 'dd-mm-yyyy'
+						 });  
+					</script> 
+					<div class="form-group">
+						<input type="checkbox" name="prekidStaza" value="DA" {!! $registration->prekidStaza == 'DA' ? 'checked' : '' !!}> Prekid radnog odnosa više od 8 dana
+					</div>
+					<div class="form-group">
+						<input type="checkbox" name="prvoZaposlenje" value="DA" {!! $registration->prvoZaposlenje == 'DA' ? 'checked' : '' !!}> Prvo zaposlenje
+					</div>
 					<div class="form-group">
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena">{{ $registration->napomena }}</textarea>

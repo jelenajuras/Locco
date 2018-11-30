@@ -10,6 +10,9 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+Route::get('/', function () {
+    return view('Welcome');
+});
 
 // Index page
 Route::get('/', ['as' => 'index', 'uses' => 'IndexController@index']);
@@ -280,6 +283,7 @@ Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses'
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
 Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
+Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses' => 'Admin\VacationRequestController@confirmation_show']);
 
 // Gantt kalendar
 Route::get('admin/', function () {

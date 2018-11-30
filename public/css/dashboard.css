@@ -105,6 +105,11 @@ h2{
 	height:100%;
 }
 
+.BTNbox:last-child .dashboard_box2 a {
+	background-color:#74b1e5;
+
+}
+
 .dashboard_box table{
 	font-size:14px;
 	width:100%;
@@ -203,8 +208,8 @@ h2{
 }
 
 .collapsible {
-	background-color: #333;
-    color: white;
+	background-color: #eee;
+    color: black;
     cursor: pointer;
     padding: 2px 0;
     width: 100%;
@@ -218,7 +223,7 @@ h2{
 }
 
 .collapsible:hover {
-	background-color: #808080;
+	background-color: #ccc;
 }
 
 .content {

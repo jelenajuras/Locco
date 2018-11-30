@@ -36,13 +36,13 @@ class AfterHoursController extends GodisnjiController
 		$user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		$registration = Registration::where('employee_id', $employee->id)->first();
-		$slobodni_dani = $this->slobodni_dani($employee); /* računa broj slobodnih dana prema prekovremenim satima */
-		$koristeni_slobodni_dani =  $this->koristeni_slobodni_dani($employee);/* računa iskorištene slobodne dane */
+		$slobodni_dani = $this->slobodni_dani($registration); /* računa broj slobodnih dana prema prekovremenim satima */
+		$koristeni_slobodni_dani =  $this->koristeni_slobodni_dani($registration);/* računa iskorištene slobodne dane */
 
 		if(Sentinel::inRole('administrator')){
-			$afterHours = AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->orderBy('created_at','DESC')->get();
+			$afterHours = AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->orderBy('datum','DESC')->get();
 		} else {
-			$afterHours = AfterHour::where('employee_id',$employee->id)->where('odobreno','')->orderBy('created_at','DESC')->get();				
+			$afterHours = AfterHour::where('employee_id',$employee->id)->where('odobreno','')->orderBy('datum','DESC')->get();				
 		}
 		return view('admin.afterHours.index',['afterHours'=>$afterHours, 'registration'=>$registration])->with('employee', $employee)->with('slobodni_dani', $slobodni_dani)->with('koristeni_slobodni_dani', $koristeni_slobodni_dani);
     }

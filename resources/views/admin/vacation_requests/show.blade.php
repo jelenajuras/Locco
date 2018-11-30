@@ -28,11 +28,10 @@
 						<tbody id="myTable">
 							<tr>
 								<td>
+								@if(Sentinel::inRole('administrator'))
 									<a href="{{ route('admin.vacation_requests.edit', $vacationRequest->id) }}" class="">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
-									<a href="{{ route('admin.vacation_requests.destroy', $vacationRequest->id) }}" data-method="delete" data-token="{{ csrf_token() }}">
-										<i class="far fa-trash-alt"></i>
-									</a>
+								@endif
 								</td>
 								<td class="disp_none">{{ date('d.m.Y.', strtotime( $vacationRequest->created_at)) }}</td>
 								<td>{{ date('d.m.Y.', strtotime( $vacationRequest->GOpocetak)) }}<br>
@@ -60,7 +59,11 @@
 										!(date_format($dan,'d') == '25' & date_format($dan,'m') == '12') &&
 										!(date_format($dan,'d') == '26' & date_format($dan,'m') == '12') &&
 										!(date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018') &&
-										!(date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018')){
+										!(date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018') &&
+										!(date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019') &&
+										!(date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019') &&
+										!(date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020') &&
+										!(date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020')){
 											$brojDana += 1;
 										}
 									}
@@ -75,9 +78,11 @@
 								<td>{{ $vacationRequest->odobreno }}  {{ $vacationRequest->razlog  }}</td>
 								<td class="disp_none">{{ $vacationRequest->authorized['first_name'] . ' ' . $vacationRequest->authorized['last_name']}}</td>
 								<td class="disp_none">
-								@if( $vacationRequest->odobreno <> "")
-								{{ date('d.m.Y.', strtotime( $vacationRequest->datum_odobrenja))}}</td>
+								@if( $vacationRequest->datum_odobrenja != "")
+								{{ date('d.m.Y.', strtotime( $vacationRequest->datum_odobrenja))}}
 								@endif
+								</td>
+								
 							</tr>
 						</tbody>
 					@endforeach
@@ -92,4 +97,17 @@
     </div>
 	
 </div>
+<!--
+<div class="uputa">
+	<p>*** Napomena:</p>
+	<p>Sukladno radnopravnim propisima RH:<br>
+		- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
+		- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
+		- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
+		- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+
+	Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
+	</p>
+</div>-->
+
 @stop

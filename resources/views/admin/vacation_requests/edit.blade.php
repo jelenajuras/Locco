@@ -39,7 +39,18 @@
 				</form>
 			</div>
 		</div>
-		
+		<!--<div class="uputa">
+			<p>*** Napomena:</p>
+			<p>Sukladno radnopravnim propisima RH:<br>
+				- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
+				- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
+				- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
+				- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+
+			Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
+			</p>
+		</div>-->
+
 		<script type="text/javascript">
 			$('.date').datepicker({  
 			   format: 'dd-mm-yyyy',

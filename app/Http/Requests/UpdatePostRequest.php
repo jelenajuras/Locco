@@ -17,12 +17,12 @@ class UpdatePostRequest extends FormRequest
     {
         // da li je korisnik vlasnik posta za koji poušava napraviti update
 		
-		$post = Post::find($this->route('post'));
+	//	$post = Post::find($this->route('post'));
 		
-		if (Sentinel::getUser()->id != $post->employee_id) {
-			return false;
-		}
-		return true;
+	//	if (Sentinel::getUser()->id != $post->employee_id) {
+	//		return false;
+	//	}
+	//	return true;
     }
 
     /**
