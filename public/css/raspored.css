@@ -116,3 +116,25 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 .container {
 	background-color:white;
 }
+
+.izostanak1 {
+	display:inline-block;
+	width:100%;
+	height:100%;
+	background-color:yellow;
+}
+
+button[type="submit"] {
+	padding:5px 20px;
+	border-radius: 5px;
+	background-color:#fff;
+}
+
+button[type="submit"]:hover{
+	background-color:#eee;
+}
+
+.form i{
+	margin-left: -25px;
+    margin-right: 25px;
+}

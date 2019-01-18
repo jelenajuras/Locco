@@ -11,6 +11,10 @@ body {
 	color:#333;
 }
 
+a.btn.btn-md.pull-left {
+	width:100%;
+	text-align:left;
+}
 .Body_section {
 	height: 100vh;
     margin-top: -100px;
@@ -55,10 +59,6 @@ body {
     margin-left: 50px;
 }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
 #font_nar {
     color: #f48b09;
 }
@@ -148,10 +148,7 @@ section:after {
 
 /* Style the footer */
 footer {
-    background-color: #777;
-    padding: 10px;
-    text-align: center;
-    color: white;
+
 }
 
 .panel-footer {
@@ -192,7 +189,12 @@ footer {
 	
 }
 
-@media screen and (max-width: 420px){
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+@media only screen and (max-width: 420px){
 	article, article:nth-child(2){
 		height:auto;
 		min-height:550px;
@@ -201,26 +203,25 @@ footer {
 	body .Body_section {
 		height:auto;
 	}
-	.forma{
-		margin:0;
-		width:100%;
-		height: auto;
-		padding:0;
+	.forma {
+		padding: 0 !important;
+		margin: 0 !important;
+		width:100% !important;
 	}
 	h1{
-		font-size:25px;
+		font-size:25px !important;
 	}
 	h2 {
-		font-size:20px;
+		font-size:20px !important;
 	}
 	h4{
-		font-size:14px;
+		font-size:14px !important;
 	}
 	p{
-		font-size:12px;
+		font-size:12px !important;
 	}
 	header h1 img {
-		height:30px
+		height:30px;
 	}
 	.panel-body{
 		padding: 10px;
@@ -367,8 +368,20 @@ header ul li a{
 	margin-top: 40px;
 }
 
-#table_id thead tr:first-child td{
+#table_id thead tr:first-child th{
 	text-align: center;
+}
+
+#table_id #myTable tr th:last-child{
+	text-align: center;
+}
+
+#table_id #myTable tr td{
+	text-align: left;
+}
+
+#table_id #myTable tr td:last-child {
+text-align: center;
 }
 
 .check{
@@ -415,4 +428,77 @@ form {
 	width: 70%;
 	max-width: 300px;
 	margin: 20px auto;
+}
+
+.dep-check{
+	color: green !important;
+    border: none !important;
+    background-color: inherit !important;
+    font-size: 1.5rem  !important;
+    margin: 0 20px  !important;
+}
+
+#myTable1 tr td {
+	padding: 10px 5px;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	text-align:left;
+}
+.tableDep tr th {
+	border-bottom: 1px solid #ccc;
+	text-align:center;
+}
+
+#trazi {
+	border-radius:5px;
+	padding: 5px;
+	margin-bottom:10px;
+}
+
+a[data-method*="delete"]:hover{
+	color:red;
+}
+
+.ech {
+	text-align:justify;
+	width: 80%;
+	margin:20px auto;
+	font-size: 16px;
+	
+}
+
+div#table_id_wrapper {
+    padding: 20px;
+}
+
+.glyphicon-remove, .fa-trash-alt {
+	color: #cb0a0a;
+}
+
+.BTNbox .anketa a{
+	background-color:#70a942a3;
+}
+
+.shedulePost {
+	margin-top: 50px;
+}
+
+.shedulePost input[type=date], .shedulePost input[type=time] {
+	width: 30%;
+	min-width: 100px;
+	max-width: 200px;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.shedulePost input[type=text] {
+	background-color:inherit;
+	border:none;
+	box-shadow:none;
+	margin:0;
+	padding:0;	
+}
+
+footer {
+	margin: 30px 0;
 }

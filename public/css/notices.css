@@ -12,6 +12,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	text-align:justify;
 }
 
 .notice {
@@ -19,9 +20,18 @@
 	padding: 20px;
 	margin: 10px;
 	border: 1px solid #ccc;
-	box-shadow: 5px 5px 5px 5px #ccc;
+	box-shadow: 1px 1px 5px 3px #ccc;
 	min-height: auto !important;
 	color: black;
+}
+
+img {
+	display:block;
+	margin: 20px 0;
+	max-width:100% !important;
+	height:auto !important;
+	margin:auto;
+	
 }
 
 @media screen and (max-width: 420px){
@@ -29,4 +39,9 @@
 	width: 100%;
 	}
 
+}
+
+.notice h3 {
+	text-transform:uppercase;
+	border-bottom:1px solid #ccc;
 }

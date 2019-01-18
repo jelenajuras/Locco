@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Obavijest')
-
+<link rel="stylesheet" href="{{ URL::asset('css/create.css') }}" type="text/css" >
 @section('content')
     <div class="" >
         <div class='btn-toolbar'>
@@ -17,7 +17,7 @@
 				
 				<small><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ 'Uprava@duplico.hr' }} | <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ \Carbon\Carbon::createFromTimeStamp(strtotime($notice->created_at))->diffForHumans() }} </small>
 			</div>
-            <div class="panel-body">
+            <div class="panel-body" style="text-align:left;">
 			{!! $notice->notice !!}
 			</div>			
         </div>

@@ -21,13 +21,6 @@ class Registration extends Model
 	protected static $employeeModel = 'App\Models\Employee'; 
 	
 	/*
-	* The Eloquent effectiveHour model name
-	* 
-	* @var string
-	*/
-	protected static $effectiveHourModel = 'App\Models\EffectiveHour'; 
-	
-	/*
 	* The Eloquent works model name
 	* 
 	* @var string
@@ -42,16 +35,6 @@ class Registration extends Model
 	public function work()
 	{
 		return $this->belongsTo(static::$workModel,'radnoMjesto_id');
-	}
-	
-	/*
-	* Returns the works relationship
-	* 
-	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	*/
-	public function ech()
-	{
-		return $this->belongsTo(static::$effectiveHourModel,'employee_id');
 	}
 	
 	/*

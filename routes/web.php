@@ -257,6 +257,78 @@ Route::group(['prefix' => 'admin'], function () {
   'update'		=> 'admin.effective_hours.update', 
   'destroy'		=> 'admin.effective_hours.destroy'
   ]]);
+   Route::resource('departments', 'Admin\DepartmentController', ['names' => [
+  'index' 		=> 'admin.departments.index', 
+  'create' 		=> 'admin.departments.create', 
+  'store' 		=> 'admin.departments.store', 
+  'show' 		=> 'admin.departments.show', 
+  'edit' 		=> 'admin.departments.edit', 
+  'update'		=> 'admin.departments.update', 
+  'destroy'		=> 'admin.departments.destroy'
+  ]]);
+   Route::resource('employee_departments', 'Admin\EmployeeDepartmentController', ['names' => [
+  'index' 		=> 'admin.employee_departments.index', 
+  'create' 		=> 'admin.employee_departments.create', 
+  'store' 		=> 'admin.employee_departments.store', 
+  'show' 		=> 'admin.employee_departments.show', 
+  'edit' 		=> 'admin.employee_departments.edit', 
+  'update'		=> 'admin.employee_departments.update', 
+  'destroy'		=> 'admin.employee_departments.destroy'
+  ]]);
+  Route::resource('evaluating_groups', 'Admin\EvaluatingGroupController', ['names' => [
+  'index' 		=> 'admin.evaluating_groups.index', 
+  'create' 		=> 'admin.evaluating_groups.create', 
+  'store' 		=> 'admin.evaluating_groups.store', 
+  'show' 		=> 'admin.evaluating_groups.show', 
+  'edit' 		=> 'admin.evaluating_groups.edit', 
+  'update'		=> 'admin.evaluating_groups.update', 
+  'destroy'		=> 'admin.evaluating_groups.destroy'
+  ]]);
+  Route::resource('evaluating_questions', 'Admin\EvaluatingQuestionController', ['names' => [
+  'index' 		=> 'admin.evaluating_questions.index', 
+  'create' 		=> 'admin.evaluating_questions.create', 
+  'store' 		=> 'admin.evaluating_questions.store', 
+  'show' 		=> 'admin.evaluating_questions.show', 
+  'edit' 		=> 'admin.evaluating_questions.edit', 
+  'update'		=> 'admin.evaluating_questions.update', 
+  'destroy'		=> 'admin.evaluating_questions.destroy'
+  ]]);
+  Route::resource('evaluating_ratings', 'Admin\EvaluatingRatingController', ['names' => [
+  'index' 		=> 'admin.evaluating_ratings.index', 
+  'create' 		=> 'admin.evaluating_ratings.create', 
+  'store' 		=> 'admin.evaluating_ratings.store', 
+  'show' 		=> 'admin.evaluating_ratings.show', 
+  'edit' 		=> 'admin.evaluating_ratings.edit', 
+  'update'		=> 'admin.evaluating_ratings.update', 
+  'destroy'		=> 'admin.evaluating_ratings.destroy'
+  ]]);
+  Route::resource('evaluating_employees', 'Admin\EvaluatingEmployeeController', ['names' => [
+  'index' 		=> 'admin.evaluating_employees.index', 
+  'create' 		=> 'admin.evaluating_employees.create', 
+  'store' 		=> 'admin.evaluating_employees.store', 
+  'show' 		=> 'admin.evaluating_employees.show', 
+  'edit' 		=> 'admin.evaluating_employees.edit', 
+  'update'		=> 'admin.evaluating_employees.update', 
+  'destroy'		=> 'admin.evaluating_employees.destroy'
+  ]]);
+  Route::resource('evaluations', 'Admin\EvaluationController', ['names' => [
+  'index' 		=> 'admin.evaluations.index', 
+  'create' 		=> 'admin.evaluations.create', 
+  'store' 		=> 'admin.evaluations.store', 
+  'show' 		=> 'admin.evaluations.show', 
+  'edit' 		=> 'admin.evaluations.edit', 
+  'update'		=> 'admin.evaluations.update', 
+  'destroy'		=> 'admin.evaluations.destroy'
+  ]]);
+  Route::resource('questionnaires', 'Admin\QuestionnaireController', ['names' => [
+  'index' 		=> 'admin.questionnaires.index', 
+  'create' 		=> 'admin.questionnaires.create', 
+  'store' 		=> 'admin.questionnaires.store', 
+  'show' 		=> 'admin.questionnaires.show', 
+  'edit' 		=> 'admin.questionnaires.edit', 
+  'update'		=> 'admin.questionnaires.update', 
+  'destroy'		=> 'admin.questionnaires.destroy'
+  ]]);
 });
 
 // Post page
@@ -283,7 +355,12 @@ Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses'
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
 Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
+Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\PostController@shedulePost']);
 Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses' => 'Admin\VacationRequestController@confirmation_show']);
+Route::get('admin/VacationRequest', ['as' => 'admin.VacationRequest', 'uses' => 'Admin\VacationRequestController@VacationRequest']);
+Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'uses' => 'Admin\VacationRequestController@AllVacationRequest']);
+
+Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
 
 // Gantt kalendar
 Route::get('admin/', function () {

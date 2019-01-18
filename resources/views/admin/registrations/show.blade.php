@@ -36,17 +36,19 @@
 				<p><b>Napomena: </b>{{ $registration->napomena }}</p>
 				</br>
 				<p><b>Bračno stanje: </b>{{ $registration->employee['bracno_stanje']  }}</p>
-				<p><b>Broj djece: </b>{{ DB::table('kids')->where('employee_id', $registration->employee_id )->count() }}</p>
+		<!--		<p><b>Djeca mlađa od 15 godina: </b>{{ DB::table('kids')->where('employee_id', $registration->employee_id )->count() }}</p>
 				
 				@if(DB::table('kids')->where('employee_id', $registration->employee_id )->count())
 					@foreach(DB::table('kids')->where('employee_id', $registration->employee_id )->get() as $kid)
 					<p id="padding">{{ $kid->ime . ' '.  $kid->prezime . ', '.  date('d.m.Y', strtotime($kid->datum_rodjenja))  }}</p>
 					@endforeach
 				@endif
-				</br>
+				</br>-->
 				<p><b>Radno mjesto: </b>{{  $registration->work['odjel'] . ' - '. $registration->work['naziv'] }}</p>
-				<p><b>Efektivna cijena sata: </b>{{  number_format($registration->ech['effective_cost'],2,",",".") . ' kn' }}</p>
-				<p><b>Brutto godišnja plaća: </b>{{  number_format($registration->ech['brutto'],2,",",".") . ' kn'  }}</p>
+				@if(Sentinel::inRole('uprava'))
+					<p><b>Efektivna cijena sata: </b>{{  number_format($effectiveHour->effective_cost,2,",",".") . ' kn' }}</p>
+					<p><b>Brutto godišnja plaća: </b>{{  number_format($effectiveHour->brutto,2,",",".") . ' kn'  }}</p>
+				@endif
 				<p><b>Liječnički pregled: </b>{{ date('d.m.Y', strtotime($registration->employee['lijecn_pregled'] ))  }}</p>
 				<p><b>Zaštita na radu: </b>{{ date('d.m.Y', strtotime($registration->employee['ZNR'] ))  }}</p>
 				</br>

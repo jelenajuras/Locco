@@ -52,7 +52,7 @@ class EffectiveHourController extends Controller
     public function store(EffectiveHourRequest $request)
     {
         $input = $request;
-	
+		
 		$data = array(
 			'employee_id'     => $input['employee_id'],
 			'effective_cost'  => str_replace(',','.', $input['effective_cost']),
@@ -65,7 +65,6 @@ class EffectiveHourController extends Controller
 		$message = session()->flash('success', 'Uneseno!');
 		
 		return redirect()->back()->withFlashMessage($message);
-
     }
 
     /**

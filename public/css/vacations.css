@@ -95,3 +95,12 @@ input[id^="myInput"], input[Type="search"]{
 #table1 tr {
 	border-bottom: 1px solid #ccc;
 }
+
+#table_id #myTable tr td:not(.not_align) {
+	text-align:center !important;
+}
+
+#tbl_izostanci tr td, #tbl_izostanci tr th{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0;
+}

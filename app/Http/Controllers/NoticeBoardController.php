@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notice;
+use App\Models\Registration;
+use App\Models\Employee_department;
 use App\Http\Controllers\NoticeBoardController;
+use Sentinel;
+use DateTime;
 
 class NoticeBoardController extends Controller
 {
@@ -15,9 +19,16 @@ class NoticeBoardController extends Controller
      */
     public function index()
     {
-        $notices = Notice::orderBy('created_at','DESC')->take(10)->get();
+		$datum = new DateTime('now');    /* današnji dan */
+		$datum->modify('-8 day');
 		
-		return view('admin.noticeBoard',['notices'=>$notices]);
+		$notices = Notice::orderBy('created_at','DESC')->where('created_at', '>', $datum)->get();
+				
+		$user = Sentinel::getUser();
+		$employee = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('employees.first_name',$user->first_name)->where('employees.last_name',$user->last_name)->first();
+		$employee_departments = Employee_department::where('employee_id',$employee->employee_id )->get();
+
+		return view('admin.noticeBoard',['notices'=>$notices, 'employee_departments' => $employee_departments ]);
     }
 
     /**

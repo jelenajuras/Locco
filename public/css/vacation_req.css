@@ -1,0 +1,75 @@
+* {
+	margin:0;
+	box-sizing:border-box;
+}
+
+.container {
+	font-family: Arial;
+	height:100vh;
+}
+
+.zahtjevPrint {
+	max-width: 800px;
+	margin:auto;
+	padding: 20px 30px;
+	height:100%;
+}
+
+.zahtjevPrint img {
+	max-width: 20%;
+}
+
+.zahtjevPrint h2 {
+	text-align: center;
+	margin: 20px 0;
+	
+}
+
+h2 span {
+	text-transform: uppercase;
+	margin-bottom:20px;
+	display: inline-block;
+}
+
+.zahtjevPrint header {
+	margin:100px 0;
+}
+
+.zahtjevPrint main {
+	margin-bottom:100px;
+}
+
+main p, .odobrio p, .datum p {
+	margin:10px;
+}
+
+.zahtjevPrint .datum {
+	width:30%;
+	margin-bottom:100px;
+}
+
+.zahtjevPrint .datum p,.zahtjevPrint .datum span  {
+	text-align:center;
+	width: 100%;
+    display: inline-block;
+}
+.zahtjevPrint .datum p {
+	border-bottom:1px solid black;
+}
+
+.zahtjevPrint .potpis {
+	width:50%;
+	margin-bottom:100px;
+}
+
+.potpis .potpisCrta {
+	border-bottom:1px solid black;
+	margin-left:10px;
+	width: 50%;
+	display: inline-block;
+}
+
+footer .odobrio{
+	width:50%;
+	float:right;
+}

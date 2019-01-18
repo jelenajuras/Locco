@@ -22,7 +22,7 @@
 		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Traži djelatnika..." title="Upiši ime">
 		<input type="text" id="myInput2" onkeyup="myFunction1()" placeholder="od datuma..." title="Upiši početni datum" class="date" >
 		<input type="text" id="myInput3" onkeyup="myFunction2()" placeholder="do datuma..." title="Upiši završni datum" class="date" >
-		<button onclick="PrintDoc()" >Print filter</button>
+		<button onclick="PrintDoc()" >Primjeni Filter</button>
 	</div>
 	<script type="text/javascript">
 		$('.date').datepicker({  

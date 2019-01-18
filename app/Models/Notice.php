@@ -11,14 +11,14 @@ class Notice extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','subject','notice'];
+	protected $fillable = ['employee_id','to','subject','notice','to_department_id'];
 
 	/*
 	* The Eloquent employee model name
 	* 
 	* @var string
 	*/
-	protected static $userModel = 'App\Models\Users'; 
+	protected static $userModel = 'App\Models\Employee'; 
 	
 	/*
 	* Returns the employee relationship
@@ -28,6 +28,23 @@ class Notice extends Model
 	public function user()
 	{
 		return $this->belongsTo(static::$userModel,'employee_id');
+	}
+	
+	/*
+	* The Eloquent employee model name
+	* 
+	* @var string
+	*/
+	protected static $departmentModel = 'App\Models\Department'; 
+	
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function department()
+	{
+		return $this->belongsTo(static::$departmentModel,'to_department_id');
 	}
 	
 	/*

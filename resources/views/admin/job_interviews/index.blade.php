@@ -28,23 +28,25 @@
                     </thead>
                     <tbody id="myTable">
                         @foreach ($job_interviews as $job_interview)
-                            <tr>
-                                <td>{{ $job_interview->first_name . ' ' . $job_interview->last_name }}</td>
-								<td>{{ date('d.m.Y', strtotime($job_interview->datum)) }}</td>
-								<td>{{ $job_interview->oib }}</td>
-                                <td>
-                                    <a href="{{ route('admin.job_interviews.edit', $job_interview->id) }}">
-                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                    </a>
-                                    <a href="{{ route('admin.job_interviews.destroy', $job_interview->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-									<a href="{{ route('admin.employees.create', $job_interview->id) }}" class="btn ">
-										<i class="fas fa-check"></i>
-										Prijavi radnika
-									</a>
-                                </td>
-                            </tr>
+							@if(!DB::table('employees')->where('first_name',$job_interview->first_name)->where('last_name',$job_interview->last_name)->first() )
+								<tr>
+									<td>{{ $job_interview->first_name . ' ' . $job_interview->last_name }}</td>
+									<td>{{ date('d.m.Y', strtotime($job_interview->datum)) }}</td>
+									<td>{{ $job_interview->oib }}</td>
+									<td>
+										<a href="{{ route('admin.job_interviews.edit', $job_interview->id) }}">
+											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+										</a>
+										<a href="{{ route('admin.job_interviews.destroy', $job_interview->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
+											<i class="far fa-trash-alt"></i>
+										</a>
+										<a href="{{ route('admin.employees.create', $job_interview->id) }}" class="btn ">
+											<i class="fas fa-check"></i>
+											Prijavi radnika
+										</a>
+									</td>
+								</tr>
+							@endif
                         @endforeach
                     </tbody>
                 </table>

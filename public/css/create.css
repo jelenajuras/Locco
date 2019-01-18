@@ -1,6 +1,5 @@
 
 .forma {
-	
 	padding: 20px;
 	border: 1px solid #ddd;
 	border-radius: 5px;
@@ -108,7 +107,7 @@ textarea {
 	padding-bottom: 20px;
 }
 
-@media only screen and (max-width: 630px) {
+@media only screen and (max-width: 740px) {
 	.forma h2:first-child{
 		font-size: 20px;
 	}
@@ -116,10 +115,9 @@ textarea {
 		font-size: 12px;
 	}
 	.datum, .do {
-		display:block;
-		width:50%;
-		float:none;
-		margin: 10px 20px;
+		display: block;
+		clear:left;
+		width:70%;
 	}
 }
 
@@ -129,6 +127,7 @@ textarea {
 		width:100%;
 	}
 }
+
 @media only screen and (max-width: 500px) {
 
 	.form-group {
@@ -136,6 +135,12 @@ textarea {
 	}
 	.forma, .form-control {
 		font-size:12px;
+	}
+}
+
+@media only screen and (max-width: 1465px) {
+	.datum {
+	margin-top: 10px;
 	}
 }
 
@@ -147,11 +152,6 @@ p {
 	text-align: left;
 }
 
-@media only screen and (max-width: 1465px) {
-	.datum {
-	margin-top: 10px;
-	}
-}
 
 .placa{
 	position:relative;
@@ -222,4 +222,28 @@ p {
 .datum1 input {
 	width:50%;
 	float:left;
+}
+
+#level1{
+	display: none;
+}
+
+.panel-body img {
+	display:block;
+	margin: 20px 0;
+	max-width:100%;
+	margin:auto;
+}
+
+#summernote {
+	width:100% !important;
+	
+}
+
+.note-editable{
+	padding: 20px !important;
+}
+
+.display-none {
+	display:none;
 }

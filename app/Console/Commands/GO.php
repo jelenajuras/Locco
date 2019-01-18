@@ -72,7 +72,7 @@ class GO extends Command
 					}
 				}
 				
-				if($izostanak->zahtjev == 'NPL' || $izostanak->zahtjev == 'Bolovanje' || $izostanak->zahtjev == 'GO' && $izostanak->odobreno == 'DA'){
+				if($izostanak->zahtjev == 'NPL' || $izostanak->zahtjev == 'PL' || $izostanak->zahtjev == 'Bolovanje' || $izostanak->zahtjev == 'GO' && $izostanak->odobreno == 'DA'){
 					$registration = Registration::where('registrations.employee_id', $izostanak->employee_id)->first();
 					$stažY = 0;
 					$stažM = 0;
@@ -222,16 +222,18 @@ class GO extends Command
 				}
 			}
 		}
-		
-		//dd($dan_izostanci);
+
 	// Send the email to user
-		Mail::queue('email.GO', ['dan_izostanci' => $dan_izostanci], function ($mail) use ($datum) {
-			$mail->to('uprava@duplico.hr')
-				->cc('jelena.juras@duplico.hr')
-				->from('info@duplico.hr', 'Duplico')
-				->subject('Izostanci ' . ' djelatnika -' . date_format($datum,'d.m.Y'));
-		});
-		
-		$this->info('GO messages sent successfully!');
+		if(date_format($datum,'N') < 6){
+			Mail::queue('email.GO', ['dan_izostanci' => $dan_izostanci], function ($mail) use ($datum) {
+				$mail->to('uprava@duplico.hr')
+					->cc('jelena.juras@duplico.hr')
+					->from('info@duplico.hr', 'Duplico')
+					->subject('Izostanci ' . ' djelatnika -' . date_format($datum,'d.m.Y'));
+			});
+			
+			$this->info('GO messages sent successfully!');
+		}
 	}
+		
 }

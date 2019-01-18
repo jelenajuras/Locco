@@ -156,7 +156,7 @@
 								$('.date').datepicker({  
 								   format: 'dd-mm-yyyy',
 								   startDate:'-60y',
-								   endDate:'+1y',
+								   endDate:'+10y',
 								}); 
 					</script> 
 					<div class="form-group">

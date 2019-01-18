@@ -4,13 +4,6 @@
 <link rel="stylesheet" href="{{ URL::asset('css/create.css') }}"/>
 @section('content')
     <div class="post" >
-        <div class='btn-toolbar'>
-            <a class="btn btn-primary btn-lg" href="{{ url()->previous() }}"  id="stil1">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                Natrag
-            </a>
-			
-        </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
             <div class="panel-heading">

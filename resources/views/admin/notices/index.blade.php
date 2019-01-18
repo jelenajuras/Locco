@@ -22,8 +22,8 @@
 						<thead>
 							<tr>
 								<th>Poslao</th>
+								<th>za</th>
 								<th>Subjekt</th>
-								<th>Poruka</th>
 								<th>Datum</th>
 								<th class="not-export-column">Opcije</th>
 							</tr>
@@ -32,8 +32,8 @@
 							@foreach ($notices as $notice)
 								<tr>
 									<td>{{ $notice->user['first_name'] . ' ' . $notice->user['last_name'] }}</td>
+									<td>{{  $notice->department['name'] }}</td>
 									<td style="width:25%"><a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a></td>
-									<td style="width:40%;">{!! str_limit($notice->notice, 100)  !!} </td>
 									<td>{{ date('d.m.Y', strtotime($notice->created_at)) }}</td>
 									<td>
 										<a href="{{ route('admin.notices.edit', $notice->id) }}">
@@ -55,4 +55,12 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  $('#summernote').summernote({
+	  height: 200
+  });
+});
+</script>
 @stop

@@ -62,89 +62,144 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $user = Sentinel::getUser();
+		$user = Sentinel::getUser();
 		$input = $request->except(['_token']);
+		
+		if($input['datum'] === '') {
+			$message = session()->flash('error', 'Nemoguće poslati zahtjev, nije upisan datum');
+		
+			return redirect()->back()->withFlashMessage($message);
+		}
 		
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		
-		if($input['to_employee_id'] == 'uprava'){
+		$registration = Registration::join('works','works.id','registrations.radnoMjesto_id')->select('registrations.*','works.user_id','works.prvi_userId')->where('registrations.employee_id', $employee->id)->first();
+		
+		$nadredjeni_id = '';
+		$nadredjeni = '';
+		
+		if($registration->prvi_userId != 0){
+			$nadredjeni_id = $registration->prvi_userId;
+		} else {
+			$nadredjeni_id = $registration->user_id;
+		}
+		
+		$nadredjeni = Employee::where('id', $nadredjeni_id)->first()->email;
+		
+		if($input['tip'] == 'raspored'){
+			$poruka = $input['content'] . ' ' . date_format(date_create($input['datum']),'d.m.Y') . '. ' . $input['content2'] . ' ' .  $input['vrijemeOd'] . ' do '. $input['vrijemeDo'] . ' h' ;
+			
 			$to_employee_id = '877282';
-		} elseif($input['to_employee_id'] == 'pravni'){
-			$to_employee_id = '772864';
-		} elseif($input['to_employee_id'] == 'racunovodstvo'){
-			$to_employee_id = '72286';
-		} elseif($input['to_employee_id'] == 'it'){
-			$to_employee_id = '48758322';
-		}
-		
-		$data = array(
-			'employee_id'  	  => $employee->id,
-			'to_employee_id'  => $to_employee_id,
-			'title'    		  => trim($input['title']),
-			'content'  		  => $input['content']
-		);
-		
-		$post = new Post();
-		$post->savePost($data);
-		
-		$proba = 'jelena.juras@duplico.hr';
-		$uprava = 'uprava@duplico.hr';
-		$pravni = 'pravni@duplico.hr';
-		$it = 'itpodrska@duplico.hr';
-		$racunovodstvo = 'racunovodstvo@duplico.hr';
-		
-		$post_id = $post->id;
-		$poruka = 'http://localhost:8000/admin/posts/' . $post_id;
-				   
-		if($input['to_employee_id'] == 'uprava'){
-			Mail::queue(
-				'email.post',
-				['employee' => $employee, 'poruka' => $poruka, 'uprava' => $uprava],
-				function ($message) use ($uprava, $employee) {
-					$message->to($uprava)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Poruka upravi - ' .  $employee->first_name . ' ' .  $employee->last_name);
-				}
+			
+			$data = array(
+				'employee_id'  	  => $employee->id,
+				'to_employee_id'  => $to_employee_id,
+				'title'    		  => trim($input['title']),
+				'content'  		  => $poruka
 			);
-		}
-		if($input['to_employee_id'] == 'pravni'){
-			Mail::queue(
-				'email.post',
-				['employee' => $employee, 'poruka' => $poruka, 'pravni' => $pravni],
-				function ($message) use ($pravni, $employee) {
-					$message->to($pravni)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Poruka pravnom odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
-				}
+			
+			$post = new Post();
+			$post->savePost($data);
+			$post_id = $post->id;
+			
+			$mailovi = ['uprava@duplico.hr',$nadredjeni];
+			//$mailovi = ['jelena.juras@duplico.hr','jelena.juras@duplico.hr'];
+			$link = 'http://administracija.duplico.hr/admin/posts/' . $post_id;
+
+			foreach($mailovi as $mail) {
+				Mail::queue(
+					'email.raspored',
+					['employee' => $employee, 'poruka' => $poruka, 'link' => $link],
+					function ($message) use ($mail, $employee) {
+						$message->to($mail)
+							->from($employee->email, $employee->first_name . ' ' .  $employee->last_name)
+							->subject('Zahtjev za raspored - ' .  $employee->first_name . ' ' .  $employee->last_name);
+					}
+				);
+			}
+			
+			$message = session()->flash('success', 'Poruka je poslana');
+			return redirect()->route('home')->withFlashMessage($message);
+			
+		} else {
+			if($input['to_employee_id'] == 'uprava'){
+				$to_employee_id = '877282';
+			} elseif($input['to_employee_id'] == 'pravni'){
+				$to_employee_id = '772864';
+			} elseif($input['to_employee_id'] == 'racunovodstvo'){
+				$to_employee_id = '72286';
+			} elseif($input['to_employee_id'] == 'it'){
+				$to_employee_id = '48758322';
+			}
+			
+			$data = array(
+				'employee_id'  	  => $employee->id,
+				'to_employee_id'  => $to_employee_id,
+				'title'    		  => trim($input['title']),
+				'content'  		  => $input['content']
 			);
+			
+			$post = new Post();
+			$post->savePost($data);
+			
+			$proba = 'jelena.juras@duplico.hr';
+			$uprava = 'uprava@duplico.hr';
+			$pravni = 'pravni@duplico.hr';
+			$it = 'itpodrska@duplico.hr';
+			$racunovodstvo = 'racunovodstvo@duplico.hr';
+			
+			$post_id = $post->id;
+			$poruka = 'http://localhost:8000/admin/posts/' . $post_id;
+			
+			if($input['to_employee_id'] == 'uprava'){
+				Mail::queue(
+					'email.post',
+					['employee' => $employee, 'poruka' => $poruka, 'uprava' => $uprava],
+					function ($message) use ($uprava, $employee) {
+						$message->to($uprava)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Poruka upravi - ' .  $employee->first_name . ' ' .  $employee->last_name);
+					}
+				);
+			}
+			if($input['to_employee_id'] == 'pravni'){
+				Mail::queue(
+					'email.post',
+					['employee' => $employee, 'poruka' => $poruka, 'pravni' => $pravni],
+					function ($message) use ($pravni, $employee) {
+						$message->to($pravni)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Poruka pravnom odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+					}
+				);
+			}
+			if($input['to_employee_id'] == 'it'){
+				Mail::queue(
+					'email.post',
+					['employee' => $employee, 'poruka' => $poruka, 'it' => $it],
+					function ($message) use ($it, $employee) {
+						$message->to($it)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Poruka IT odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+					}
+				);
+			}
+			if($input['to_employee_id'] == 'racunovodstvo'){
+				Mail::queue(
+					'email.post',
+					['employee' => $employee, 'poruka' => $poruka, 'proba' => $proba],
+					function ($message) use ($racunovodstvo, $employee) {
+						$message->to($racunovodstvo)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Poruka racunovodstvu - ' .  $employee->first_name . ' ' .  $employee->last_name);
+					}
+				);
+			}
+
+			$message = session()->flash('success', 'Poruka je poslana');
+
+			return redirect()->route('admin.posts.index')->withFlashMessage($message);
 		}
-		if($input['to_employee_id'] == 'it'){
-			Mail::queue(
-				'email.post',
-				['employee' => $employee, 'poruka' => $poruka, 'it' => $it],
-				function ($message) use ($it, $employee) {
-					$message->to($it)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Poruka IT odjelu - ' .  $employee->first_name . ' ' .  $employee->last_name);
-				}
-			);
-		}
-		if($input['to_employee_id'] == 'racunovodstvo'){
-			Mail::queue(
-				'email.post',
-				['employee' => $employee, 'poruka' => $poruka, 'proba' => $proba],
-				function ($message) use ($racunovodstvo, $employee) {
-					$message->to($racunovodstvo)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Poruka racunovodstvu - ' .  $employee->first_name . ' ' .  $employee->last_name);
-				}
-			);
-		}
-		
-		$message = session()->flash('success', 'Poruka je poslana');
-		
-		//return redirect()->back()->withFlashMessage($message);
-		return redirect()->route('admin.posts.index')->withFlashMessage($message);
     }
 
     /**
@@ -155,7 +210,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
+		
+		$post = Post::find($id);
 
 		return view('admin.posts.show', ['post' => $post]);
     }
@@ -266,4 +322,10 @@ class PostController extends Controller
 		
 		return redirect()->route('admin.posts.index')->withFlashMessage($message);
     }
+	
+	public function shedulePost()
+	{
+		$user = Sentinel::getUser();
+		return view('admin.shedulePost', ['user' => $user]);
+	}
 }

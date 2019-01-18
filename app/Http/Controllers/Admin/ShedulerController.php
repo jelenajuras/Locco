@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Sheduler;
 use App\Models\Registration;
 use App\Models\VacationRequest;
+use App\Http\Controllers\GodisnjiController;
 
 class ShedulerController extends Controller
 {
@@ -47,8 +48,10 @@ class ShedulerController extends Controller
     {
 		$input = $request;
 
-		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
+		//$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
+		$employees = Registration::join('employees','registrations.employee_id','employees.id')->leftJoin('employee_terminations','registrations.employee_id', '=', 'employee_terminations.employee_id')->select('registrations.*','employees.first_name', 'employees.last_name', 'employee_terminations.datum_odjave')->orderBy('employees.last_name','ASC')->get();
+
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
@@ -124,4 +127,28 @@ class ShedulerController extends Controller
     {
         //
     }
+	
+	public function shedule (Request $request)
+	{
+		$input = $request;
+		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
+		
+		
+		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
+		
+		$list = array();
+		$mjesec = strstr( $input['mjesec'],'-',true);
+		$godina = substr( $input['mjesec'],'-4');
+
+		for($d=1; $d<=31; $d++)
+		{
+			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
+			if (date('m', $time)==$mjesec){   
+					$list[]=date('Y/m/d/D', $time);
+			}
+		}
+	
+		return view('admin.shedule')->with('employees',$employees)->with('mjesec', $mjesec)->with('godina', $godina)->with('list', $list)->with('requests', $requests);
+		
+	}
 }

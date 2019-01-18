@@ -52,53 +52,94 @@
 						</thead>
 						<tbody id="myTable">
 							@foreach($employees as $djelatnik)
-							@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
-							<?php 
-								$zahtjev="";
-							?>
-								<tr>
-									<td>{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}</td>
-									@foreach($list as $value2)
-										<?php $dan2 = date('j', strtotime($value2)); ?>
-										<td>
-										@foreach($requests as $request)
-											@if($request->employee_id == $djelatnik->employee_id)
-												<?php 
-													$begin = new DateTime($request['GOpocetak']);
-													$end = new DateTime($request['GOzavršetak']);
-													$end->setTime(0,0,1);
-													$interval = DateInterval::createFromDateString('1 day');
-													$period = new DatePeriod($begin, $interval, $end);
-													foreach($period as $dan3){
-														if(date_format($dan3,'j') == $dan2 && date_format($dan3,'n') == $mjesec){
-															$zahtjev = $request->zahtjev;
-															switch ($zahtjev) {
-															 case 'Izlazak':
-																$zahtjev = 'IZL';
-																break;
-															case 'Bolovanje':
-																$zahtjev = 'BOL';
-																break;
-															case 'GO':
-																$zahtjev = 'GO';
-																break;
-															case 'SLD':
-																$zahtjev = 'SLD';
-																break;
-														 }
-														}
-													}
-												?>
-											@endif
-										@endforeach
-										{{ $zahtjev }}
-										
+								@if( !$djelatnik->datum_odjave || date('mm-YY', strtotime($djelatnik->datum_odjave )) == date('mm-YY',strtotime($value)) )
+									
+								<?php 
+									$zahtjev="";
+									$redovan_Rad = '8:00';
+									
+									$datetime1 = date_create($djelatnik->datum_prijave); // razlika od datuma prijave
+									$datetime2 = date_create($value);
+									$interval = date_diff($datetime1, $datetime2);
+								
+								?>
+									@if($interval->format('%R%a days') >= 0)
+									<tr>
+										<td>{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}
 										</td>
-										<?php 
-											$zahtjev="";
-										?>
-									@endforeach
-								</tr>
+										@foreach($list as $value2)
+											<?php $dan2 = date('j', strtotime($value2)); ?>
+											
+											<td class="td_izostanak">
+											@if(date('N',strtotime($value2)) < 6)
+												@foreach($requests as $request)
+													@if($request->employee_id == $djelatnik->employee_id)
+														<?php 
+															$begin = new DateTime($request['GOpocetak']);
+															$end = new DateTime($request['GOzavršetak']);
+															$end->setTime(0,0,1);
+															$interval = DateInterval::createFromDateString('1 day');
+															$period = new DatePeriod($begin, $interval, $end);
+															foreach($period as $dan3){
+																if(date_format($dan3,'j') == $dan2 && date_format($dan3,'n') == $mjesec){
+																	if(date_format($dan3,'d') == '01' & date_format($dan3,'m') == '01' ||
+																		date_format($dan3,'d') == '06' & date_format($dan3,'m') == '01' ||
+																		date_format($dan3,'d') == '01' & date_format($dan3,'m') == '05' ||
+																		date_format($dan3,'d') == '22' & date_format($dan3,'m') == '06' ||
+																		date_format($dan3,'d') == '25' & date_format($dan3,'m') == '06' ||
+																		date_format($dan3,'d') == '15' & date_format($dan3,'m') == '08' ||
+																		date_format($dan3,'d') == '05' & date_format($dan3,'m') == '08' ||
+																		date_format($dan3,'d') == '08' & date_format($dan3,'m') == '10' ||
+																		date_format($dan3,'d') == '01' & date_format($dan3,'m') == '11' ||
+																		date_format($dan3,'d') == '25' & date_format($dan3,'m') == '12' ||
+																		date_format($dan3,'d') == '26' & date_format($dan3,'m') == '12' ||date_format($dan3,'d') == '02' & date_format($dan3,'m') == '04' & date_format($dan3,'Y') == '2018' ||
+																		date_format($dan3,'d') == '31' & date_format($dan3,'m') == '05' & date_format($dan3,'Y') == '2018' ||
+																		date_format($dan3,'d') == '22' & date_format($dan3,'m') == '04' & date_format($dan3,'Y') == '2019' ||
+																		date_format($dan3,'d') == '20' & date_format($dan3,'m') == '06' & date_format($dan3,'Y') == '2019' ||
+																		date_format($dan3,'d') == '13' & date_format($dan3,'m') == '04' & date_format($dan3,'Y') == '2020' ||
+																		date_format($dan3,'d') == '11' & date_format($dan3,'m') == '06' & date_format($dan3,'Y') == '2020'){
+																			
+																		}else{
+																			$zahtjev = $request->zahtjev;
+																				switch ($zahtjev) {
+																				 case 'Izlazak':
+																					$zahtjev = 'IZL';
+																					break;
+																				case 'Bolovanje':
+																					$zahtjev = 'BOL';
+																					break;
+																				case 'GO':
+																					$zahtjev = 'GO';
+																					break;
+																				case 'SLD':
+																					$zahtjev = 'SLD';
+																					break;
+																			 }
+																		}
+																}
+															}
+														?>
+													@endif
+												@endforeach
+												@if($zahtjev)
+													<span class="izostanak1">{{ $zahtjev }}<br>{{ ' 8:00' }}</span>
+												@else
+													@if(strtotime($value2) >= strtotime($djelatnik->datum_prijave))
+														@if($djelatnik->datum_odjave == null || strtotime($value2) <= strtotime($djelatnik->datum_odjave))
+															<span class="izostanak2">{{ $redovan_Rad  }}</span>
+														@endif
+													@endif
+												@endif
+											@endif
+											
+											</td>
+											
+											<?php 
+												$zahtjev="";
+											?>
+										@endforeach
+									</tr>
+									@endif
 								@endif
 							@endforeach
 						</tbody>

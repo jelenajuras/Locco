@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Sentinel;
 use App\Models\Notice;
+use App\Models\Employee;
 use App\Models\EmployeeTermination;
 use App\Models\Registration;
+use App\Models\Department;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
 use Mail;
@@ -43,9 +45,14 @@ class NoticeController extends Controller
      */
     public function create()
     {
-        $user = Sentinel::getUser()->id;
+        $user1 = Sentinel::getUser();
+		$user = Employee::where('first_name',$user1->first_name)->where('last_name',$user1->last_name)->first();
+		$user = $user->id;
 
-		return view('admin.notices.create',['user'=>$user]);
+		$departments0 = Department::where('level',0)->orderBy('name','ASC')->get();
+		$departments1 = Department::where('level',1)->orderBy('name','ASC')->get();
+		$departments2 = Department::where('level',2)->orderBy('name','ASC')->get();
+		return view('admin.notices.create',['user'=>$user, 'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
     }
 
     /**
@@ -56,42 +63,59 @@ class NoticeController extends Controller
      */
     public function store(NoticeRequest $request)
     {
-        $input = $request->except(['_token']);
+		$notice = $request['notice'];
+		$dom = new \DomDocument();
+		$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		$images = $dom->getElementsByTagName('img');
 		
-		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name','employees.email')->orderBy('employees.last_name','ASC')->get();
-		
-		$data = array(
-			'employee_id'  => $input['employee_id'],
-			'subject'   => $input['subject'],
-			'notice'  => $input['notice']
-		);
-		
-		$notice = new Notice();
-		$notice->saveNotice($data);
-
-		$poruka = $notice->subject;
-		
-		foreach($registrations as $registration){
-			if(! EmployeeTermination::where('employee_id',$registration->employee_id)->first() ){
-				$to = $registration->email;
-				Mail::queue(
-					'email.notice',
-					['poruka' => $poruka],
-					function ($message) use ($to , $poruka) {
-						$message->to($to)
-							->from('info@duplico.hr', 'Duplico')
-							->subject('Obavijest uprave');
-					}
-				);
-			}
+		foreach($images as $k => $img){
+			$data = $img->getAttribute('src');
+			$dataFilename = $img->getAttribute('data-filename');
+			list($type, $data) = explode(';', $data);
+			list(, $data)      = explode(',', $data);
+			$data = base64_decode($data);
+			$image_name= "/img/notices/" . $dataFilename;
+			$path = public_path() .  $image_name;
+			file_put_contents($path, $data);
+			$img->removeAttribute('src');
+			$img->setAttribute('src', $image_name);
 		}
 			
+		$notice = $dom->saveHTML();
+
+		$input = $request->except(['_token']);
+		
+		foreach($request['to_department_id'] as $department) {
+			$notice1 ="";
+			$data1 = array(
+				'employee_id'   	=> $input['employee_id'],
+				'to_department_id'  => $department,
+				'subject'  			=> $input['subject'],
+				'notice'  			=> $notice
+			);
+			
+			$notice1 = new Notice();
+			$notice1->saveNotice($data1);
+
+			$department = Department::where('id',$notice1->to_department_id)->first();
+			$prima = $department->email;
+			$poruka = $notice1->subject;
+			
+			Mail::queue(
+				'email.notice',
+				['poruka' => $poruka],
+				function ($message) use ($prima , $poruka) {
+					$message->to($prima)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Obavijest uprave');
+				}
+			);
+			
+		}
+		
 		$message = session()->flash('success', 'Obavijest je poslana');
 		
-		//return redirect()->back()->withFlashMessage($messange);
 		return redirect()->route('admin.notices.index')->withFlashMessage($message);
-		
-		
     }
 
     /**
@@ -117,8 +141,9 @@ class NoticeController extends Controller
     {
         $user = Sentinel::getUser()->id;
 		$notice = Notice::find($id);
-		
-		return view('admin.notices.edit', ['notice' => $notice], ['user' => $user]);
+		$departments = Department::orderBy('name','ASC')->get();
+
+		return view('admin.notices.edit', ['notice' => $notice, 'user' => $user, 'departments'=>$departments]);
     }
 
     /**
@@ -131,38 +156,58 @@ class NoticeController extends Controller
     public function update(Request $request, $id)
     {
         $notice = Notice::find($id);
+		
+		$poruka = $request['notice'];
+
+		$dom = new \DomDocument();
+		$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		$images = $dom->getElementsByTagName('img');
+		
+		foreach($images as $k => $img){
+            $data = $img->getAttribute('src');
+			$dataFilename = $img->getAttribute('data-filename');
+		
+            list($type, $data) = explode(';', $data);
+            list(, $data)      = explode(',', $data);
+            $data = base64_decode($data);
+            $image_name= "/img/notices/" . $dataFilename;
+            $path = public_path() .  $image_name;
+            file_put_contents($path, $data);
+            $img->removeAttribute('src');
+            $img->setAttribute('src', $image_name);
+        }
+
+        $poruka = $dom->saveHTML();
+		
 		$input = $request->except(['_token']);
-		//dd($input);
-		$data = array(
-			'employee_id'  => $input['employee_id'],
-			'subject'   => $input['subject'],
-			'notice'  => $input['notice']
+		
+		$data1 = array(
+			'employee_id'   	=> $input['employee_id'],
+			'to_department_id'  => $input['to_department_id'],
+			'subject'  			=> $input['subject'],
+			'notice'  			=> $poruka
 		);
 		
-		$notice->updateNotice($data);
+		$notice->updateNotice($data1);
 		
-		// $to = 'svi@duplico.hr';
-		// $to = 'jelena.juras@duplico.hr';
-		
-		$to = 'zeljko.rendulic@duplico.hr';
-		$subject = $input['subject'];
-		$user = Sentinel::getUser()->email;
-		$poruka_id = $notice->id;
+		$department = Department::where('id',$notice->to_department_id)->first();
+		$prima = $department->email;
+		$poruka = $notice->subject;
+		//$prima = 'jelena.juras@duplico.hr';
 		
 		Mail::queue(
 			'email.notice',
-			['subject' => $subject, 'poruka_id' => $poruka_id ],
-			function ($message) use ($to , $subject) {
-				$message->to($to)
+			['poruka' => $poruka],
+			function ($message) use ($prima , $poruka) {
+				$message->to($prima)
 					->from('info@duplico.hr', 'Duplico')
-					->subject('Obavijest');
+					->subject('Ispravak obavijesti');
 			}
 		);
 		
 		$message = session()->flash('success', 'Obavijest je ispravljena');
 		
 		return redirect()->route('admin.notices.index')->withFlashMessage($message);
-		
     }
 
     /**

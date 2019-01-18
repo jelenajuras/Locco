@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Registration;
 use App\Models\Employee;
 use App\Models\Work;
+use App\Models\EffectiveHour;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Controllers\Controller;
@@ -60,7 +61,7 @@ class RegistrationController extends Controller
      */
     public function store(RegistrationRequest $request)
     {
-        $input = $request->except(['_token']);
+		$input = $request->except(['_token']);
 		
 		if($input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'] == '--'){
 			$staz = '0-0-0';
@@ -86,13 +87,12 @@ class RegistrationController extends Controller
 		if($request['prvoZaposlenje'] != ''){
 			$data += ['prvoZaposlenje' => $input['prvoZaposlenje']];
 		}
-		
-		
+
 		$registration = new Registration();
 		$registration->saveRegistration($data);
 
 		$employee = $input['employee_id'];
-		$djelatnik = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('registrations.*','employees.first_name','employees.last_name','works.odjel','works.naziv')->where('registrations.employee_id', $employee)->first();
+		$djelatnik = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('registrations.*','employees.first_name','employees.email','employees.last_name','works.odjel','works.naziv')->where('registrations.employee_id', $employee)->first();
 		
 		$radno_mj = $djelatnik->naziv;
 		$ime = $djelatnik->first_name;
@@ -127,10 +127,15 @@ class RegistrationController extends Controller
 		}
 		);
 		
+		$ime_prezime = strstr($djelatnik->email, '@',true);
+		$prezime_dir = str_replace('.', '', strstr($ime_prezime, '.'));
+		$ime_dir = strstr($ime_prezime, '.',true);
+		$prezime_ime = $prezime_dir . '_' . $ime_dir;
+		
 		// Create directory
-		$path = 'storage/' . $prezime . '_' . $ime;
+		$path = 'storage/' . $prezime_ime;
 		mkdir($path);
-	
+		
 		$message = session()->flash('success', 'Novi djelatnik je prijavljen');
 		
 		//return redirect()->back()->withFlashMessage($messange);
@@ -146,8 +151,8 @@ class RegistrationController extends Controller
     public function show($id)
     {
 		$registration = Registration::find($id);
-		
-		return view('admin.registrations.show', ['registration' => $registration]);
+		$effectiveHour = EffectiveHour::where('employee_id',$registration->employee_id )->first();
+		return view('admin.registrations.show', ['registration' => $registration,'effectiveHour' => $effectiveHour]);
     }
 
     /**

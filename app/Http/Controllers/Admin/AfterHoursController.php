@@ -87,22 +87,32 @@ class AfterHoursController extends GodisnjiController
 		$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email');
 		
 		$proba = array('jelena.juras@duplico.hr');
+		$uprava = array('uprava@duplico.hr');
 		
 		$nadredjeni1 = $registration->user_id; // id nadređene osobe
 		
 		$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
 		
-		if($nadredjeni){
+		//if($nadredjeni){
 			Mail::queue(
 				'email.zahtjevAfterHour',
 				['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
-				function ($message) use ($nadredjeni, $employee) {
-					$message->to($nadredjeni)
+				function ($message) use ($uprava, $employee) {
+					$message->to($uprava)
 						->from('info@duplico.hr', 'Duplico')
 						->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
 				}
 			);
-		}
+			Mail::queue(
+				'email.zahtjevAfterHour',
+				['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
+				function ($message) use ($proba, $employee) {
+					$message->to($proba)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		//}
 			
 		$message = session()->flash('success', 'Zahtjev je poslan');
 			
@@ -160,8 +170,7 @@ class AfterHoursController extends GodisnjiController
 		
 		$message = session()->flash('success', 'Podaci su ispravljeni');
 			
-		return redirect()->route('admin.dashboard')->withFlashMessage($message);
-		
+		return redirect()->route('home')->withFlashMessage($message);
     }
 
     /**
@@ -177,7 +186,7 @@ class AfterHoursController extends GodisnjiController
 		
 		$message = session()->flash('success', 'Zahtjev je obrisan.');
 		
-		return redirect()->route('admin.dashboard')->withFlashMessage($message);
+		return redirect()->route('home')->withFlashMessage($message);
     }
 	
 	public function storeConf(Request $request)
@@ -219,7 +228,7 @@ class AfterHoursController extends GodisnjiController
 		$message = session()->flash('success', 'Zahtjev je potvrđen');
 		
 		//return redirect()->back()->withFlashMessage($messange);
-		return redirect()->route('admin.dashboard')->withFlashMessage('Zahtjev je odobren');
+		return redirect()->route('home')->withFlashMessage('Zahtjev je odobren');
     }
 	
 }

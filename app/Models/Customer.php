@@ -30,7 +30,7 @@ class Customer extends Model
 	/*
 	* Save Customer
 	* 
-	* @param array $post
+	* @param array $Customer
 	* @return void
 	*/
 	
@@ -42,7 +42,7 @@ class Customer extends Model
 	/*
 	* Update Customer
 	* 
-	* @param array $post
+	* @param array $Customer
 	* @return void
 	*/
 	

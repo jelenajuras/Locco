@@ -4,10 +4,11 @@
 
 @section('content')
 @if(Sentinel::check())
-	<div class="">
-		<h2>{{ $user->first_name . ' ' . $user->last_name }}</h2>
-		<h4><b>Efektivna cijena sata: </b>{{  number_format($registration->ech['effective_cost'],2,",",".") . ' kn' }}</h4>
-		<h4><b>Godišnja brutto plaća: </b>{{  number_format($registration->ech['brutto'],2,",",".") . ' kn' }}</h4>
+	<div class="row">
+		<div class="ech">
+			<p>{{ $user->first_name . ' ' . $user->last_name }} ukupan trošak Tvoje godišnje plaće iznosi <b>{{  number_format($ech['brutto'],2,",",".") . ' kn' }}</b>.</p>
+			<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <b>{{  number_format($ech['effective_cost'],2,",",".") . ' kn' }}</b>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
+		</div>
 		<div class="dashboard_box1">
 			<div class="BTNbox">
 				<div class="dashboard_box2">
@@ -16,7 +17,12 @@
 			</div>
 			<div class="BTNbox">
 				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.vacation_requests.index') }}"  ><span>Godišnji odmor i izostanci</span></a>
+					<a class="" href="{{ route('admin.vacation_requests.index') }}"><span>Godišnji odmor i izostanci</span></a>
+				</div>
+			</div>
+			<div class="BTNbox">
+				<div class="dashboard_box2">
+					<a class="" href="{{ route('admin.shedulePost') }}" ><span>Zahtjev za rasporedom</span></a>
 				</div>
 			</div>
 			<div class="BTNbox">
@@ -33,14 +39,23 @@
 					@endif
 				</div>
 			</div>
-			
 			<div class="BTNbox">
 				<div class="dashboard_box2">
 					<a href="{{ route('admin.registrations.show', $registration->id) }}">
 						<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
 				</div>
 			</div>
-			@if (Sentinel::inRole('administrator'))
+			@if(Sentinel::inRole('administrator'))
+				@foreach($questionnaires as $questionnaire)
+					<div class="BTNbox">
+						<div class="dashboard_box2 anketa">
+							<a href="{{ route('admin.questionnaires.show', $questionnaire->id) }}">
+								<span>Anketa<br> <br>{{$questionnaire->naziv}}</span></a>
+						</div>
+					</div>
+				@endforeach
+			@endif
+			@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
 				<div class="BTNbox">
 					<div class="dashboard_box2">
 						<a href="{{ route('admin.notices.create') }}">
@@ -50,6 +65,7 @@
 			@endif
 		</div>
 	</div>
+	<div class="row">
 	@if(Sentinel::inRole('administrator'))
 		<div class="dashboard_box" style="overflow-x:auto;">
 			<button class="collapsible">Neodobreni zahtjevi </button>
@@ -159,7 +175,30 @@
 				</table>
 			</div>
 		</div>
+		
 	@endif
+	</div>
+	<footer>
+			<div class="ech">
+				<p>Duplico je jedna od vodećih tvrtki tržišnog segmenta u domeni registriranih djelatnosti.</p>
+				<p>Postigli smo to kvantitetom i kvalitetom izvedenih projekata, ponašanjem prema kupcima, kao i stavom prema poslu te učinkovitošću rada na svim dosadašnjim projektima. Upravo kroz navedene kategorije se nameće i potreba za vrednovanjem Tvog rada:</p>
+				<dl class="dl_list">
+					<dt>Kvantiteta</dt>
+					<dd> - količina obavljenog posla, raspoloživo vrijeme za zadatke, uloženi napor, brzina rada </dd><br>
+					<dt>Kvaliteta</dt>
+					<dd> - znanje i sposobnost, spretnost, poštivanje rokova, pouzdanost, briga o izvršenju, fleksibilnost </dd><br>
+					<dt>Ponašanje</dt>
+					<dd> - sklonost timskom radu, sposobnost jasnog komuniciranja korektnost i principijelnost</dd><br>
+					<dt>Stav prema poslu</dt>
+					<dd> - identifikacija sa zadatkom, uloženi napor i izdržljivost, motiviranost, nezavisnost</dd><br>
+					<dt>Učinkovitost</dt>
+					<dd> - kontrola troška, ekonomično ponašanje, poduzetničko razmišljanje i djelovanje </dd><br>
+					<dt>Donošenje odluka</dt>
+					<dd> - spremnost prihvaćanja odgovornosti, sposobnost procjenjivanja, efikasnost i dosljednost u donošenju odluka, asertivnost</dd><br>
+				</dl>
+				Tijekom 2019. kroz sustav praćenja rada u ERP-u  doći ćemo do podatka o efektima Tvog angažmana kroz navedene kategorije, s ciljem stvaranja zajedničkog temelja našeg budućeg odnosa.
+			</div>
+	</footer>
 @else
 	<div class="jumbotron">
 		<h1>Welcome, Guest!</h1>

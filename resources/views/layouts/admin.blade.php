@@ -25,6 +25,12 @@
 		<!-- jQuery Timepicker --> 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 		
+		<!-- include libraries(jQuery, bootstrap) -->
+		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+
+		<!-- include summernote css/js -->
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+
 		@stack('stylesheet')
     </head>
     <body>
@@ -45,15 +51,15 @@
 				@if(Sentinel::check() && Sentinel::inRole('administrator') || Sentinel::inRole('basic') ||  Sentinel::inRole('uprava'))
 					<a href="{{ route('home') }}" class="active naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
+					<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.documents.index') }}">Dokumenti</a>
 					@if(Sentinel::inRole('administrator'))
 					<a href="{{ route('admin.gantt') }}" >Kalendar</a>
-					<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.documents.index') }}">Dokumenti</a>
-					
 						<button class="poruke" data-toggle="collapse" data-target="#link1"><span>Opći podaci<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse " id="link1">
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('users.index') }}">Korisnici</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('roles.index') }}">Uloge</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.works.index') }}">Radna mjesta</a>
+							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.departments.index') }}">Odjeli</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.terminations.index') }}">Otkazi</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.equipments.index') }}" >Radna oprema</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.cars.index') }}">Vozila</a>	
@@ -63,6 +69,7 @@
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.job_interviews.index') }}">Razgovori za posao</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employees.index') }}">Kandidati za posao</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
+							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employee_departments.index') }}">Zaposenici po odjelima</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employee_equipments.index') }}">Zadužena oprema</a>
 							<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.kids.index') }}">Djeca zaposlenika</a>
 							<a class=" {{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.employee_terminations.index') }}">Odjavljeni radnici</a>
@@ -87,16 +94,27 @@
 								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.effective_hours.index') }}">ECH</a>
 							@endif
 						</div>
+						@if(Sentinel::inRole('administrator'))
+							<button class="poruke" data-toggle="collapse" data-target="#link6"><span>Ankete<i class="fas fa-caret-down"></i></span></button>
+							<div class="collapse " id="link6">
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.questionnaires.index') }}">Ankete</a>
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.evaluating_groups.index') }}">Kategorije</a>
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.evaluating_questions.index') }}">Podkategorije</a>
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.evaluating_ratings.index') }}">Ocjene</a>
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.evaluating_employees.index') }}">Zaposlenici</a>
+								<a class="{{ Request::is('admin') ? 'active' : '' }}" href="{{ route('admin.evaluations.index') }}">Rezultati</a>
+							</div>
+						@endif
 					@endif
 					<div class="noticesHome">
-						@if(DB::table('notices')->take(5)->get())
+						<!--@if(DB::table('notices')->take(5)->get())
 						<button class="poruke" data-toggle="collapse" data-target="#poruke1"><span>Obavijesti uprave<i class="fas fa-caret-down"></i></span></button>
 							<div class="collapse " id="poruke1">
 								@foreach(DB::table('notices')->orderBy('created_at','DESC')->take(5)->get() as $notice)
 									<a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a>
 								@endforeach
 							</div>
-						@endif
+						@endif-->
 						@if(Sentinel::inRole('uprava'))
 							@if(count(DB::table('posts')->where('to_employee_id','877282')->orderBy('created_at','DESC')->take(5)->get()))
 								<button class="poruke" data-toggle="collapse" data-target="#poruke3"><span>Prijedlozi upravi<i class="fas fa-caret-down"></i></span></button>
@@ -113,7 +131,7 @@
 					<i class="fa fa-bars"></i>
 				  </a>-->
 			</nav>
-			<article class="col-xs-12 col-sm-9 col-md-9 col-lg-10" style="text-align:center;">
+			<article class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
 					@include('notifications')
 					@yield('content')
 			</article>
@@ -125,7 +143,14 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('js/restfulizer.js') }}"></script>
+		
+		<!-- include libraries(jQuery, bootstrap) -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
 
+		<!-- include summernote css/js -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+		
 		<!-- DataTables -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   
@@ -138,6 +163,7 @@
 		
 		<script src="{{ asset('js/datatable.js') }}"></script>
 		<script src="{{ asset('js/collaps.js') }}"></script>
+		
 		<script>
 		function myFunction() {
 			var x = document.getElementById("myTopnav");

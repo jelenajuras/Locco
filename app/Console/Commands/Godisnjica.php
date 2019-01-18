@@ -87,7 +87,7 @@ class Godisnjica extends Command
 			$years = $interval->format('%y'); 
 			
 			if(!$otkaz){
-			//	if($years == 5 || $years == 10 || $years == 15 || $years == 20) {
+				if($years > 0) {
 					Mail::queue('email.Godisnjica1', ['djelatnik' => $djelatnik, 'years' => $years], function ($mail) use ($djelatnik) {
 						$mail->to('uprava@duplico.hr')
 							->cc('jelena.juras@duplico.hr')
@@ -96,7 +96,8 @@ class Godisnjica extends Command
 							->from('info@duplico.hr', 'Duplico')
 							->subject('Godišnjica ' . ' rada - ' . $djelatnik->first_name . ' '. $djelatnik->last_name);
 					});
-				//}
+				
+				}
 			}
 		}
 		$this->info('Obavijest je poslana!');

@@ -5,6 +5,10 @@ Ispravi {{ $post->title }}
 @stop
 							
 @section('content')
+<a class="btn btn-md pull-left" href="{{ url()->previous() }}">
+	<i class="fas fa-angle-double-left"></i>
+	Natrag
+</a>
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">

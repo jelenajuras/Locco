@@ -31,6 +31,23 @@ class EffectiveHour extends Model
 	}
 	
 	/*
+	* The Eloquent employee model name
+	* 
+	* @var string
+	*/
+	protected static $registrationModel = 'App\Models\Registration'; 
+	
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function registration()
+	{
+		return $this->hasMany(static::$registrationModel,'employee_id');
+	}
+	
+	/*
 	* Save EffectiveHour
 	* 
 	* @param array $effectiveHour
