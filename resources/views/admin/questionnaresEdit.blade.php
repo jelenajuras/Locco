@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ URL::asset('css/anketa.css') }}" type="text/css" >
 @section('content')
 <div class="row">
-	<h2>Anketa {{ $questionnaire->naziv }}</h2>
+	<h2>Anketa {{ $evaluations->first()->questionnaire['naziv'] }}</h2>
 	<div class="anketa">
 		<div class="zaposlenik">
 			<div class="dl_list">
@@ -16,21 +16,13 @@
 				</dl>
 			</div>
 		</div>
+		
 		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.evaluations.store') }}">
-			<div class="ime form-group">
-				<h4>Ime zaposlenika
-				<select name="ev_employee_id" class="ev_employee_id form-control" id="ev_employee_id1" required >
-					<option value="" disabled selected ></option>
-					@foreach($registrations as $registration)
-						@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
-							@if(!DB::table('evaluating_employees')->where('employee_id',$employee->id)->where('ev_employee_id',$registration->employee_id)->first())
-								<option value="{{ $registration->employee_id }}">{{  $registration->employee['last_name'] . ' ' . $registration->employee['first_name'] }}</option>
-							@endif
-						@endif
-					@endforeach
-				</select></h4>
+			<div class="form-group" id="tip_ankete1" >
+				<h4>{{ $employee->first_name  . ' ' . $employee->last_name }}<h4>
+				<input name="employee_id" type="hidden" id="employee_id" value ="{{ $employee->id }}">
 			</div>
-			<div class="ime form-group" id="tip_ankete1" hidden >
+			<div class="ime form-group" id="tip_ankete1" >
 				<h4>Prikaz ankete
 				<select name="tip_ankete" class="tip_ankete form-control" id="tip_ankete" required>
 					<option value="" disabled selected ></option>
@@ -40,8 +32,9 @@
 			</div>
 			
 			<p id="user" hidden >{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name  }}</p>
-			<input name="employee_id" type="hidden" id="employee_id" value ="{{ $employee->id }}">
-			<input name="questionnaire_id" type="hidden" value ="{{ $questionnaire->id }}">
+			
+			
+			<input name="questionnaire_id" type="hidden" value ="{{ $evaluations->first()->id }}">
 			<input name="datum" type="hidden" value ="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
 			
 			<section class="pitanja">
@@ -55,7 +48,7 @@
 									<b>{{ $question->naziv }} </b> 
 									<span class="ocj">							
 										@foreach($evaluatingRatings as $evaluatingRating)
-											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio1{{ $question->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio1{{ $question->id }}" required {!!  $evaluations->where('question_id', $question->id)->where('rating', $evaluatingRating->rating) ? 'checked' : '' !!} /><b>{{ $evaluatingRating->rating }}</b>
 										@endforeach 
 									</span>
 									<p class="opis">{{ $question->opis }}<p>
@@ -71,7 +64,7 @@
 								<input name="group_id[{{ $evaluatingGroup->id }}]" type="hidden" value="{{ $evaluatingGroup->id }}" id="group_id2" />
 								<span class="ocj">									
 									@foreach($evaluatingRatings as $evaluatingRating)
-										<input type="radio" name="rating[{{ $evaluatingGroup->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio2{{ $evaluatingGroup->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+										<input type="radio" name="rating[{{ $evaluatingGroup->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio2{{ $evaluatingGroup->id }}" required {!!  $evaluations->where('group_id', $evaluatingGroup->id)->where('rating', $evaluatingRating->rating) ? 'checked' : '' !!} /><b>{{ $evaluatingRating->rating }}</b>
 									@endforeach 
 								</span>
 							@foreach( $evaluatingQuestion->where('group_id', $evaluatingGroup->id) as $question )

@@ -56,3 +56,7 @@ Artisan::command('email:GO', function () {
 Artisan::command('email:Odjava', function () {
     $this->comment(Odjava::quote());
 })->describe('Display an Odjava quote');
+
+Artisan::command('email:Anketa', function () {
+    $this->comment(Anketa::quote());
+})->describe('Display an Anketa quote');

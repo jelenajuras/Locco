@@ -42,6 +42,6 @@ img {
 }
 
 .notice h3 {
-	text-transform:uppercase;
 	border-bottom:1px solid #ccc;
+	text-align: center;
 }

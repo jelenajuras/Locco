@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Lijecnicki2::class,
 		\App\Console\Commands\Odjava::class,
 		\App\Console\Commands\GO::class,
+		\App\Console\Commands\Anketa::class,
     ];
 
     /**
@@ -66,6 +67,9 @@ class Kernel extends ConsoleKernel
 				  ->evenInMaintenanceMode();
 		$schedule->command('email:Odjava')
 				  ->dailyAt('16:00')
+				  ->evenInMaintenanceMode();
+		$schedule->command('email:Anketa')
+				  ->dailyAt('08:00')
 				  ->evenInMaintenanceMode();
     }
 

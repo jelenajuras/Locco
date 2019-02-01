@@ -16,18 +16,11 @@
 				</dl>
 			</div>
 		</div>
-		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.evaluations.store') }}">
+		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.evaluations.update', $evaluatingEmployee->id) }}">
 			<div class="ime form-group">
 				<h4>Ime zaposlenika
 				<select name="ev_employee_id" class="ev_employee_id form-control" id="ev_employee_id1" required >
-					<option value="" disabled selected ></option>
-					@foreach($registrations as $registration)
-						@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
-							@if(!DB::table('evaluating_employees')->where('employee_id',$employee->id)->where('ev_employee_id',$registration->employee_id)->first())
-								<option value="{{ $registration->employee_id }}">{{  $registration->employee['last_name'] . ' ' . $registration->employee['first_name'] }}</option>
-							@endif
-						@endif
-					@endforeach
+					<option value="{{ $evaluatingEmployee->ev_employee_id }}">{{ $evaluatingEmployee->evaleated_employee['first_name'] . ' ' . $evaluatingEmployee->evaleated_employee['last_name']}}</option>
 				</select></h4>
 			</div>
 			<div class="ime form-group" id="tip_ankete1" hidden >
@@ -52,10 +45,10 @@
 							@foreach( $evaluatingQuestion->where('group_id', $evaluatingGroup->id) as $question )
 								<div class="pitanje">
 									<input name="question_id[{{ $question->id }}]" type="hidden" value="{{ $question->id }}"  id="group_id1" />
-									<b>{{ $question->naziv }} </b> 
+									<b>{{ $question->naziv }}</b> 
 									<span class="ocj">							
-										@foreach($evaluatingRatings as $evaluatingRating)
-											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio1{{ $question->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+										@foreach($evaluatingRatings as $evaluatingRating1)
+											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating1->rating }}" id="myRadio1{{ $question->id }}" required {!! $evaluations->where('group_id',$evaluatingGroup->id)->where('question_id',$question->id)->first()->rating === $evaluatingRating1->rating ? 'checked' : ''!!} /><b>{{ $evaluatingRating1->rating }}</b>
 										@endforeach 
 									</span>
 									<p class="opis">{{ $question->opis }}<p>
@@ -65,26 +58,28 @@
 					@endforeach
 				</div>
 				<div class="display_none" id="anketa_2">
-					@foreach($evaluatingGroups as $evaluatingGroup)
+					@foreach($evaluatingGroups as $evaluatingGroup1)
 						<details open>
-							<summary id="{{ $evaluatingGroup->naziv }}">{{ $evaluatingGroup->naziv }}</summary>
-								<input name="group_id[{{ $evaluatingGroup->id }}]" type="hidden" value="{{ $evaluatingGroup->id }}" id="group_id2" />
+							<summary id="{{ $evaluatingGroup1->naziv }}">{{ $evaluatingGroup1->naziv }}</summary>
+								<input name="group_id[{{ $evaluatingGroup1->id }}]" type="hidden" value="{{ $evaluatingGroup1->id }}" id="group_id2" />
 								<span class="ocj">									
-									@foreach($evaluatingRatings as $evaluatingRating)
-										<input type="radio" name="rating[{{ $evaluatingGroup->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio2{{ $evaluatingGroup->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+									@foreach($evaluatingRatings as $evaluatingRating2)
+										<input type="radio" name="rating[{{ $evaluatingGroup1->id }}]" value="{{ $evaluatingRating2->rating }}" id="myRadio2{{ $evaluatingGroup1->id }}" required {!!$evaluations->where('group_id',$evaluatingGroup1->id)->first()->rating  == $evaluatingRating2->rating ? 'checked' : ''!!}  /><b>{{ $evaluatingRating2->rating }} </b>
 									@endforeach 
 								</span>
-							@foreach( $evaluatingQuestion->where('group_id', $evaluatingGroup->id) as $question )
+							@foreach( $evaluatingQuestion->where('group_id', $evaluatingGroup1->id) as $question1 )
 								
 								<div class="pitanje">
-									<b>{{ $question->naziv }} </b> 
-									<p class="opis">{{ $question->opis }}<p>
+									<b>{{ $question1->naziv }} </b> 
+									<p class="opis">{{ $question1->opis }}<p>
 								</div>
 							@endforeach
 						</details>
 					@endforeach
 				</div>
 			</section>
+			{{ csrf_field() }}
+			{{ method_field('PUT') }}
 			<input name="_token" value="{{ csrf_token() }}" type="hidden">
 			<input class="btn btn-lg btn-primary" type="submit" value="Upiši" id="stil1">
 		</form>

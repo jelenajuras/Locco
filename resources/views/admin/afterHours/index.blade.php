@@ -65,11 +65,14 @@
 										<td style="border-bottom: 1px solid #ccc;">{{ $afterHour->odobreno }}</td>
 										
 										<td style="border-bottom: 1px solid #ccc;">
-											<a href="{{ route('admin.afterHours.edit', $afterHour->id) }}" class="btn">
+											<a href="{{ route('admin.confirmationAfter_show', ['id' => $afterHour->id]) }}" class="btn" title="Odobri">
+												<i class="fas fa-check"></i>
+											</a>
+											<a href="{{ route('admin.afterHours.edit', $afterHour->id) }}" class="btn" title="Ispravi">
 												<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 												
 											</a>
-											<a href="{{ route('admin.afterHours.destroy', $afterHour->id) }}" class="btn action_confirm {{ ! Sentinel::inRole('administrator') ? 'disabled' : '' }}" data-method="delete" data-token="{{ csrf_token() }}">
+											<a href="{{ route('admin.afterHours.destroy', $afterHour->id) }}" class="btn action_confirm {{ ! Sentinel::inRole('administrator') ? 'disabled' : '' }}" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši">
 												<i class="far fa-trash-alt"></i>
 											</a>
 										</td>

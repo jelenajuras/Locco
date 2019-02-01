@@ -9,9 +9,12 @@ use App\Models\EvaluatingGroup;
 use App\Models\EvaluatingQuestion;
 use App\Models\EvaluatingRating;
 use App\Models\EvaluatingEmployee;
+use App\Models\Evaluation;
 use App\Models\Employee;
+use App\Models\Registration;
 use App\Http\Requests\QuestionnaireRequest;
 use Sentinel;
+use DateTime;
 
 class QuestionnaireController extends Controller
 {
@@ -81,15 +84,21 @@ class QuestionnaireController extends Controller
     {
         $user = Sentinel::getUser();
 		
+		$danas = new DateTime('now');
+		$mjesec_godina = date_format($danas,'Y-m');
+		
 		$employee = Employee::where('first_name', $user->first_name)->where('last_name', $user->last_name)->first();
-		$employees = Employee::get();
+				
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
+			//svi djelatnici
+		
 	    $questionnaire = Questionnaire::find($id);
 		$evaluatingGroups = EvaluatingGroup::where('questionnaire_id', $questionnaire->id)->get();
 		$evaluatingQuestion = EvaluatingQuestion::get();
 		$evaluatingRatings = EvaluatingRating::get();
-		$evaluatingEmployees = EvaluatingEmployee::where('employee_id', $employee->id)->where('status', null)->get();
-
-		return view('admin.questionnaires.show',['employee'=>$employee,'employees'=>$employees,'evaluatingEmployees'=>$evaluatingEmployees,'questionnaire'=>$questionnaire,'evaluatingGroups'=>$evaluatingGroups,'evaluatingQuestion'=>$evaluatingQuestion,'evaluatingRatings'=>$evaluatingRatings]);
+		$evaluatingEmployees = EvaluatingEmployee::where('employee_id', $employee->id)->where('status', null)->where('mjesec_godina',$mjesec_godina)->get();
+		
+		return view('admin.questionnaires.show',['employee'=>$employee,'registrations'=>$registrations,'evaluatingEmployees'=>$evaluatingEmployees,'questionnaire'=>$questionnaire,'evaluatingGroups'=>$evaluatingGroups,'evaluatingQuestion'=>$evaluatingQuestion,'evaluatingRatings'=>$evaluatingRatings]);
     }
 
     /**
@@ -104,6 +113,8 @@ class QuestionnaireController extends Controller
 		 
 		return view('admin.questionnaires.edit',['questionnaire'=>$questionnaire]);
     }
+	
+
 
     /**
      * Update the specified resource in storage.

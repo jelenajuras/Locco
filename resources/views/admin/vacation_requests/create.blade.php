@@ -99,20 +99,23 @@
 			<p>Sukladno Zakonu o radu, za vrijeme neplaćenog dopusta prava i obveze iz radnog odnosa miruju.
 			</p>
 		</div>
-	</div>
-	<!--<div class="uputa">
-		<p>*** Napomena:</p>
-		<p>Sukladno radnopravnim propisima RH:<br>
-			- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
-			- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
-			- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
-			- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+		<div class="uputa_PL display-none">
+			<p>*** Napomena:</p>
+			<p>Tijekom kalendarske godine Radnik ima pravo na plaćeni dopust za važne osobne potrebe u ukupnom trajanju do 7 radnih dana godišnje, u trajanju kako je niže navedeno:<br>
+			- sklapanje braka - 3 radna dana<br>
+			- rođenje djeteta - 2 radna dana<br>
+			- smrt bračnog supružnika, djeteta ili roditelja - 4 radna dana<br>
+			- smrt roditelja bračnog supružnika, djedova i baka, braće i sestara - 1 radni dan<br>
+			- selidba u isto ili drugo mjesto - 1 radni dan<br>
+			- uklanjanje štetnih posljedica elementarnih nesreća na stambenim i gospodarskim objektima - 4 radna dana<br>
+			- teška bolest člana uže obitelji (roditelji, djeca) izvan mjesta stanovanja - 2 radna dana<br>
+			- u slučaju dobrovoljnog darivanja krvi - 1 radni dan.<br>
 
-		Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
-		</p>
-	</div>-->
-	
-	
+			Okolnosti temeljem kojih traži pravo na plaćeni dopust, Radnik mora dokazati pisanim putem.<br>
+			</p>
+		</div>
+	</div>
+		
 		<!-- izračun dana GO u zahtjevu -->
 		<script>
 			function GO_dani(){
@@ -149,101 +152,10 @@
 		</script>
 		<!-- unos value u napomenu -->
 		<script>
-			function GO_value(){
-				if(document.getElementById("prikaz").value == "GO" ){
-					document.getElementById("napomena").value = "GO" ;
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}else {
-					document.getElementById("napomena").value = "" ;
-				}
-				if(document.getElementById("prikaz").value == "Bolovanje" ){
-					document.getElementById("zahtjev").innerHTML = "Obavijest";
-				}
-				if(document.getElementById("prikaz").value == "Izlazak"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "NPL" ||document.getElementById("prikaz").value == "PL"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "SLD"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "Vik"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				
-			}
-		</script>
-		<script>
-			$('#prikaz').change(function(){
-			var selected = $('option:selected', this).attr('class');
-			var optionText = $('.editable1').text();
-			var optionText1 = $('.editable2').text();
-			var optionText2 = $('.editable3').text();
-
-			if(selected == "editable1"){
-			  $('.uputa_RGO').show();
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').show();
-			  $('.uputa_NPL').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable4" || selected == "editable5"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').hide();
-			  $('.uputa_RGO').hide();
-			  $('.uputa_NPL').show();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable6" || selected == "editable7"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption5').hide();
-			  $('.editOption4').hide();
-			  $('.uputa_RGO').hide();
-			  $('.uputa_NPL').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable5"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption5').show();
-			  $('.uputa_RGO').hide();
-			  $('.uputa_NPL').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
 			
-			if(selected == "editable3"){
-			  $('.editOption1').show();
-			  $('.editOption2').hide();
-			  $('.editOption3').show();
-			  $('.editOption4').hide();
-			  $('.uputa_RGO').hide();
-			  $('.uputa_NPL').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable2"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').hide();
-			  $('.uputa_RGO').hide();
-			  $('.uputa_NPL').hide();
-			  $('.text1').hide();
-			  $('.text2').show();
-			}
-			});
 		</script>
+
+		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
+		<script src="{{ asset('js/go_value.js') }}"></script>
 		
 @stop

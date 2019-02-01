@@ -325,11 +325,12 @@ Route::group(['prefix' => 'admin'], function () {
   'create' 		=> 'admin.questionnaires.create', 
   'store' 		=> 'admin.questionnaires.store', 
   'show' 		=> 'admin.questionnaires.show', 
-  'edit' 		=> 'admin.questionnaires.edit', 
+  'edit' 		=> 'admin.questionnaires.edit',  
   'update'		=> 'admin.questionnaires.update', 
   'destroy'		=> 'admin.questionnaires.destroy'
   ]]);
 });
+
 
 // Post page
 Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'IndexController@storeComment']);
@@ -360,6 +361,7 @@ Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses'
 Route::get('admin/VacationRequest', ['as' => 'admin.VacationRequest', 'uses' => 'Admin\VacationRequestController@VacationRequest']);
 Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'uses' => 'Admin\VacationRequestController@AllVacationRequest']);
 
+Route::get('admin/confirmationAfter_show', ['as' => 'admin.confirmationAfter_show', 'uses' => 'Admin\AfterHoursController@confirmationAfter_show']);
 Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
 
 // Gantt kalendar

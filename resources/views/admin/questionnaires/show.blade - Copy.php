@@ -19,20 +19,16 @@
 		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.evaluations.store') }}">
 			<div class="ime form-group">
 				<h4>Ime zaposlenika
-				<select name="ev_employee_id" class="ev_employee_id form-control" id="ev_employee_id1" required >
+				<select name="ev_employee_id" class="ev_employee_id form-control" id="ev_employee_id1" required onchange="display_Anketa()" >
 					<option value="" disabled selected ></option>
-					@foreach($registrations as $registration)
-						@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
-							@if(!DB::table('evaluating_employees')->where('employee_id',$employee->id)->where('ev_employee_id',$registration->employee_id)->first())
-								<option value="{{ $registration->employee_id }}">{{  $registration->employee['last_name'] . ' ' . $registration->employee['first_name'] }}</option>
-							@endif
-						@endif
+					@foreach($evaluatingEmployees as $evaluatingEmployee)
+						<option value="{{ $evaluatingEmployee->ev_employee_id }}">{{ $evaluatingEmployee->evaleated_employee['first_name'] . ' ' . $evaluatingEmployee->evaleated_employee['last_name'] }}</option>
 					@endforeach
 				</select></h4>
 			</div>
 			<div class="ime form-group" id="tip_ankete1" hidden >
 				<h4>Prikaz ankete
-				<select name="tip_ankete" class="tip_ankete form-control" id="tip_ankete" required>
+				<select name="tip_ankete" class="tip_ankete form-control" id="tip_ankete" required onchange="display_Tip()">
 					<option value="" disabled selected ></option>
 					<option value="grupa">Grupirano</option>
 					<option value="podgrupa">Pojedinačno</option>
@@ -55,7 +51,7 @@
 									<b>{{ $question->naziv }} </b> 
 									<span class="ocj">							
 										@foreach($evaluatingRatings as $evaluatingRating)
-											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio1{{ $question->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+											<input type="radio" name="rating[{{ $question->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio1{{ $question->id }}"  /><b>{{ $evaluatingRating->rating }}</b>
 										@endforeach 
 									</span>
 									<p class="opis">{{ $question->opis }}<p>
@@ -71,7 +67,7 @@
 								<input name="group_id[{{ $evaluatingGroup->id }}]" type="hidden" value="{{ $evaluatingGroup->id }}" id="group_id2" />
 								<span class="ocj">									
 									@foreach($evaluatingRatings as $evaluatingRating)
-										<input type="radio" name="rating[{{ $evaluatingGroup->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio2{{ $evaluatingGroup->id }}" required /><b>{{ $evaluatingRating->rating }}</b>
+										<input type="radio" name="rating[{{ $evaluatingGroup->id }}]" value="{{ $evaluatingRating->rating }}" id="myRadio2{{ $evaluatingGroup->id }}"  /><b>{{ $evaluatingRating->rating }}</b>
 									@endforeach 
 								</span>
 							@foreach( $evaluatingQuestion->where('group_id', $evaluatingGroup->id) as $question )
@@ -90,57 +86,72 @@
 		</form>
 	</div>
 </div>
+<script>
+$( document ).ready(function() {
+	var ev_employee_id1 = $("#ev_employee_id1").val();
+	var employee_id = $("#employee_id").val();
+	var tip_ankete = $("#tip_ankete");
+		
+		
+	
+	
+		console.log(ev_employee_id1);
+		console.log(employee_id);
+		
+});
+
+</script>
+
 
 <script>
+
 	$(document).ready(function(){
 		if($("#user").text() == "Željko Rendulić"){
+			console.log($("#user").text());
 			$("#tip_ankete1").removeAttr("hidden");
 		}
 	});
-	
-	$("#ev_employee_id1").change(function(){
-		var radio1 = $( '#anketa_2 input[type=radio]' );
-		var radio2 = $( '#anketa_1 input[type=radio]' );
-		var anketa1 = $('#anketa_1');
-		var anketa2 =  $('#anketa_2');
-		var ev_employee_id1 = $("#ev_employee_id1").val();
-		var employee_id = $("#employee_id").val();
-		var tip_ankete = $("#tip_ankete");
+
+	function display_Anketa() {
+		var ev_employee_id1 = document.getElementById("ev_employee_id1").value;
+		var employee_id = document.getElementById("employee_id").value;
+		var tip_ankete = document.getElementById("tip_ankete");
 		
 		if(ev_employee_id1 === employee_id){
-			tip_ankete.val('podgrupa');
-			anketa1.removeAttr('class');
-			anketa2.attr("class", "display_none");
-			radio1.removeAttr("required");
-			radio2.attr('required', 'required');
-		}else {
-			tip_ankete.val('grupa');
-			radio1.attr('required', 'required');
-			radio2.removeAttr("required");
-			anketa1.attr("class", "display_none");
-			anketa2.removeAttr('class');
+			document.getElementById("anketa_1").removeAttribute("class");
+			document.getElementById("anketa_2").setAttribute("class", "display_none");
+			document.getElementById("group_id2").setAttribute("class", "display_none");
+
+			document.getElementById("tip_ankete").value = 'podgrupa';
+			
+		} else {
+			
+			document.getElementById("anketa_2").removeAttribute("class");
+			document.getElementById("anketa_1").setAttribute("class", "display_none");
+			document.getElementById("group_id1").setAttribute("class", "display_none");
+			document.getElementById("tip_ankete").value = 'grupa';
 		}
-	});
-	$("#tip_ankete").change(function(){
-		var radio1 = $( '#anketa_2 input[type=radio]' );
-		var radio2 = $( '#anketa_1 input[type=radio]' );
-		var anketa1 = $('#anketa_1');
-		var anketa2 =  $('#anketa_2');
-		var tip_ankete = $("#tip_ankete").val();
+			
 		
-		if(tip_ankete === 'podgrupa'){
-			anketa1.removeAttr('class');
-			anketa2.attr("class", "display_none");
-			radio1.removeAttr("required");
-			radio2.attr('required', 'required');
-		}else {
-			radio1.attr('required', 'required');
-			radio2.removeAttr("required");
-			anketa1.attr("class", "display_none");
-			anketa2.removeAttr('class');
-		}
-	});
+	}
 	
+	function display_Tip() {
+		var tip_ankete = document.getElementById("tip_ankete").value;
+		console.log(tip_ankete);
+		if(tip_ankete == 'grupa'){
+			document.getElementById("anketa_2").removeAttribute("class");
+			document.getElementById("anketa_1").setAttribute("class", "display_none");
+			document.getElementById("myRadio2").required  = true;
+			document.getElementById("myRadio1").required  = false;
+			document.getElementById("group_id1").setAttribute("class", "display_none");
+		} else {
+			document.getElementById("anketa_1").removeAttribute("class");
+			document.getElementById("anketa_2").setAttribute("class", "display_none");
+			document.getElementById("myRadio1").required  = true;
+			document.getElementById("myRadio2").required  = false;
+			document.getElementById("group_id2").setAttribute("class", "display_none");
+		}
+	}
 </script>
 
 @stop

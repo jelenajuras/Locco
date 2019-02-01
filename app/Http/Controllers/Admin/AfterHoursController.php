@@ -170,7 +170,7 @@ class AfterHoursController extends GodisnjiController
 		
 		$message = session()->flash('success', 'Podaci su ispravljeni');
 			
-		return redirect()->route('home')->withFlashMessage($message);
+		return redirect()->route('admin.afterHours.index')->withFlashMessage($message);
     }
 
     /**
@@ -194,8 +194,6 @@ class AfterHoursController extends GodisnjiController
 		$input = $request->except(['_token']);
 		$afterHour = AfterHour::find($_GET['id']);
 
-		//dd($input);
-		
 		$employee_id = $afterHour->employee_id;
 		$employee = Employee::where('employees.id', $employee_id)->first();
 		$mail = $employee->email;
@@ -227,8 +225,15 @@ class AfterHoursController extends GodisnjiController
 		
 		$message = session()->flash('success', 'Zahtjev je potvrđen');
 		
-		//return redirect()->back()->withFlashMessage($messange);
 		return redirect()->route('home')->withFlashMessage('Zahtjev je odobren');
     }
+
+	public function confirmationAfter_show(Request $request)
+	{
+		$user = Sentinel::getUser();
+		$nadredjeni1 = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
+		
+		return view('admin.confirmationAfterHour')->with('afterHour_id', $request->id)->with('nadredjeni1', $nadredjeni1->id);
+	}
 	
 }

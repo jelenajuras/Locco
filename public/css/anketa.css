@@ -151,7 +151,7 @@ input[type="radio"]{
 .ocj input[type="radio"] { 
 	margin-left: 20px;
     margin-right: 4px;
-	width: 
+
 }
 
 .aktivna input:nth-child(3) {
@@ -211,7 +211,6 @@ details {
 	position:relative;
 	padding:20px;
 	font-size:16px;
-	font-weight:bold;
 	margin-left: 30px;
 }
 
@@ -250,6 +249,7 @@ th {
 
 #table_id1 {
 	position: relative;
+	margin: 20px 0;
 }
 
 #table_id1 thead tr {
@@ -259,17 +259,22 @@ th {
 }
 
 @media screen and (max-width: 1100px){
-	.anketa form .ime select{
-		width:100%;
-		display:block;
-	}
+	
 	.dl_list {
 		float:none;
 		width:100%;
 	}
 }
+@media screen and (max-width: 1000px){
+	details .ocj {
+		display:block;
+		width:100%;
+		position:static;
+		margin: 10px 0;
+		}
+}
 
-@media screen and (max-width: 600px){
+@media only screen and (max-width: 600px){
 	.anketa form .pitanje .ocj, .anketa form .pitanje>input  {
 		display:block;
 		width:100%;
@@ -277,6 +282,39 @@ th {
 		padding:10px 0;
 	}
 	
+	.anketa {
+		padding:0 !important;
+	}
+	details {
+		padding:0 !important;
+		margin:0 !important;
+		font-size: 12px;
+	}
+	summary {
+		font-size: 16px !important;
+	}
+	
+	.anketa form .pitanja {
+		margin-top: 10px;
+	}
+	
+	#anketa_2, #anketa_1 {
+		padding: 0 20px;
+	} 
+	.evaluation {
+	width:100% !important;
+	}
+	table.tbl_ocjene {
+		font-size:12px !important;
+	}
+	.gumb_natrag {
+		display:none !important;
+	}
+	.anketa form .ime select{
+	display:block;
+	width: 100%;
+	margin-top:20px;
+}
 }
 
 .display_none {
@@ -285,4 +323,47 @@ th {
 
 .visible_hidden {
 	visibility: hidden;
+}
+
+summary {
+    font-size: 20px;
+}
+
+#anketa_2, #anketa_1 {
+	padding: 20px;
+} 
+
+.evaluation {
+	width:100%;
+}
+
+.tbl_ocjene {
+	width:100%
+}
+
+.tbl_ocjene tr td {
+	padding: 5px 0;
+}
+.tbl_ocjene tr td:first-child {
+	width:50%;
+}
+
+.tbl_ocjene tr td:not(:first-child){
+	text-align: center;
+}
+
+.tbl_ocjene thead tr th{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0 !important;
+}
+
+.tbl_ocjene tbody  tr td{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0 !important;
+}
+
+.tbl_ocjene tfoot  tr td{
+	padding: 20px 0 !important;
+	border-top: 1px solid #ccc;
+	font-weight:bold
 }

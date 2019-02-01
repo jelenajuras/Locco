@@ -1,0 +1,28 @@
+{
+  "name": "portal",
+  "version": "1.0.0",
+  "description": "portal",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jelenajuras/djelatnici-v.1.git"
+  },
+  "author": "Juras",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jelenajuras/djelatnici-v.1/issues"
+  },
+  "homepage": "https://github.com/jelenajuras/djelatnici-v.1#readme",
+  "dependencies": {
+    "bootstrap": "^4.2.1"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.7.0"
+  }
+}

@@ -81,7 +81,7 @@
 															$interval = DateInterval::createFromDateString('1 day');
 															$period = new DatePeriod($begin, $interval, $end);
 															foreach($period as $dan3){
-																if(date_format($dan3,'j') == $dan2 && date_format($dan3,'n') == $mjesec){
+																if(date_format($dan3,'j') == $dan2 && date_format($dan3,'n') == $mjesec && date_format($dan3,'Y') == $godina){
 																	if(date_format($dan3,'d') == '01' & date_format($dan3,'m') == '01' ||
 																		date_format($dan3,'d') == '06' & date_format($dan3,'m') == '01' ||
 																		date_format($dan3,'d') == '01' & date_format($dan3,'m') == '05' ||

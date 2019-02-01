@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Registration;
 use App\Models\Employee;
 use App\Models\Work;
+use App\Models\Users;
 use App\Models\EffectiveHour;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\UserController;
+use Cartalyst\Sentinel\Users\IlluminateUserRepository;
+use Centaur\AuthManager;
 use Sentinel;
 use DB;
 use Session;
@@ -18,16 +22,27 @@ use Mail;
 
 class RegistrationController extends Controller
 {
-	/**
-   * Set middleware to quard controller.
-   *
-   * @return void
-   */
-    public function __construct()
+	/** @var Cartalyst\Sentinel\Users\IlluminateUserRepository */
+    protected $userRepository;
+
+    /** @var Centaur\AuthManager */
+    protected $authManager;
+
+    public function __construct(AuthManager $authManager)
     {
+        // Middleware
         $this->middleware('sentinel.auth');
+        $this->middleware('sentinel.access:users.create', ['only' => ['create', 'store']]);
+        $this->middleware('sentinel.access:users.view', ['only' => ['index', 'show']]);
+        $this->middleware('sentinel.access:users.update', ['only' => ['edit', 'update']]);
+        $this->middleware('sentinel.access:users.destroy', ['only' => ['destroy']]);
+
+        // Dependency Injection
+        $this->userRepository = app()->make('sentinel.users');
+        $this->authManager = $authManager;
     }
 	
+
 	/**
      * Display a listing of the resource.
      *
@@ -87,13 +102,15 @@ class RegistrationController extends Controller
 		if($request['prvoZaposlenje'] != ''){
 			$data += ['prvoZaposlenje' => $input['prvoZaposlenje']];
 		}
-
+		
 		$registration = new Registration();
 		$registration->saveRegistration($data);
-
-		$employee = $input['employee_id'];
-		$djelatnik = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('registrations.*','employees.first_name','employees.email','employees.last_name','works.odjel','works.naziv')->where('registrations.employee_id', $employee)->first();
 		
+		$employee = $input['employee_id'];
+		
+		$djelatnik = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('registrations.*','employees.first_name','employees.email','employees.last_name','works.odjel','works.naziv')->where('registrations.employee_id', $employee)->first();
+
+
 		$radno_mj = $djelatnik->naziv;
 		$ime = $djelatnik->first_name;
 		$prezime = $djelatnik->last_name;
@@ -139,7 +156,8 @@ class RegistrationController extends Controller
 		$message = session()->flash('success', 'Novi djelatnik je prijavljen');
 		
 		//return redirect()->back()->withFlashMessage($messange);
-		return redirect()->route('admin.registrations.index')->withFlashMessage($message);
+		// return redirect()->route('admin.registrations.index')->withFlashMessage($message);
+		return redirect()->route('users.create')->with('djelatnik', $djelatnik)->withFlashMessage($message);
     }
 
     /**

@@ -87,7 +87,7 @@ class EmployeeTerminationController extends Controller
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
 		
-		/*foreach($zaduzene_osobe as $key => $zaduzena_osoba){
+		foreach($zaduzene_osobe as $key => $zaduzena_osoba){
 			Mail::queue(
 			'email.Odjava',
 			['djelatnik' => $djelatnik,'zaduzena_osoba' => $zaduzena_osoba,'napomena' => $input['napomena'], 'radno_mj' => $radno_mj, 'ime' => $ime, 'prezime' => $prezime ],
@@ -96,7 +96,7 @@ class EmployeeTerminationController extends Controller
 					->subject('Odjava djelatnika ' . ' - ' . $ime . ' ' .  $prezime);
 			}
 			);
-		}*/
+		}
 		
 		$message = session()->flash('success', 'Djelatnik je odjavljen.');
 		

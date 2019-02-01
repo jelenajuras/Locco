@@ -30,9 +30,8 @@ class HomeController extends GodisnjiController
     public function index()
     {
 		$user = Sentinel::getUser();
-		
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-		
+
 		$comments = Comment::get();
 		$afterHours = AfterHour::get();
 		

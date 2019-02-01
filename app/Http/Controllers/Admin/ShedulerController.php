@@ -47,7 +47,7 @@ class ShedulerController extends Controller
     public function create(Request $request)
     {
 		$input = $request;
-
+		
 		//$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$employees = Registration::join('employees','registrations.employee_id','employees.id')->leftJoin('employee_terminations','registrations.employee_id', '=', 'employee_terminations.employee_id')->select('registrations.*','employees.first_name', 'employees.last_name', 'employee_terminations.datum_odjave')->orderBy('employees.last_name','ASC')->get();

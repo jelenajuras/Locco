@@ -16,6 +16,7 @@
 				</dl>
 			</div>
 		</div>
+		
 		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.evaluations.store') }}">
 			<div class="ime form-group">
 				<h4>Ime zaposlenika

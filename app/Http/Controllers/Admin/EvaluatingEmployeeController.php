@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\EvaluatingEmployee;
 use App\Models\Registration;
+use App\Models\Employee;
 use App\Models\Questionnaire;
 use App\Http\Requests\EvaluatingEmployeeRequest;
 
@@ -29,9 +30,11 @@ class EvaluatingEmployeeController extends Controller
     public function index()
     {
         $evaluatingEmployees = EvaluatingEmployee::get();
+		$questionnaires = Questionnaire::get();
+		
 		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
 
-		return view('admin.evaluating_employees.index',['registrations'=>$registrations, 'evaluatingEmployees'=>$evaluatingEmployees]);
+		return view('admin.evaluating_employees.index',['registrations'=>$registrations, 'evaluatingEmployees'=>$evaluatingEmployees, 'questionnaires'=>$questionnaires]);
     }
 
     /**
@@ -58,16 +61,19 @@ class EvaluatingEmployeeController extends Controller
     {
 		$input = $request;
 		
+		$evaluatingEmployees = EvaluatingEmployee::get();
+		
 		foreach($input['ev_employee_id'] as $ev_employee_id){
-			$data = array(
-				'employee_id'  	 	=> $input['employee_id'],
-				'ev_employee_id'  	=> $ev_employee_id,
-				'mjesec_godina'  	=> $input['mjesec_godina'],
-				'questionnaire_id'  => $input['questionnaire_id']
-			);
-			
-			$evaluatingEmployee = new EvaluatingEmployee();
-			$evaluatingEmployee->saveEvaluatingEmployee($data);
+			if(! $evaluatingEmployees->where('employee_id',$input['employee_id'])->where('ev_employee_id', $ev_employee_id)->where('mjesec_godina', $input['mjesec_godina'])->where('questionnaire_id', $input['questionnaire_id'])->first()){
+				$data = array(
+					'employee_id'  	 	=> $input['employee_id'],
+					'ev_employee_id'  	=> $ev_employee_id,
+					'mjesec_godina'  	=> $input['mjesec_godina'],
+					'questionnaire_id'  => $input['questionnaire_id']
+				);
+				$evaluatingEmployee = new EvaluatingEmployee();
+				$evaluatingEmployee->saveEvaluatingEmployee($data);
+			}
 		}
 
 		$message = session()->flash('success', 'Uspješno su dodatni zaposlenici');
@@ -83,7 +89,9 @@ class EvaluatingEmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $evaluatingEmployees = EvaluatingEmployee::where('employee_id',$id)->get();
+		$employee = Employee::where('id',$id)->first();
+		return view('admin.evaluating_employees.show',['evaluatingEmployees' => $evaluatingEmployees,'employee' => $employee]);
     }
 
     /**
@@ -94,16 +102,16 @@ class EvaluatingEmployeeController extends Controller
      */
     public function edit(Request $request, $employee_id)
     {
-		$evaluatingEmployee = EvaluatingEmployee::where('id',$request['ev_empl_id'])->first(); 
-		$questionnaire_id = $evaluatingEmployee->questionnaire_id;
-		$evaluatingEmployees = EvaluatingEmployee::where('employee_id',$evaluatingEmployee->employee_id)->where('questionnaire_id',$evaluatingEmployee->questionnaire_id)->get(); //svi zapisi za istu anketu istog djelatnika
+		$evaluatingEmployee = EvaluatingEmployee::where('employee_id',$employee_id)->where('questionnaire_id',$request['questionnaire_id'])->where('mjesec_godina',$request['mjesec_godina'])->first();
+
+		$evaluatingEmployees = EvaluatingEmployee::where('employee_id',$employee_id)->where('questionnaire_id',$evaluatingEmployee->questionnaire_id)->where('mjesec_godina',$evaluatingEmployee->mjesec_godina)->get(); //svi zapisi za istu anketu istog djelatnika u istom mjesecu
 
 		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		$employee = Registration::where('employee_id',$employee_id)->first();
 	
 		$questionnaires = Questionnaire::get();
 		
-		return view('admin.evaluating_employees.edit',['evaluatingEmployee'=>$evaluatingEmployee, 'evaluatingEmployees'=>$evaluatingEmployees, 'registrations'=>$registrations, 'employee'=>$employee, 'questionnaires'=>$questionnaires]);
+		return view('admin.evaluating_employees.edit',['evaluatingEmployee'=>$evaluatingEmployee,'evaluatingEmployees'=>$evaluatingEmployees, 'registrations'=>$registrations, 'employee'=>$employee, 'questionnaires'=>$questionnaires]);
     }
 
     /**
@@ -120,19 +128,23 @@ class EvaluatingEmployeeController extends Controller
 		$evaluatingEmployees = EvaluatingEmployee::where('employee_id',$input['employee_id'])->where('mjesec_godina',$input['mjesec_godina'])->where('questionnaire_id',$input['questionnaire_id'])->get();
 	   
 		foreach($evaluatingEmployees as $evaluatingEmployee){
-		   $evaluatingEmployee->delete();
+			if($evaluatingEmployee->status != 'OK'){
+				$evaluatingEmployee->delete();
+			}
 	    }
+		$evaluatingEmployees = EvaluatingEmployee::get();
 		
 		foreach($input['ev_employee_id'] as $ev_employee_id){
-			$data = array(
-				'employee_id'  	 	=> $input['employee_id'],
-				'ev_employee_id'  	=> $ev_employee_id,
-				'mjesec_godina'  	=> $input['mjesec_godina'],
-				'questionnaire_id'  => $input['questionnaire_id']
-			);
-			
+			if(! $evaluatingEmployees->where('employee_id',$input['employee_id'])->where('ev_employee_id', $ev_employee_id)->where('mjesec_godina', $input['mjesec_godina'])->where('questionnaire_id', $input['questionnaire_id'])->first()){
+				$data = array(
+					'employee_id'  	 	=> $input['employee_id'],
+					'ev_employee_id'  	=> $ev_employee_id,
+					'mjesec_godina'  	=> $input['mjesec_godina'],
+					'questionnaire_id'  => $input['questionnaire_id']
+				);
 			$evaluatingEmployee1 = new EvaluatingEmployee();
 			$evaluatingEmployee1->saveEvaluatingEmployee($data);
+			}
 		}
 
 	    $message = session()->flash('success', 'Podaci su ispravljeni!');

@@ -77,6 +77,7 @@ class UserController extends Controller
             'first_name' => $request->get('first_name', null),
             'last_name' => $request->get('last_name', null)
         ];
+		
        // $activate = (bool)$request->get('activate', true);
 
         // Attempt the registration
@@ -93,6 +94,21 @@ class UserController extends Controller
                 $role->users()->attach($result->user);
             }
         }
+		
+		// $email = $request->get('email');
+		$email = 'jelena.juras@duplico.hr';
+		$lozinka = $request->get('password');
+		$link = 'http://administracija.duplico.hr/';
+		$podrska = 'jelena.juras@duplico.hr';
+		
+		Mail::queue(
+			'email.portal',
+			['email' => $email,'lozinka' => $lozinka,'link' => $link, 'podrska' => $podrska ],
+			function ($message) use ($email) {
+				$message->to($email)
+					->subject('Portal za zaposlenike' );
+			}
+		);
 		
 		$message = session()->flash('success', 'Uspješno je dodan novi djelatnik');
         return $result->dispatch(route('users.index'))->withFlashMessage($message);

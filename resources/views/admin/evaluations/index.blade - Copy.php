@@ -27,7 +27,9 @@
 									<th>Djelatnik</th>
 									<th>Dao ocjena</th>
 									<th>Dobio ocjena</th>
-							
+									@foreach($evaluatingGroups as $evaluatingGroup)
+									<th>{{ $evaluatingGroup->naziv }}</th>
+									@endforeach
 									<th>Ukupna ocjena</th>
 								</tr>
 							</thead>
@@ -37,32 +39,39 @@
 										<tr>
 										<?php
 											$ukupnaOcjena = 0;
-											$ukupanRezultat = 0;
-											$i = 0;
 										?>
 											<td><a href="{{ route('admin.evaluations.show',['employee_id' =>  $registration->employee_id, 'questionnaire_id' =>  $questionnaire->id, 'mjesec_godina' =>$mjesec->mjesec_godina ] ) }}">{{ $registration->first_name . ' ' . $registration->last_name }}</a></td>
 											<td>{{ count($evaluatingEmployee->where('employee_id', $registration->employee_id))  }}</td>
 											<td>{{ count($evaluations->where('employee_id', $registration->employee_id)) /25 }}</td>
-											<!--	@foreach($evaluations->where('questionnaire_id',$questionnaire->id)->where('employee_id', $registration->employee_id) as $evaluation)
-													<?php
-														$rezultat = '';
-														$ukupanRezultat = 0;
+											@foreach($evaluatingGroups as $evaluatingGroup)
+												<?php
+													$i = 0;
+													$rezultat = '';
+													$ukupanRezultat = 0;
 													
-														$mjesec_godina = substr($evaluation->datum,0,7);
-														if($mjesec_godina == $mjesec->mjesec_godina){
-															$i++;
-															$rezultat = number_format($evaluation->rating,2)*0.25 *number_format($evaluation->koef,2);
-															$ukupanRezultat += $rezultat;	
+													foreach($evaluations->where('questionnaire_id',$questionnaire->id) as $evaluation){
+														
+														if($evaluation->employee_id == $registration->employee_id && $evaluation->group_id == $evaluatingGroup->id){
+															$mjesec_godina = substr($evaluation->datum,0,7);
+															if($mjesec_godina == $mjesec->mjesec_godina){
+																$i++;
+																$rezultat = number_format($evaluation->rating,2)*0.25 *number_format($evaluation->koef,2);
+																$ukupanRezultat += $rezultat;		
+															}
 														}
-														if($ukupanRezultat === 0){
-															$i = 1;
-														} 
-														$ukupanRezultat = number_format($ukupanRezultat / $i, 2);
-														$ukupnaOcjena += $ukupanRezultat ;
+													}
+													if($ukupanRezultat === 0){
+														$i = 1;
+													} 
+													$ukupanRezultat = number_format($ukupanRezultat / $i,2);
+													$ukupnaOcjena += $ukupanRezultat
 												?>
 												
-												@endforeach-->
-											<td></td>
+												<td>{{ $ukupanRezultat }}</td>
+												
+												
+											@endforeach
+											<td>{{ $ukupnaOcjena }}</td>
 										</tr>
 									@endif
 								@endforeach
