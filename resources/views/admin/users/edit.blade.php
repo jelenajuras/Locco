@@ -32,14 +32,16 @@
 					<div class="{!! Sentinel::inRole('basic') ? 'hidden' : '' !!}" >
 						<h5>Roles</h5>
 						@foreach ($roles as $role)
+							@if($role->name != 'SuperAdmin')
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {{ $user->inRole($role) ? 'checked' : '' }}>
 									{{ $role->name }}
 								</label>
 							</div>
+							@endif
 						@endforeach
-						 <hr />
+						 <hr/>
 					</div>
                    
                     <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">

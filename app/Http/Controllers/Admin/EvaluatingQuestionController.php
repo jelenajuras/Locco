@@ -58,6 +58,7 @@ class EvaluatingQuestionController extends Controller
 		$data = array(
 			'naziv'  	=> $input['naziv'],
 			'opis'  	=> $input['opis'],
+			'opis2'  	=> $input['opis2'],
 			'group_id'	=> $input['group_id']
 		);
 		
@@ -109,6 +110,7 @@ class EvaluatingQuestionController extends Controller
 		$data = array(
 			'naziv'  	=> $input['naziv'],
 			'opis'  	=> $input['opis'],
+			'opis2'  	=> $input['opis2'],
 			'group_id'	=> $input['group_id']
 		);
 		

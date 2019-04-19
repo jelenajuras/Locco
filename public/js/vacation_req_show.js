@@ -3,7 +3,7 @@ $('#prikaz').change(function(){
 	var optionText = $('.editable1').text();
 	var optionText1 = $('.editable2').text();
 	var optionText2 = $('.editable3').text();
-
+	  
 	if(selected == "editable1"){
 	  $('.uputa_RGO').show();
 	  $('.editOption1').show();

@@ -25,6 +25,7 @@
                         <tr>
                             <th>Odjel</th>
                             <th>Naziv</th>
+                            <th>Opis rada</th>
 							<th>Pravilnik</th>
 							<th>Točke</th>
 							<th>Nadređeni djelatnik</th>
@@ -37,6 +38,7 @@
                             <tr>
                                 <td>{{ $work->odjel }}</td>
                                 <td>{{ $work->naziv }}</td>
+								<td>{{ $work->job_description }}</td>
 								<td>{{ $work->pravilnik }}</td>
 								<td>{{ $work->tocke }}</td>
 								<td>{{ $work->nadredjeni['first_name'] . ' ' .$work->nadredjeni['last_name'] }}</td>

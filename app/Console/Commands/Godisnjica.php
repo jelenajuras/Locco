@@ -69,8 +69,7 @@ class Godisnjica extends Command
 					Mail::queue('email.Godisnjica', ['djelatnik' => $djelatnik, 'years' => $years, 'dana' => $dana], function ($mail) use ($djelatnik) {
 						$mail->to('uprava@duplico.hr')
 							->cc('jelena.juras@duplico.hr')
-							->cc('andrea.glivarec@duplico.hr')
-							->cc('matija.barberic@duplico.hr')
+							->cc('pravni@duplico.hr')
 							->from('info@duplico.hr', 'Duplico')
 							->subject('Godišnjica ' . ' rada - ' . $djelatnik->first_name . ' '. $djelatnik->last_name);
 					});
@@ -91,8 +90,7 @@ class Godisnjica extends Command
 					Mail::queue('email.Godisnjica1', ['djelatnik' => $djelatnik, 'years' => $years], function ($mail) use ($djelatnik) {
 						$mail->to('uprava@duplico.hr')
 							->cc('jelena.juras@duplico.hr')
-							->cc('andrea.glivarec@duplico.hr')
-							->cc('matija.barberic@duplico.hr')
+							->cc('pravni@duplico.hr')
 							->from('info@duplico.hr', 'Duplico')
 							->subject('Godišnjica ' . ' rada - ' . $djelatnik->first_name . ' '. $djelatnik->last_name);
 					});

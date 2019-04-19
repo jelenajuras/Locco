@@ -72,4 +72,5 @@ main p, .odobrio p, .datum p {
 footer .odobrio{
 	width:50%;
 	float:right;
+	padding-top: 50px;
 }

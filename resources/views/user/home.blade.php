@@ -5,64 +5,98 @@
 @section('content')
 @if(Sentinel::check())
 	<div class="row">
+		@if(isset($employee))
 		<div class="ech">
-			<p>{{ $user->first_name . ' ' . $user->last_name }} ukupan trošak Tvoje godišnje plaće iznosi <b>{{  number_format($ech['brutto'],2,",",".") . ' kn' }}</b>.</p>
-			<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <b>{{  number_format($ech['effective_cost'],2,",",".") . ' kn' }}</b>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
+			<p>{{ $employee->first_name . ' ' . $employee->last_name }} ukupan trošak Tvoje godišnje plaće iznosi 
+			<span class="efc"><b>{{  number_format($ech['brutto'],2,",",".") . ' kn' }}</b>.</span>
+			<span class="efc_show">prikaži</span>
+			<span class="efc_hide">sakrij</span></p>
+			<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{{  number_format($ech['effective_cost'],2,",",".") . ' kn' }}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
 		</div>
+		@endif
+		
 		<div class="dashboard_box1">
+			@if(isset($employee))
 			<div class="BTNbox">
-				<div class="dashboard_box2">
+				<div class="dashboard_box2 benefits">
+					<a class="" href="{{ route('admin.benefits.show', 1) }}"  ><span>Pogodnosti za zaposlenike</span></a>
+				</div>
+			</div>
+			@endif
+			<div class="BTNbox">
+				<div class="dashboard_box2 oglasna">
 					<a class="" href="{{ route('admin.noticeBoard') }}"  ><span>Oglasna ploča</span></a>
 				</div>
 			</div>
-			<div class="BTNbox">
-				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.vacation_requests.index') }}"><span>Godišnji odmor i izostanci</span></a>
-				</div>
-			</div>
-			<div class="BTNbox">
-				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.shedulePost') }}" ><span>Zahtjev za rasporedom</span></a>
-				</div>
-			</div>
-			<div class="BTNbox">
-				<div class="dashboard_box2">
-					<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
-				</div>
-			</div>
-			<div class="BTNbox">
-				<div class="dashboard_box2">
-					@if (Sentinel::inRole('administrator'))
-					<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
-					@else
-					<a class="" href="{{ route('admin.afterHours.create') }}"><span>Prekovremeni rad</span></a>
-					@endif
-				</div>
-			</div>
-			<div class="BTNbox">
-				<div class="dashboard_box2">
-					<a href="{{ route('admin.registrations.show', $registration->id) }}">
-						<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
-				</div>
-			</div>
-			
-			@foreach($questionnaires as $questionnaire)
-				<div class="BTNbox">
-					<div class="dashboard_box2 anketa">
-						<a href="{{ route('admin.questionnaires.show', $questionnaire->id) }}">
-							<span>Anketa<br> <br>{{$questionnaire->naziv}}</span></a>
-					</div>
-				</div>
-			@endforeach
-			
-			@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
+			@if(isset($employee))
 				<div class="BTNbox">
 					<div class="dashboard_box2">
-						<a href="{{ route('admin.notices.create') }}">
-							<span>Nova obavijest</span></a>
+						<a class="" href="{{ route('admin.vacation_requests.index') }}"><span>Godišnji odmor i izostanci</span></a>
+					</div>
+				</div>
+				<div class="BTNbox">
+					<div class="dashboard_box2">
+						<a class="" href="{{ route('admin.shedulePost') }}" ><span>Zahtjev za rasporedom</span></a>
+					</div>
+				</div>
+				<div class="BTNbox">
+					<div class="dashboard_box2">
+						<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
+					</div>
+				</div>
+				<div class="BTNbox">
+					<div class="dashboard_box2">
+						@if (Sentinel::inRole('administrator'))
+						<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
+						@else
+						<a class="" href="{{ route('admin.afterHours.create') }}"><span>Prekovremeni rad</span></a>
+						@endif
+					</div>
+				</div>
+				
+				<div class="BTNbox">
+					<div class="dashboard_box2">
+						<a href="{{ route('admin.registrations.show', $registration->id) }}">
+							<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
+					</div>
+				</div>
+				
+				@if($questionnaires)
+					@foreach($questionnaires->where('status','aktivna') as $questionnaire)
+						<div class="BTNbox">
+							<div class="dashboard_box2 anketa">
+								<a href="{{ route('admin.questionnaires.show', $questionnaire->id) }}">
+									<span>Anketa<br> <br>{{$questionnaire->naziv}}</span></a>
+							</div>
+						</div>
+					@endforeach
+				@endif
+				@if($educations)
+					@foreach($educations as $education)
+						<div class="BTNbox">
+							<div class="dashboard_box2 edukacija">
+								<a href="{{ route('admin.educations.show', $education->id) }}">
+									<span>Edukacija<br><br>{{$education->name}}</span></a>
+							</div>
+						</div>
+						@endforeach
+				@endif
+				@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
+					<div class="BTNbox">
+						<div class="dashboard_box2">
+							<a href="{{ route('admin.notices.create') }}">
+								<span>Nova obavijest</span></a>
+						</div>
+					</div>
+				@endif
+				<div class="BTNbox">
+					<div class="dashboard_box2 oglasnik">
+						<a href="">
+							<span>Naše njuškalo</span></a>
 					</div>
 				</div>
 			@endif
+				
 		</div>
 	</div>
 	<div class="row">
@@ -211,30 +245,66 @@
 				</table>
 			</div>
 		</div>
-		
 	@endif
 	</div>
+	@if(isset($employee))
 	<footer>
-		<div class="ech">
-			<p>Duplico je jedna od vodećih tvrtki tržišnog segmenta u domeni registriranih djelatnosti.</p>
-			<p>Postigli smo to kvantitetom i kvalitetom izvedenih projekata, ponašanjem prema kupcima, kao i stavom prema poslu te učinkovitošću rada na svim dosadašnjim projektima. Upravo kroz navedene kategorije se nameće i potreba za vrednovanjem Tvog rada:</p>
-			<dl class="dl_list">
-				<dt>Kvantiteta</dt>
-				<dd> - količina obavljenog posla, raspoloživo vrijeme za zadatke, uloženi napor, brzina rada </dd><br>
-				<dt>Kvaliteta</dt>
-				<dd> - znanje i sposobnost, spretnost, poštivanje rokova, pouzdanost, briga o izvršenju, fleksibilnost </dd><br>
-				<dt>Ponašanje</dt>
-				<dd> - sklonost timskom radu, sposobnost jasnog komuniciranja korektnost i principijelnost</dd><br>
-				<dt>Stav prema poslu</dt>
-				<dd> - identifikacija sa zadatkom, uloženi napor i izdržljivost, motiviranost, nezavisnost</dd><br>
-				<dt>Učinkovitost</dt>
-				<dd> - kontrola troška, ekonomično ponašanje, poduzetničko razmišljanje i djelovanje </dd><br>
-				<dt>Donošenje odluka</dt>
-				<dd> - spremnost prihvaćanja odgovornosti, sposobnost procjenjivanja, efikasnost i dosljednost u donošenju odluka, asertivnost</dd><br>
-			</dl>
-			Tijekom 2019. kroz sustav praćenja rada u ERP-u  doći ćemo do podatka o efektima Tvog angažmana kroz navedene kategorije, s ciljem stvaranja zajedničkog temelja našeg budućeg odnosa.
-		</div>
+
+		@foreach($questionnaires as $questionnaire)
+			@if(count($evaluations->where('questionnaire_id', $questionnaire->id)) > 0)
+				<div class="ech">
+					<div class="jumbotron">
+						<div>
+							<h4>Rezultati ankete {{ $questionnaire->name }} i moji ciljevi</h4>
+							<table>
+								<thead>
+									<tr>
+										<th>Grupa</th>
+										<th>Rezultat</th>
+										<th>Ciljana ocjena</th>
+										<th>Cilj</th>
+									</tr>
+								</thead>
+								<tbody>
+								
+									@foreach($evaluatingGroups->where('questionnaire_id', $questionnaire->id) as $evaluatingGroup)
+									
+										<tr  class="ev_group">
+											<td colspan="2">{{ $evaluatingGroup->naziv }}</td>
+											@foreach($evaluationTargets->where('group_id',$evaluatingGroup->id) as $evaluationTarget)
+													
+											<td class="">{!! $evaluationTarget->target != 0 ? $evaluationTarget->target : '' !!}</td>
+											<td class="">{{ $evaluationTarget->comment }}</td>
+											@endforeach
+										</tr>
+										@foreach($evaluatingQuestions->where('group_id',$evaluatingGroup->id) as $evaluatingQuestion)
+								
+											<tr class="ev_question">
+												<td>{{ $evaluatingQuestion->naziv }}</td>
+												<?php 
+												$rating = 0;
+												$rating1 = 0;
+												$i = 0;		
+												foreach($evaluations->where('question_id', $evaluatingQuestion->id) as $evaluation){
+													$rating += $evaluation->rating;
+													$i ++;
+													$rating1 = $rating / $i;
+												}
+												?>
+												<td>{{ number_format($rating1, 2) }}</td>
+												
+											</tr>
+										@endforeach
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			@endif
+		@endforeach
 	</footer>
+	@endif
 @else
 	<div class="jumbotron">
 		<h1>Welcome, Guest!</h1>
@@ -242,5 +312,5 @@
 		<p><a class="btn btn-primary btn-lg" href="{{ route('auth.login.form') }}" role="button">Log In</a></p>
 	</div>
 @endif
-
+<script src="{{ asset('js/efc_toggle.js') }}"></script>
 @stop

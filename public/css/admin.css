@@ -1,5 +1,9 @@
 /* CSS admin */
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+* {
+    box-sizing: border-box;
+}
+
 html {
 	font-size:14px;
 	min-height: 100vh;
@@ -9,6 +13,12 @@ body {
 	background: #fff;
 	padding:0 20px;
 	color:#333;
+}
+
+.isDisabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 a.btn.btn-md.pull-left {
@@ -86,10 +96,11 @@ a.btn.btn-md.pull-left {
 	float:right;
 }
 
-* {
-    box-sizing: border-box;
-}
 
+
+.ev_group {
+	
+}
 
 
 h1 img {
@@ -205,12 +216,13 @@ footer {
 	}
 }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-
 @media only screen and (max-width: 420px){
+	.sidenav {padding-top: 15px;}
+	.sidenav a {font-size: 18px;}
+  
+	.container-fluid {
+		padding:0 !important;
+	}
 	article, article:nth-child(2){
 		height:auto;
 		min-height:550px;
@@ -245,6 +257,39 @@ footer {
 	body {
 		padding:0;
 	}
+	footer {
+		margin-right: -15px !important;
+		margin-left: -15px !important;
+	}
+	.benefit small {
+		display:block;
+	}
+	.benefit .btn {
+		float: none !important;
+	}
+	.ech {
+		margin:0 !important;
+		padding: 10px !important;
+		width: 100% !important;
+		word-wrap: break-word;
+		
+	}
+	.ech .jumbotron{
+		padding: 10px !important;
+	}
+	.ech .jumbotron>div{
+		padding: 10px !important;
+	}
+	.ech table {
+		font-size: 12px !important;
+	}
+	.ech table thead tr th {
+		word-wrap: break-word;
+	}
+	div.odobrenje {
+		width:100%;
+	}
+}
 
 } 
 
@@ -469,7 +514,7 @@ form {
 	text-align:center;
 }
 
-#trazi {
+#trazi, #trazi2  {
 	border-radius:5px;
 	padding: 5px;
 	margin-bottom:10px;
@@ -483,7 +528,7 @@ a[data-method*="delete"]:hover{
 	text-align:justify;
 	width: 80%;
 	margin:20px auto;
-	font-size: 16px;
+	
 	
 }
 
@@ -497,6 +542,11 @@ div#table_id_wrapper {
 
 .BTNbox .anketa a{
 	background-color:#70a942a3;
+	
+}
+
+.BTNbox .edukacija a {
+	background-color:#b862c0;
 }
 
 .shedulePost {
@@ -525,4 +575,109 @@ footer {
 
 .fa-check {
 	color:green;
+}
+
+
+.benefit {
+ 	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 20px 30px !important;
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+.benefit .btn {
+	float:right;
+	text-transform:uppercase;
+	font-weight: bold;
+}
+
+.BTNbox .benefits a{
+	background-color:#2fa2a4;
+	color:white;
+}
+
+h3 a {
+	font-size: 1.5rem !important;
+	float:none !important;
+}
+
+.ech .jumbotron {
+	padding: 20px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 10px #ccc;
+	background-color: inherit;
+}
+
+.ech .jumbotron>div {
+	background-color:#eee;
+	padding: 20px;
+}
+
+.ech .jumbotron h4 {
+	text-align:center;
+	font-weight: bold;
+	color:#be0c0c;
+}
+
+.ech .jumbotron p {
+	font-size: 14px;
+}
+
+.ech table{
+	width: 100%;
+	font-size: 14px;
+}
+
+.ech table thead tr th{
+	text-align:center !important;
+	padding: 10px 0;
+}
+.ev_group {
+	border-bottom: 1px solid #ccc !important;
+	border-right: 1px solid #ccc !important;
+	font-weight:bold;
+	box-shadow: 5px 5px 10px #ccc;
+	text-align:center;
+}
+
+.ev_question td:not(:first-child)  {
+	padding-left: 20px !important;
+	text-align: center;
+	
+}
+
+.ech table tbody .ev_question td{
+	padding: 10px 0;
+}
+
+.ech table tbody .ev_group td {
+	padding: 5px 0;
+}
+
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left:20px;
+  margin:auto;
+}
+
+span.efc_show, span.efc_hide {
+	color: #0044cc;
+	cursor: pointer;
+	text-decoration:underline;
+}
+
+span.efc {
+	display: none;
+}
+
+.efc_hide {
+	display:none;
+}
+
+.dashboard_box2.oglasnik a {
+	background-color: #f5f5dc;
+	
 }

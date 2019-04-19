@@ -27,7 +27,7 @@
 	<script type="text/javascript">
 		$('.date').datepicker({  
 		   format: 'yyyy-mm-dd',
-		   startDate:'-60y',
+		   startDate:'-1y',
 		   endDate:'+1y',
 		}); 
 	</script> 

@@ -97,6 +97,7 @@ td {
 .raspored .page-header p, .raspored .page-header input{
 	display:inline;
 	width:auto;
+	padding-right: 30px;
 } 
 
 .mjesec {
@@ -137,4 +138,19 @@ button[type="submit"]:hover{
 .form i{
 	margin-left: -25px;
     margin-right: 25px;
+}
+
+
+table.izvjestaj_mjesec tr th:first-child, table.izvjestaj_mjesec tr td:first-child {
+   width: 30% !important;
+}
+
+span.w50 {
+	width: 50%;
+	text-align: center;
+	display:inline-block;
+	
+}
+span.w50:first-child {
+	border-right: 1px solid #ccc;
 }

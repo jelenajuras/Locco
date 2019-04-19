@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/jelenajuras/djelatnici-v.1#readme",
   "dependencies": {
-    "bootstrap": "^4.2.1"
+    "bootstrap": "^4.2.1",
+    "jquery-tabs": "^0.5.3",
+    "jquery-ui": "^1.12.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.7.0"

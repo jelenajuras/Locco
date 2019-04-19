@@ -1,0 +1,14 @@
+input[type="radio"]{
+	    margin-left: 20px !important;
+}
+
+.page-header {
+	padding: 0 30px !important;
+}
+
+#myInput {
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 30%;
+}
+

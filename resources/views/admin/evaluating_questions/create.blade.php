@@ -35,6 +35,10 @@
 						<textarea name="opis" type="text" class="form-control" rows="6" value="{{ old('opis') }}"></textarea>
 						{!! ($errors->has('opis') ? $errors->first('opis', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
+					<div class="form-group">
+                        <label>Dodatan opis</label>
+						<textarea name="opis2" type="text" class="form-control" rows="6" value="{{ old('opis2') }}"></textarea>
+                    </div>
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>

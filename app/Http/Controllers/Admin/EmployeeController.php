@@ -124,7 +124,7 @@ class EmployeeController extends Controller
 			}
 		);
 		
-			$zaduzene_osobe = array('petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','tomislav.novosel@duplico.hr','uprava@duplico.hr','matija.barberic@duplico.hr');
+			$zaduzene_osobe = array('petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','tomislav.novosel@duplico.hr','uprava@duplico.hr','matija.barberic@duplico.hr','nikolina.dujic@duplico.hr');
 		
 		foreach($zaduzene_osobe as $key => $zaduzena_osoba){
 			Mail::queue(

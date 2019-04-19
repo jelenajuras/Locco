@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use App\Http\Controllers\Controller;
+use App\Models\Table;
 
 class RoleController extends Controller
 {
@@ -43,7 +44,11 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('admin.roles.create');
+        $tables = Table::get();
+		
+		$permissions = array('create', 'update', 'view', 'delete');
+
+		return view('admin.roles.create', ['tables' => $tables, 'permissions' => $permissions]);
     }
 
     /**
@@ -110,11 +115,14 @@ class RoleController extends Controller
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
 
+		$tables = Table::get();
+		$permissions = array('create', 'update', 'view', 'delete');
+
         if ($role) {
             return view('admin.roles.edit')
-                ->with('role', $role);
+                ->with('role', $role)->with('tables',$tables)->with('permissions', $permissions);
         }
-
+		
         session()->flash('error', 'Invalid role.');
         return redirect()->back();
     }

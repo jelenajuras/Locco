@@ -12,7 +12,7 @@
 				@if (Sentinel::inRole('administrator'))
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 						<label class="padd_10">Djelatnik</label>
-						<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple>
+						<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
 							<option value="" disabled></option>
 							<option name="employee_id" value="svi">Svi djelatnici</option>
 							@foreach ($registrations as $djelatnik)
@@ -32,30 +32,29 @@
 					</p>
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 				@endif
-				
+				<!--<input name="montaza" type="hidden"  value="{{ $registration->work['job_description']}}" />-->
 				<div class="form-group {{ ($errors->has('zahtjev')) ? 'has-error' : '' }}">
-					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()">
+					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()" required>
 						<option disabled selected value></option>
 						<option class="editable1" value="GO">korištenje godišnjeg odmora za period od</option>
 						<option class="editable2" value="Bolovanje">bolovanje</option>
 						<option class="editable3"  value="Izlazak">izlazak</option>
-						<option class="editable4" value="NPL">korištenje neplaćenog odmora za period od</option>
-						<option class="editable7" value="PL">korištenje plaćenog odmora za period od</option>
+						<option class="editable4" value="NPL">korištenje neplaćenog dopusta za period od</option>
+						<option class="editable7" value="PL">korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK">oslobođenje od planiranog radnog vikenda</option>
 						<option class="editable5" value="SLD"  {{ ($slobodni_dani-$koristeni_slobodni_dani <= 0 && !Sentinel::inRole('administrator') ? 'disabled' : '' )  }} >korištenje slobodnih dana za period od</option>
 					</select> 
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
 				<p class="editOption4 iskorišteno display-none" >
-					<input type="hidden" value="{{$razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
-					@if($razmjeranGO - $daniZahtjevi > 0)
-						Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
+					<input type="hidden" value="{{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
+					@if($razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi > 0)
+							Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
 					@else
-						Svi dani godišnjeg odmora su iskorišteni! <br>
-						Nemoguće je poslati zahtjev za godišnji odmor.
+							Svi dani godišnjeg odmora su iskorišteni! <br>
+							Nemoguće je poslati zahtjev za godišnji odmor.
 					@endif
 				</p>
-
 				<p class="editOption5 iskorišteno display-none">
 					@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
 						Neiskorišteno {{ $slobodni_dani }} slobodnih dana
@@ -70,7 +69,7 @@
 				</div>
 				<span class="editOption2 do display-none" >do</span>
 				<div class="datum form-group editOption2 display-none">
-					<input name="GOzavršetak" class="date form-control" type="date" value ="{{ old('GOzavršetak')}}"" id="date2"><i class="far fa-calendar-alt" ></i>
+					<input name="GOzavršetak" class="date form-control" type="date" value ="{{ old('GOzavršetak')}}" id="date2"><i class="far fa-calendar-alt" ></i>
 					{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<div class="datum2 form-group editOption3 display-none">
@@ -79,12 +78,12 @@
 				</div>
 				<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 					<label>Napomena:</label>
-					<textarea rows="4" id="napomena" name="napomena" type="text" class="form-control" value="{{ old('napomena') }} "></textarea>
+					<textarea rows="4" id="napomena" name="napomena" type="text" class="form-control" value="{{ old('napomena') }} " required></textarea>
 					{!! ($errors->has('napomena') ? $errors->first('napomena', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				
 				<input name="_token" value="{{ csrf_token() }}" type="hidden">
-				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" onclick="GO_dani()">
+				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" >
 			</form>
 		</div>
 		<div class="uputa_RGO display-none">
@@ -123,14 +122,15 @@
 					var dan1 =  new Date(document.forms["myForm"]["GOpocetak"].value);
 					var dan2 = new Date(document.forms["myForm"]["GOzavršetak"].value);
 					var person = {GOpocetak:dan1, GOzavršetak:dan2};
+					
 					//razlika dana
 					var datediff = (dan2 - dan1);
 					document.getElementById('demo').innerHTML=(datediff / (24*60*60*1000)) +1;
 					//uvečava datum
 					dan1.setDate(dan1.getDate() + 1);
-					
 					//document.getElementById('demo').innerHTML=dan1;
 				}
+				return false;
 			}
 		</script>
 		<!-- validator  -->
@@ -139,21 +139,19 @@
 				var x = document.forms["myForm"]["zahtjev"].value;
 				var y = document.forms["myForm"]["Dani"].value;
 				var z = document.forms["myForm"]["GOpocetak"].value;
+
 				if (z == "") {
 					alert("Nemoguće poslati zahtjev. Nije upisan početan datum");
 					return false;
 				}
-				if (x == "GO" & y <= 0) {
+				if (x == "GO" & y <= 0 ) {
 					alert("Nemoguće poslati zahtjev. Svi dani godišnjeg odmora su iskorišteni");
 					return false;
 				}
 				
 			}
 		</script>
-		<!-- unos value u napomenu -->
-		<script>
-			
-		</script>
+		
 
 		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
 		<script src="{{ asset('js/go_value.js') }}"></script>

@@ -311,6 +311,15 @@ Route::group(['prefix' => 'admin'], function () {
   'update'		=> 'admin.evaluating_employees.update', 
   'destroy'		=> 'admin.evaluating_employees.destroy'
   ]]);
+  Route::resource('evaluation_targets', 'Admin\EvaluationTargetController', ['names' => [
+  'index' 		=> 'admin.evaluation_targets.index', 
+  'create' 		=> 'admin.evaluation_targets.create', 
+  'store' 		=> 'admin.evaluation_targets.store', 
+  'show' 		=> 'admin.evaluation_targets.show', 
+  'edit' 		=> 'admin.evaluation_targets.edit', 
+  'update'		=> 'admin.evaluation_targets.update', 
+  'destroy'		=> 'admin.evaluation_targets.destroy'
+  ]]);
   Route::resource('evaluations', 'Admin\EvaluationController', ['names' => [
   'index' 		=> 'admin.evaluations.index', 
   'create' 		=> 'admin.evaluations.create', 
@@ -328,6 +337,87 @@ Route::group(['prefix' => 'admin'], function () {
   'edit' 		=> 'admin.questionnaires.edit',  
   'update'		=> 'admin.questionnaires.update', 
   'destroy'		=> 'admin.questionnaires.destroy'
+  ]]);
+  Route::resource('educations', 'Admin\EducationController', ['names' => [
+  'index' 		=> 'admin.educations.index', 
+  'create' 		=> 'admin.educations.create', 
+  'store' 		=> 'admin.educations.store', 
+  'show' 		=> 'admin.educations.show', 
+  'edit' 		=> 'admin.educations.edit',  
+  'update'		=> 'admin.educations.update', 
+  'destroy'		=> 'admin.educations.destroy'
+  ]]);
+  Route::resource('education_themes', 'Admin\EducationThemeController', ['names' => [
+  'index' 		=> 'admin.education_themes.index', 
+  'create' 		=> 'admin.education_themes.create', 
+  'store' 		=> 'admin.education_themes.store', 
+  'show' 		=> 'admin.education_themes.show', 
+  'edit' 		=> 'admin.education_themes.edit',  
+  'update'		=> 'admin.education_themes.update', 
+  'destroy'		=> 'admin.education_themes.destroy'
+  ]]);
+  Route::resource('education_articles', 'Admin\EducationArticleController', ['names' => [
+  'index' 		=> 'admin.education_articles.index', 
+  'create' 		=> 'admin.education_articles.create', 
+  'store' 		=> 'admin.education_articles.store', 
+  'show' 		=> 'admin.education_articles.show', 
+  'edit' 		=> 'admin.education_articles.edit',  
+  'update'		=> 'admin.education_articles.update', 
+  'destroy'		=> 'admin.education_articles.destroy'
+  ]]);
+  Route::resource('education_comments', 'Admin\EducationCommentController', ['names' => [
+  'index' 		=> 'admin.education_comments.index', 
+  'create' 		=> 'admin.education_comments.create', 
+  'store' 		=> 'admin.education_comments.store', 
+  'show' 		=> 'admin.education_comments.show', 
+  'edit' 		=> 'admin.education_comments.edit',  
+  'update'		=> 'admin.education_comments.update', 
+  'destroy'		=> 'admin.education_comments.destroy'
+  ]]);
+   Route::resource('companies', 'Admin\CompanyController', ['names' => [
+  'index' 		=> 'admin.companies.index', 
+  'create' 		=> 'admin.companies.create', 
+  'store' 		=> 'admin.companies.store', 
+  'show' 		=> 'admin.companies.show', 
+  'edit' 		=> 'admin.companies.edit',  
+  'update'		=> 'admin.companies.update', 
+  'destroy'		=> 'admin.companies.destroy'
+  ]]);
+   Route::resource('benefits', 'Admin\BenefitController', ['names' => [
+  'index' 		=> 'admin.benefits.index', 
+  'create' 		=> 'admin.benefits.create', 
+  'store' 		=> 'admin.benefits.store', 
+  'show' 		=> 'admin.benefits.show', 
+  'edit' 		=> 'admin.benefits.edit',  
+  'update'		=> 'admin.benefits.update', 
+  'destroy'		=> 'admin.benefits.destroy'
+  ]]);
+  Route::resource('tables', 'Admin\TableController', ['names' => [
+  'index' 		=> 'admin.tables.index', 
+  'create' 		=> 'admin.tables.create', 
+  'store' 		=> 'admin.tables.store', 
+  'show' 		=> 'admin.tables.show', 
+  'edit' 		=> 'admin.tables.edit',  
+  'update'		=> 'admin.tables.update', 
+  'destroy'		=> 'admin.tables.destroy'
+  ]]);
+   Route::resource('ad_categories', 'Admin\AdCategoryController', ['names' => [
+  'index' 		=> 'admin.ad_categories.index', 
+  'create' 		=> 'admin.ad_categories.create', 
+  'store' 		=> 'admin.ad_categories.store', 
+  'show' 		=> 'admin.ad_categories.show', 
+  'edit' 		=> 'admin.ad_categories.edit',  
+  'update'		=> 'admin.ad_categories.update', 
+  'destroy'		=> 'admin.ad_categories.destroy'
+  ]]);
+  Route::resource('ads', 'Admin\AdController', ['names' => [
+  'index' 		=> 'admin.ads.index', 
+  'create' 		=> 'admin.ads.create', 
+  'store' 		=> 'admin.ads.store', 
+  'show' 		=> 'admin.ads.show', 
+  'edit' 		=> 'admin.ads.edit',  
+  'update'		=> 'admin.ads.update', 
+  'destroy'		=> 'admin.ads.destroy'
   ]]);
 });
 
@@ -356,6 +446,7 @@ Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses'
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
 Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
+
 Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\PostController@shedulePost']);
 Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses' => 'Admin\VacationRequestController@confirmation_show']);
 Route::get('admin/VacationRequest', ['as' => 'admin.VacationRequest', 'uses' => 'Admin\VacationRequestController@VacationRequest']);
@@ -363,6 +454,8 @@ Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'use
 
 Route::get('admin/confirmationAfter_show', ['as' => 'admin.confirmationAfter_show', 'uses' => 'Admin\AfterHoursController@confirmationAfter_show']);
 Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
+
+
 
 // Gantt kalendar
 Route::get('admin/', function () {

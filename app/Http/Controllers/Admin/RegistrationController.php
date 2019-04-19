@@ -114,9 +114,9 @@ class RegistrationController extends Controller
 		$radno_mj = $djelatnik->naziv;
 		$ime = $djelatnik->first_name;
 		$prezime = $djelatnik->last_name;
-		$work = Work::leftjoin('users','users.id','works.user_id')->where('works.id',$djelatnik->radnoMjesto_id)->first();
+		$work = Work::leftjoin('employee','employee.employee_id','works.user_id')->where('works.id', $djelatnik->radnoMjesto_id)->first();
 		
-		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','matija.barberic@duplico.hr');
+		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','petrapaola.bockor@duplico.hr','matija.barberic@duplico.hr','nikolina.dujic@duplico.hr');
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
 		
@@ -132,8 +132,8 @@ class RegistrationController extends Controller
 		}	
 		
 		$zaduzen = ('tomislav.novosel@duplico.hr');
-		$ime1 = $work->first_name;
-		$prezime1 = $work->last_name;
+		$ime1 = $work->first_name; // ime nadređene osobe
+		$prezime1 = $work->last_name; // prezime nadređene osobe
 		
 		Mail::queue(
 		'email.prijava4',

@@ -17,7 +17,7 @@
 			<form action="{{ route('admin.documents.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
 				<div class="form-group">
 					<label class="padd_10">Za djelatnika </label>
-					<select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}">
+					<select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required>
 						<option selected="selected" value=""></option>
 						<option name="svi" value="svi">Svi zaposlenici</option>
 						@foreach($registrations as $djelatnik)

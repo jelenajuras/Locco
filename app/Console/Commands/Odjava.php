@@ -42,7 +42,7 @@ class Odjava extends Command
      */
     public function handle()
     {
-      $djelatnici = EmployeeTermination::join('employees','employee_terminations.employee_id', '=', 'employees.id')->join('registrations','employee_terminations.employee_id', '=','registrations.employee_id')->join('works', 'registrations.radnoMjesto_id', '=', 'works.id')->select('employee_terminations.*','employees.first_name','employees.last_name','works.naziv')->whereMonth('employee_terminations.datum_odjave', '=', date('m'))->whereDay('employee_terminations.datum_odjave', '=', date('d'))->get();
+      $djelatnici = EmployeeTermination::join('employees','employee_terminations.employee_id', '=', 'employees.id')->join('registrations','employee_terminations.employee_id', '=','registrations.employee_id')->join('works', 'registrations.radnoMjesto_id', '=', 'works.id')->select('employee_terminations.*','employees.first_name','employees.last_name','works.naziv')->whereYear('employee_terminations.datum_odjave', '=', date('Y'))->whereMonth('employee_terminations.datum_odjave', '=', date('m'))->whereDay('employee_terminations.datum_odjave', '=', date('d'))->get();
 
 		foreach($djelatnici as $djelatnik) {
 			$ime = $djelatnik->first_name;

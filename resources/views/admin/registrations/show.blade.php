@@ -24,8 +24,8 @@
 				<p><b>Privatan e-mail: </b>{{ $registration->employee['priv_email'] }}</p>
 				</br>
 				<p><b>Prebivalište: </b>{{ $registration->employee['prebivaliste_adresa']  . ', ' . $registration->employee['prebivaliste_grad']  }}</p>
-				@if( $registration->employee['boravište_adresa']  )
-				<p><b>Boravište: </b>{{ $registration->employee['boravište_adresa'] . ', ' . $registration->employee['boravište_grad']  }}</p>
+				@if( $registration->employee['boraviste_adresa']  )
+				<p><b>Boravište: </b>{{ $registration->employee['boraviste_adresa'] . ', ' . $registration->employee['boraviste_grad']  }}</p>
 				@endif
 				</br>
 				<p><b>Zvanje: </b>{{ $registration->employee['zvanje']  }}</p>
@@ -46,8 +46,8 @@
 				</br>-->
 				<p><b>Radno mjesto: </b>{{  $registration->work['odjel'] . ' - '. $registration->work['naziv'] }}</p>
 				@if(Sentinel::inRole('uprava'))
-					<p><b>Efektivna cijena sata: </b>{{  number_format($effectiveHour->effective_cost,2,",",".") . ' kn' }}</p>
-					<p><b>Brutto godišnja plaća: </b>{{  number_format($effectiveHour->brutto,2,",",".") . ' kn'  }}</p>
+					<p><b>Efektivna cijena sata: </b>@if(isset($effectiveHour->effective_cost)){{  number_format($effectiveHour->effective_cost,2,",",".") . ' kn' }}@endif</p>
+					<p><b>Brutto godišnja plaća: </b>@if(isset($effectiveHour->effective_cost)){{  number_format($effectiveHour->brutto,2,",",".") . ' kn'  }}@endif</p>
 				@endif
 				<p><b>Liječnički pregled: </b>{{ date('d.m.Y', strtotime($registration->employee['lijecn_pregled'] ))  }}</p>
 				<p><b>Zaštita na radu: </b>{{ date('d.m.Y', strtotime($registration->employee['ZNR'] ))  }}</p>

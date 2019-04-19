@@ -44,6 +44,7 @@
 							<th onclick="sortTable(6)">Razmjeran dio GO  {{ $ova_godina}}</th>
 							<th onclick="sortTable(7)">Iskorišteni dani  {{ $ova_godina}}</th>
                             <th onclick="sortTable(8)">Neiskorišteno dana  {{ $ova_godina}}</th>
+							<th onclick="sortTable(8)">Ukupno neiskorišteno dana  GO</th>
 							<th onclick="sortTable(9)">Neiskorišteni slobodni dani</th>
 							
                         </tr>
@@ -71,8 +72,6 @@
 								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);
 								
 								$razmjeranGO = GodisnjiController::razmjeranGO($registration);
-								
-								//$proba = GodisnjiController::godisnjiPG($registration);
 								
 								$GO_PG = GodisnjiController::razmjeranGO_PG($registration); // razmjerni dani prošla godina
 								
@@ -102,10 +101,11 @@
 									<td>{{ $GO_PG }}</td> 							<!-- GO prošla godina -->
 									<td>{{ $daniZahtjeviPG }}</td>				<!-- iskorišteni dani prošla godina  -->
 									<td>{{ $GO_PG - $daniZahtjeviPG }}</td>				<!-- neiskorišteni dani prošla godina  -->
-									<td>{{  $godisnjiUser }}</td>					 <!-- ukupno GO -->
+									<td>{{ $godisnjiUser }}</td>					 <!-- ukupno GO -->
 									<td>{{ $razmjeranGO }}</td> 					<!-- Razmjerni dani GO-->
 									<td>{{ $daniZahtjevi }}</td> 				<!-- // iskorišteni dani ova godina -->
 									<td>{{ $razmjeranGO - $daniZahtjevi }}</td>  <!-- // neiskorišteni dani godišnjeg odmora ova godina -->
+									<td>{{ $GO_PG - $daniZahtjeviPG + $razmjeranGO - $daniZahtjevi }}</td> 
 									<td class="width_10">{{ $slDani - $koristeni_slDani  }}</td>
 								</tr>
 									

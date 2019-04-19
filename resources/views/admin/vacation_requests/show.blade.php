@@ -1,8 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Duplico djelatnici')
+@section('title', 'Izostanci djelatnika' . ' - ' . $employee->first_name . ' ' . $employee->last_name )
 <?php
 	use App\Http\Controllers\GodisnjiController;
+	$ukupna_razlika = 0;
+	$iskorišteno_GO = 0;
+	$iskorišteno_SLD = 0;
+	$iskorišteno_GO_ova_godina = 0;
+	$iskorišteno_GO_prosla_godina = 0;
 ?>
 @section('content')
 <div class="row">
@@ -17,7 +22,10 @@
 					<thead>
 						<tr>
 							<th class="not-export-column">Opcije</th>
-							<th>Od - Do</th>
+							<th>Do</th>
+							<th>Do</th>
+							<th>Period</th>
+							<th>Vrijeme</th>
 							<th>Zahtjev</th>
 							<th>Napomena</th>
 							<th>Odobreno</th>
@@ -25,12 +33,18 @@
 							<th>Datum odobrenja</th>
 						</tr>
 					</thead>
-					
 					<tbody id="myTable">
 					@foreach($vacationRequests as $vacationRequest)
 						<?php 
 							$brojDana = GodisnjiController::daniGO(['GOpocetak' => $vacationRequest->GOpocetak, 'GOzavršetak' => $vacationRequest->GOzavršetak] );
 							$vrijeme = GodisnjiController::izlazak(['od' => $vacationRequest->vrijeme_od, 'do' => $vacationRequest->vrijeme_do] );
+							if($vacationRequest->zahtjev == 'GO' && $vacationRequest->odobreno == 'DA' ) {
+								$iskorišteno_GO += $brojDana;
+							}
+							if($vacationRequest->zahtjev == 'SLD' && $vacationRequest->odobreno == 'DA' ){
+								$iskorišteno_SLD += $brojDana;
+							}
+	
 						?>
 						<tr>
 							<td class="not-export-column">
@@ -44,21 +58,21 @@
 								</a>
 							@endif
 							</td>
-							<td>{{ date('d.m.Y.', strtotime( $vacationRequest->GOpocetak)) }}
-								
-								@if($vacationRequest->GOzavršetak != $vacationRequest->GOpocetak )
-								{{ ' - ' . date('d.m.Y.', strtotime( $vacationRequest->GOzavršetak)) }}
-								
-								@elseif($vacationRequest->zahtjev != 'GO') 
-									{{ date('H:i', strtotime( $vacationRequest->GOpocetak. ' '. $vacationRequest->vrijeme_od))  }} - {{  date('H:i', strtotime( $vacationRequest->GOpocetak. ' '. $vacationRequest->vrijeme_do)) }}
+							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->GOpocetak)) }}</td>
+							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->GOzavršetak)) }}</td>
+							
+							<td>@if($vacationRequest->zahtjev == 'Izlazak')
+									{{$vrijeme . ' h' }}
+								@else
+									 {{$brojDana . ' dana' }}
+								@endif</td>
+							<td>	
+								@if($vacationRequest->zahtjev == 'Izlazak') 
+									{{ date('H:i', strtotime($vacationRequest->vrijeme_od))  }} - {{  date('H:i', strtotime($vacationRequest->vrijeme_do)) }}
 								@endif
 							</td>
 							<td>{{ $vacationRequest->zahtjev }}
-								@if($vacationRequest->zahtjev == 'Izlazak')
-									{{'- ' . $vrijeme . ' h' }}
-								@else
-									 {{'- ' . $brojDana . ' dana' }}
-								@endif
+								
 							</td>
 							<td>{{ $vacationRequest->napomena }}</td>
 							<td>{{ $vacationRequest->odobreno }}  {{ $vacationRequest->razlog  }}</td>
@@ -72,7 +86,10 @@
 						@endforeach
 					</tbody>
 				</table>
-
+				<div class="page-footer">
+					<h4>Ukupno iskorišteno dana GO {{ $iskorišteno_GO }}</h4>
+					<h4>Ukupno iskorišteno slobodnih dana {{ $iskorišteno_SLD }} </h4>
+				</div>
 				@else
 					{{'Nema podataka!'}}
 				@endif
@@ -80,17 +97,69 @@
         </div>
     </div>
 </div>
-<!--
-<div class="uputa">
-	<p>*** Napomena:</p>
-	<p>Sukladno radnopravnim propisima RH:<br>
-		- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
-		- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
-		- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
-		- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
+@if(Sentinel::inRole('administrator'))
+  <div class="row" id="printarea">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		 <div class="page-header">
+			<h2>Prekovremeni sati</h2>
+		</div>
+           <div class="table-responsive">
+				@if(count($afterHours) > 0)
+					 <table id="table_id1" class="display" style="width: 100%;">
+						<thead >
+							<tr>
+								<th style="border-bottom: 1px double #ccc;">Djelatnik</th>
+								<th style="border-bottom: 1px double #ccc;">Datum</th>
+								<th style="border-bottom: 1px double #ccc;">Vrijeme</th>
+								<th style="border-bottom: 1px double #ccc;">Napomena</th>
+								<th style="border-bottom: 1px double #ccc;">Odobrenje</th>
+								<th  style="border-bottom: 1px double #ccc;" class="not-export-column">Opcije</th>
+							</tr>
+						</thead>
+						<tbody id="myTable">
+							@foreach ($afterHours as $afterHour)
+								<?php
+								
+								$vrijeme_1 = new DateTime($afterHour->vrijeme_od);  /* vrijeme od */
+								$vrijeme_2 = new DateTime($afterHour->vrijeme_do);  /* vrijeme do */
+								$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+								$ukupna_razlika += $razlika_vremena->h;
+								?>
 
-	Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
-	</p>
-</div>-->
+								<tr>
+									<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
+									<td>>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
+									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do . '(' .   $razlika_vremena->h . ' h)'   }}</td>
+									<td>{{ $afterHour->napomena }}</td>
+									<td>{{ $afterHour->odobreno }}</td>
+									
+									<td>
+										<a href="{{ route('admin.confirmationAfter_show', ['id' => $afterHour->id]) }}" class="btn" title="Odobri">
+											<i class="fas fa-check"></i>
+										</a>
+										<a href="{{ route('admin.afterHours.edit', $afterHour->id) }}" class="btn" title="Ispravi">
+											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+											
+										</a>
+										<a href="{{ route('admin.afterHours.destroy', $afterHour->id) }}" class="btn action_confirm {{ ! Sentinel::inRole('administrator') ? 'disabled' : '' }}" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši">
+											<i class="far fa-trash-alt"></i>
+										</a>
+									</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+					<div class="page-footer">
+						<h4>Ukupno prekovremenih sati {{ $ukupna_razlika }}</h4>
+						<h4>Ukupno slobodnih dana {{ floor($ukupna_razlika/8) }}</h4>
+					</div>
+		
+				@else
+					{{'Nema neodobrenih evidencija!'}}
+				@endif
+            </div>
+        </div>
+    </div>
+@endif
 
 @stop

@@ -19,7 +19,7 @@
         </div>
 	    <h1>Zaposlenici po odjelima</h1>
     </div>
-	<input class='pull-right' type="text" id="trazi" onkeyup="TraziIme()" placeholder="Traži ime..." title="Type in a name">
+	<input class='pull-right' type="text" id="trazi" onkeyup="TraziIme()" placeholder="Traži ..." title="Type in a name or department">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="table-responsive">
@@ -75,9 +75,11 @@ function TraziIme() {
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
+	td1 = tr[i].getElementsByTagName("td")[1];
+    if (td || td1) {
       txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+	  txtValue1 = td1.textContent || td1.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue1.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
       } else {
         tr[i].style.display = "none";
@@ -85,5 +87,6 @@ function TraziIme() {
     } 
   }
 }
+
 </script>
 @stop

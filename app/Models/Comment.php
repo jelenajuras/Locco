@@ -18,7 +18,7 @@ class Comment extends Model
 	* 
 	* @var string
 	*/
-	protected static $usersModel = 'App\Models\Users';
+	protected static $usersModel = 'App\Models\Employee';
 	
 	/*
 	* The Eloquent posts model name

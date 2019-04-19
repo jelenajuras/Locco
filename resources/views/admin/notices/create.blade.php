@@ -7,7 +7,7 @@
   <h2>Upis nove obavijesti</h2>
 </div> 
 <div class="">
-	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+	<div class="col-sm-12 col-md-6 col-lg-6 col-lg-offset-1">
 		<div class="panel panel-default">
 			<div class="panel-body">
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.notices.store') }}">
@@ -47,19 +47,19 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-sm-12 col-md-4 col-lg-2 col-lg-offset-1" style="padding:20px">
+		@foreach($departments2 as $department2)
+			<details>
+			<summary>{{ $department2->name }}</summary>
+				@foreach($employee_departments->where('department_id',$department2->id) as $employee_department)
+					@if(!DB::table('employee_terminations')->where('employee_id',$employee_department->employee_id)->first() )
+						<p>-  {{ $employee_department->employee['last_name'] }}</p>
+					@endif
+				@endforeach
+			
+			</details>
+		@endforeach
+	</div>
 </div>
-<script>
-$(document).ready(function() {
-  $('#summernote').summernote({
-	  height: 200
-  });
-});
-</script>
-<script>
-$('option').mousedown(function(e) {
-    e.preventDefault();
-    $(this).prop('selected', !$(this).prop('selected'));
-    return false;
-});
-</script>
+<script src="{{ asset('js/summernote.js') }}"></script>
 @stop

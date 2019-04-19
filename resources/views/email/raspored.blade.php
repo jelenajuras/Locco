@@ -14,7 +14,7 @@
 	?>
 	<body>
 		<h3>{{ $poruka }}</h3>
-		<p><a href="{{ $link }}" >Link na zahtjev</a></p>
+	<!--	<p><a href="{{ $link }}" >Link na zahtjev</a></p>-->
 		
 
 	</body>

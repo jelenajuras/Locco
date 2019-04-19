@@ -15,17 +15,8 @@ h2{
 	padding:10px;
 }
 
-.BTNbox:first-child .dashboard_box2 a {
+.oglasna a {
 	background-color:coral;
-}
-
-.BTNbox:first-child .dashboard_box2 a:hover {
-	background-color:#eea68c;
-}
-
-.BTNbox:last-child .dashboard_box2 a {
-	background-color:#74b1e5;
-
 }
 
 .dashboard_box1{

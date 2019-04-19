@@ -35,7 +35,7 @@
 								<tr>
 									<td>{{ $evaluatingQuestion->group['naziv'] }}</td>
 									<td>{{ $evaluatingQuestion->naziv }}</td>
-									<td>{{ $evaluatingQuestion->opis }}</td>
+									<td>{{ $evaluatingQuestion->opis }}<br><small>{{ $evaluatingQuestion->opis2 }}</small></td>
 									<td>
 										<a href="{{ route('admin.evaluating_questions.edit', $evaluatingQuestion->id) }}">
 											<i class="fas fa-edit"></i>

@@ -95,11 +95,12 @@ class UserController extends Controller
             }
         }
 		
-		// $email = $request->get('email');
-		$email = 'jelena.juras@duplico.hr';
+		$email = $request->get('email');
+		//$email = 'jelena.juras@duplico.hr';
+		$podrska = 'itpodrska@duplico.hr';
 		$lozinka = $request->get('password');
 		$link = 'http://administracija.duplico.hr/';
-		$podrska = 'jelena.juras@duplico.hr';
+	//	$podrska = 'jelena.juras@duplico.hr';
 		
 		Mail::queue(
 			'email.portal',
@@ -109,6 +110,16 @@ class UserController extends Controller
 					->subject('Portal za zaposlenike' );
 			}
 		);
+		
+		Mail::queue(
+			'email.portal',
+			['email' => $email,'lozinka' => $lozinka,'link' => $link, 'podrska' => $podrska ],
+			function ($message) use ($podrska) {
+				$message->to($podrska)
+					->subject('Portal za zaposlenike' );
+			}
+		);
+		
 		
 		$message = session()->flash('success', 'Uspješno je dodan novi djelatnik');
         return $result->dispatch(route('users.index'))->withFlashMessage($message);

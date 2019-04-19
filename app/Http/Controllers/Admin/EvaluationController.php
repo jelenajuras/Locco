@@ -8,6 +8,7 @@ use App\Models\EvaluatingQuestion;
 use App\Models\EvaluatingGroup;
 use App\Models\EvaluatingEmployee;
 use App\Models\Registration;
+use App\Models\EvaluationTarget;
 use App\Models\Questionnaire;
 use App\Models\EvaluatingRating;
 use App\Models\Employee;
@@ -41,12 +42,11 @@ class EvaluationController extends Controller
 		$evaluatingGroups = EvaluatingGroup::get();
 		$mjesec_godina = EvaluatingEmployee::select('mjesec_godina')->distinct()->get();
 		$evaluatingEmployee = EvaluatingEmployee::get();
-		
 		$data = array('evaluations'=> $evaluations, 'evaluatingEmployee'=> $evaluatingEmployee, 'mjesec_godina'=> $mjesec_godina, 'registrations'=> $registrations, 'questionnaires'=> $questionnaires, 'evaluatingGroups'=> $evaluatingGroups);
 		
 	//	return response()->json(array('data'=> $data), 200);
 		
-		return view('admin.evaluations.index',['evaluatingEmployee'=>$evaluatingEmployee,'mjesec_godina'=>$mjesec_godina,'registrations'=>$registrations,'questionnaires'=>$questionnaires,'evaluatingGroups'=>$evaluatingGroups]);
+		return view('admin.evaluations.index',['evaluatingEmployee'=>$evaluatingEmployee,'evaluations'=>$evaluations,'mjesec_godina'=>$mjesec_godina,'registrations'=>$registrations,'questionnaires'=>$questionnaires,'evaluatingGroups'=>$evaluatingGroups]);
     }
 
     /**
@@ -190,8 +190,12 @@ class EvaluationController extends Controller
 		$questionnaire = Questionnaire::where('id', $request['questionnaire_id'])->first();
 		$evaluatingGroups = EvaluatingGroup::where('questionnaire_id', $request['questionnaire_id'])->get();
 		$evaluatingQuestions = EvaluatingQuestion::get();
+		$mjesec_godina = $request['mjesec_godina'];
+		$ratings = EvaluatingRating::get();
+		$targets = EvaluationTarget::where('questionnaire_id',$questionnaire->id)->where('employee_id',$id)->where('mjesec_godina',$mjesec_godina)->get();
 		
-		return view('admin.evaluations.show', ['employee' => $employee, 'evaluation_D' => $evaluation_D, 'evaluations' => $evaluations,'questionnaire' => $questionnaire, 'evaluatingGroups' => $evaluatingGroups,  'evaluatingQuestions' => $evaluatingQuestions, 'mjesec_godina' =>$request['mjesec_godina'], 'evaluatingEmployees' => $evaluatingEmployees, 'questionnaire_id' => $request['questionnaire_id']]);
+		return view('admin.evaluations.show', ['employee' => $employee, 'evaluation_D' => $evaluation_D, 'evaluations' => $evaluations,'questionnaire' => $questionnaire, 'evaluatingGroups' => $evaluatingGroups,  'evaluatingQuestions' => $evaluatingQuestions, 'mjesec_godina' =>$request['mjesec_godina'], 'evaluatingEmployees' => $evaluatingEmployees, 'questionnaire_id' => $request['questionnaire_id'], '$mjesec_godina' => $mjesec_godina, 'ratings' => $ratings, 'targets' => $targets ]);
+		
 		
     }
 

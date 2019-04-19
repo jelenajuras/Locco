@@ -6,6 +6,7 @@ use App\Models\Work;
 use App\Models\Users;
 use App\Models\Employee;
 use App\Models\Registration;
+use App\Models\Termination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkRequest;
@@ -37,9 +38,10 @@ class WorkController extends Controller
      */
     public function create()
     {
-      $users = Registration::get();
+	   $users = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
+	   $terminations = Termination::get();
 	   
-	   return view('admin.works.create',['users'=>$users]);
+	   return view('admin.works.create',['users'=>$users, 'terminations'=>$terminations]);
     }
 
     /**
@@ -55,6 +57,7 @@ class WorkController extends Controller
 		$data = array(
 			'odjel'  => $input['odjel'],
 			'naziv'  => $input['naziv'],
+			'job_description'  => $input['job_description'],
 			'pravilnik'  => $input['pravilnik'],
 			'tocke'  => $input['tocke'],
 			'user_id'  => $input['user_id']
@@ -100,7 +103,9 @@ class WorkController extends Controller
 		$work = Work::leftjoin('employees','employees.id','works.user_id')->find($id);
 		$users = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.last_name','employees.first_name')->orderBy('last_name','ASC')->get();
 
-		return view('admin.works.edit',['work' => $work], ['work1' => $work1])->with('users', $users);
+	    $terminations = Termination::get();
+	   
+		return view('admin.works.edit',['work' => $work, 'work1' => $work1, 'users' => $users, 'terminations' => $terminations]);
     }
 
     /**
@@ -118,6 +123,7 @@ class WorkController extends Controller
 		$data = array(
 			'odjel'  => $input['odjel'],
 			'naziv'  => $input['naziv'],
+			'job_description'  => $input['job_description'],
 			'pravilnik'  => $input['pravilnik'],
 			'tocke'  => $input['tocke'],
 			'user_id'  => $input['user_id']

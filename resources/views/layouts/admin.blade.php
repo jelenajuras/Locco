@@ -30,8 +30,13 @@
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
 
 		<!-- include summernote css/js -->
-		<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
 
+		<!-- include summernote css/js -->
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		@stack('stylesheet')
     </head>
     <body>
@@ -49,23 +54,32 @@
 		<section class="Body_section">
 			<input type="hidden" id="rola" {!! Sentinel::inRole('basic') ? 'value="basic"' : '' !!} />
 			<nav class="topnav col-xs-12 col-sm-3 col-md-3 col-lg-2" id="myTopnav">
-				@if(Sentinel::check() && Sentinel::inRole('administrator') || Sentinel::inRole('basic') ||  Sentinel::inRole('uprava'))
+				@if(Sentinel::check())
 					<a href="{{ route('home') }}" class="naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
-					<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
-					@if(Sentinel::inRole('administrator'))
-					<a href="{{ route('admin.gantt') }}" >Kalendar</a>
-						<button class="collapsible poruke"><span>Opći podaci<i class="fas fa-caret-down"></i></span></button>
+					<a class="" href="{{ route('admin.ad_categories.index') }}">Predaj oglas</a>
+					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') )
+						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
+					@endif
+					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))
+					<!--<a href="{{ route('admin.gantt') }}" >Kalendar</a>-->
+						@if(Sentinel::inRole('superadmin'))
+							<button class="collapsible poruke {{ !Sentinel::inRole('superadmin') ? 'isDisabled' : '' }}"><span>SUPER ADMIN<i class="fas fa-caret-down"></i></span></button>
+							<div class="collapse">
+								<a class="{{ !Sentinel::inRole('superadmin') ? 'isDisabled' : '' }}" href="{{ route('roles.index') }}">Uloge</a>
+								<a class="{{ !Sentinel::inRole('superadmin') ? 'isDisabled' : '' }}" href="{{ route('admin.tables.index') }}">Tablice</a>
+							</div>
+						@endif
+						<button class="collapsible poruke {{ !Sentinel::inRole('administrator') ? 'isDisabled' : '' }}"><span>Opći podaci<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse ">
 							<a class="" href="{{ route('users.index') }}">Korisnici</a>
-							<a class="" href="{{ route('roles.index') }}">Uloge</a>
 							<a class="" href="{{ route('admin.works.index') }}">Radna mjesta</a>
 							<a class="" href="{{ route('admin.departments.index') }}">Odjeli</a>
 							<a class="" href="{{ route('admin.terminations.index') }}">Otkazi</a>
-							<a class=" " href="{{ route('admin.equipments.index') }}" >Radna oprema</a>
-							<a class=" " href="{{ route('admin.cars.index') }}">Vozila</a>	
+							<a class="" href="{{ route('admin.equipments.index') }}" >Radna oprema</a>
+							<a class="" href="{{ route('admin.cars.index') }}">Vozila</a>	
 						</div>
-						<button class="collapsible poruke"><span>Administracija<i class="fas fa-caret-down"></i></span></button>
+						<button class="collapsible poruke {{ !Sentinel::inRole('administrator') ? 'isDisabled' : '' }}"><span>Administracija<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse ">
 							<a class="" href="{{ route('admin.job_interviews.index') }}">Razgovori za posao</a>
 							<a class="" href="{{ route('admin.employees.index') }}">Kandidati za posao</a>
@@ -73,7 +87,7 @@
 							<a class="" href="{{ route('admin.employee_departments.index') }}">Zaposenici po odjelima</a>
 							<a class="" href="{{ route('admin.employee_equipments.index') }}">Zadužena oprema</a>
 							<a class="" href="{{ route('admin.kids.index') }}">Djeca zaposlenika</a>
-							<a class=" " href="{{ route('admin.employee_terminations.index') }}">Odjavljeni radnici</a>
+							<a class="" href="{{ route('admin.employee_terminations.index') }}">Odjavljeni radnici</a>
 						</div>
 						<button class="collapsible poruke"><span>Izostanci<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse">
@@ -88,27 +102,32 @@
 						</div>
 						<button class="collapsible poruke"><span>Ostalo<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse ">
+							<a class="" href="{{ route('admin.benefits.index') }}">Pogodnosti za zaposlenike</a>
 							<a class="" href="{{ route('admin.notices.index') }}">Obavijesti</a>
-							<a class="" href="{{ route('admin.showKalendar') }}">Kalendar sastanaka</a>
+							<!--<a class="" href="{{ route('admin.showKalendar') }}">Kalendar sastanaka</a>-->
 							
 							@if(Sentinel::inRole('uprava'))
 								<a class="" href="{{ route('admin.effective_hours.index') }}">ECH</a>
 							@endif
 						</div>
-
-						@if(Sentinel::inRole('administrator'))
-							<button class="collapsible poruke"><span>Ankete<i class="fas fa-caret-down"></i></span></button>
-							<div class="collapse">
-								<a class="" href="{{ route('admin.questionnaires.index') }}">Ankete</a>
-								<a class="}" href="{{ route('admin.evaluating_groups.index') }}">Kategorije</a>
-								<a class="" href="{{ route('admin.evaluating_questions.index') }}">Podkategorije</a>
-								<a class="" href="{{ route('admin.evaluating_ratings.index') }}">Ocjene</a>
-								<a class="" href="{{ route('admin.evaluating_employees.index') }}">Zaposlenici</a>
-								@if(Sentinel::inRole('uprava'))
-									<a class="" href="{{ route('admin.evaluations.index') }}">Rezultati</a>
-								@endif
-							</div>
-						@endif
+						<button class="collapsible poruke"><span>Ankete<i class="fas fa-caret-down"></i></span></button>
+						<div class="collapse">
+							<a class="" href="{{ route('admin.questionnaires.index') }}">Ankete</a>
+							<a class="}" href="{{ route('admin.evaluating_groups.index') }}">Kategorije</a>
+							<a class="" href="{{ route('admin.evaluating_questions.index') }}">Podkategorije</a>
+							<a class="" href="{{ route('admin.evaluating_ratings.index') }}">Ocjene</a>
+							<a class="" href="{{ route('admin.evaluating_employees.index') }}">Zaposlenici</a>
+							@if(Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić' || Sentinel::getUser()->last_name == 'Juras') <!--  Vide uprava i Matija--> 
+								<a class="" href="{{ route('admin.evaluations.index') }}">Rezultati</a>
+							@endif
+						</div>
+						<button class="collapsible poruke"><span>Edukacija<i class="fas fa-caret-down"></i></span></button>
+						<div class="collapse">
+							<a class="" href="{{ route('admin.educations.index') }}">Edukacije</a>
+							<a class="" href="{{ route('admin.education_themes.index') }}">Teme</a>
+							<a class="" href="{{ route('admin.education_articles.index') }}">Članci</a>
+						</div>
+						
 					@endif
 					<div class="noticesHome">
 						<!--@if(DB::table('notices')->take(5)->get())
@@ -135,14 +154,13 @@
 				 <i class="fa fa-bars"></i>
 				</a>
 			</nav>
-			<article class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+			<section class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
 					@include('notifications')
 					@yield('content')
-			</article>
+			</section>
 		
 		</section>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
@@ -179,7 +197,22 @@
 			}
 		
 		</script>
-
+		<script>
+			/* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+	/*		var dropdown = document.getElementsByClassName("collapsible");
+			var i;
+			for (i = 0; i < dropdown.length; i++) {
+			dropdown[i].addEventListener("click", function() {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+			  dropdownContent.style.display = "none";
+			} else {
+			  dropdownContent.style.display = "block";
+			}
+			});
+			}*/
+		</script>
 		@stack('script')
     </body>
 </html>

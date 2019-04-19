@@ -32,7 +32,7 @@
                                 <td>{{ $kid->employee['first_name'] . ' ' . $kid->employee['last_name'] }}</td>
 								<td>{{ $kid->ime . ' ' . $kid->prezime }}</td>
                                 <td>{{ date('d.m.Y', strtotime($kid->datum_rodjenja)) }}</td>
-                                  <td>
+                                 <td>
                                     <a href="{{ route('admin.kids.edit', $kid->id) }}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </a>

@@ -28,6 +28,10 @@
 						{!! ($errors->has('naziv') ? $errors->first('naziv', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group">
+						<label>Opis rada:</label>
+						<input name="job_description" type="text" class="form-control" value="{{ old('job_description') }}" required>
+					</div>
+					<div class="form-group">
 						<label>Pravilnik:</label>
 						<select class="form-control" name="pravilnik" id="sel1" value="{{ old('pravilnik') }}">
 							<option selected="selected" value=""></option>
@@ -44,7 +48,9 @@
 						<select class="form-control" name="user_id" id="sel1" value="{{ old('user_id') }}"required>
 							<option selected="selected"></option>
 						@foreach($users as $user)
-							<option name="user_id" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }} </option>
+							@if(! $terminations->where('employee_id', $user->employee_id)->first())
+								<option name="user_id" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }} </option>
+							@endif
 						@endforeach
 						</select>
 						{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -54,12 +60,12 @@
 						<select class="form-control" name="prvi_userId" id="sel1" value="{{ old('prvi_userId') }}" >
 							<option selected="selected"></option>
 						@foreach($users as $user)
-							<option name="prvi_userId" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }}</option>
+							@if(! $terminations->where('employee_id', $user->employee_id)->first())
+								<option name="prvi_userId" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }}</option>
+							@endif
 						@endforeach
 						</select>
-
 					</div>
-					
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši radno mjesto" id="stil1">
 				</form>
@@ -67,5 +73,4 @@
 		</div>
 	</div>
 </div>
-
 @stop

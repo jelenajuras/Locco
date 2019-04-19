@@ -12,40 +12,43 @@
 						<option class="editable1" value="GO" {!! ($vacationRequest->zahtjev == 'GO' ? 'selected ': '') !!}>korištenje godišnjeg odmora za period od</option >
 						<option class="editable2" value="Bolovanje" {!! ($vacationRequest->zahtjev == 'Bolovanje' ? 'selected ': '') !!}>bolovanje</option >
 						<option class="editable3"  value="Izlazak" {!! ($vacationRequest->zahtjev == 'Izlazak' ? 'selected ': '') !!}>Prijevremeni izlaz dana</option >
-						<option class="editable4" value="NPL" {!! ($vacationRequest->zahtjev == 'NPL' ? 'selected ': '') !!}>korištenje neplaćenog odmora za period od</option>
-						<option class="editable7" value="PL" {!! ($vacationRequest->zahtjev == 'PL' ? 'selected ': '') !!}>korištenje plaćenog odmora za period od</option>
+						<option class="editable4" value="NPL" {!! ($vacationRequest->zahtjev == 'NPL' ? 'selected ': '') !!}>korištenje neplaćenog dopusta za period od</option>
+						<option class="editable7" value="PL" {!! ($vacationRequest->zahtjev == 'PL' ? 'selected ': '') !!}>korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK" {!! ($vacationRequest->zahtjev == 'VIK' ? 'selected ': '') !!}>oslobođenje od planiranog radnog vikenda</option>
 						<option class="editable5" value="SLD"  {!! ($slobodni_dani-$koristeni_slobodni_dani <= 0 ? 'disabled' : '' )  !!} {!! ($vacationRequest->zahtjev == 'SLD' ? 'selected ': '') !!} >korištenje slobodnih dana za period od</option>
 					</select> 
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
-					<p class="editOption4 iskorišteno" style="display:none;">
-					<input type="hidden" value="{{$razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
-					@if($razmjeranGO - $daniZahtjevi > 0)
-						Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
-					@else
-						Svi dani godišnjeg odmora su iskorišteni! <br>
-						Nemoguće je poslati zahtjev za godišnji odmor.
-					@endif
-					</p>
-					<p class="editOption5 iskorišteno" style="display:none;">
-						@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
-							Neiskorišteno {{ $slobodni_dani }} slobodnih dana
+					<input name="montaza" type="hidden"  value="{{ $registration->work['job_description']}}" />
+					@if($registration->work['job_description'] != 'montaža')
+						<p class="editOption4 iskorišteno" style="display:none;">
+						<input type="hidden" value="{{$razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
+						@if($razmjeranGO - $daniZahtjevi > 0)
+							Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
 						@else
-							Svi slobodni dani su iskorišteni! <br>
-							Nemoguće je poslati zahtjev za slobodni dan.
+							Svi dani godišnjeg odmora su iskorišteni! <br>
+							Nemoguće je poslati zahtjev za godišnji odmor.
 						@endif
-					</p>
-
+						</p>
+						<p class="editOption5 iskorišteno" style="display:none;">
+							@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
+								Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
+							@else
+								Svi slobodni dani su iskorišteni! <br>
+								Nemoguće je poslati zahtjev za slobodni dan.
+								
+							@endif
+						</p>
+					@endif
 					<div class="datum form-group editOption1" >
 						<input name="GOpocetak" class="date form-control" type="text" value = "{{  date('d-m-Y', strtotime($vacationRequest->GOpocetak)) }}"><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<span class="editOption2 do" {!! ($vacationRequest->zahtjev != 'GO' ? ' style="display:none;" ': '') !!}>do</span>
-					<div class="datum form-group editOption2" {!! ($vacationRequest->zahtjev != 'GO' ? ' style="display:none;" ': '') !!}>
+					<span class="editOption2 do" >do</span>
+					<div class="datum form-group editOption2">
 						<input name="GOzavršetak" class="date form-control" type="text" value = "{{  date('d-m-Y', strtotime($vacationRequest->GOzavršetak)) }}"><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<div class="datum2 form-group editOption3" {!! ($vacationRequest->zahtjev == 'GO' ? ' style="display:none;" ': '') !!}>
+					<div class="datum2 form-group editOption3" {!! ($vacationRequest->zahtjev == 'GO' || $vacationRequest->zahtjev == 'Bolovanje' ? ' style="display:none;" ': '') !!}>
 						<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value={!! !$vacationRequest->vrijeme_od ? '08:00' : $vacationRequest->vrijeme_od !!} >
 						<span>do</span><input type="time" name="vrijeme_do" class="vrijeme" value={!! !$vacationRequest->vrijeme_do ? '16:00' : $vacationRequest->vrijeme_do !!} }}" >
 					</div>
@@ -115,91 +118,8 @@
 				}
 			}
 		</script>
-		<!-- unos value u napomenu -->
-		<script>
-			function GO_value(){
-				if(document.getElementById("prikaz").value == "GO" ){
-					document.getElementById("napomena").value = "GO" ;
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}else {
-					document.getElementById("napomena").value = "" ;
-				}
-				if(document.getElementById("prikaz").value == "Bolovanje" ){
-					document.getElementById("zahtjev").innerHTML = "Obavijest";
-				}
-				if(document.getElementById("prikaz").value == "Izlazak"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "NPL" ||document.getElementById("prikaz").value == "PL"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "SLD"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				if(document.getElementById("prikaz").value == "Vik"){
-					document.getElementById("zahtjev").innerHTML = "Zahtjev";
-				}
-				
-			}
-		</script>
-		<script>
-			$('#prikaz').change(function(){
-			var selected = $('option:selected', this).attr('class');
-			var optionText = $('.editable1').text();
-			var optionText1 = $('.editable2').text();
-			var optionText2 = $('.editable3').text();
-
-			if(selected == "editable1"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').show();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable4" || selected == "editable5"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable6" || selected == "editable7"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption5').hide();
-			  $('.editOption4').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable5"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption5').show();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			
-			if(selected == "editable3"){
-			  $('.editOption1').show();
-			  $('.editOption2').hide();
-			  $('.editOption3').show();
-			  $('.editOption4').hide();
-			  $('.text1').show();
-			  $('.text2').hide();
-			}
-			if(selected == "editable2"){
-			  $('.editOption1').show();
-			  $('.editOption2').show();
-			  $('.editOption3').hide();
-			  $('.editOption4').hide();
-			  $('.text1').hide();
-			  $('.text2').show();
-			}
-			});
-		</script>
+	
+		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
+		<script src="{{ asset('js/go_value.js') }}"></script>
 @stop
 

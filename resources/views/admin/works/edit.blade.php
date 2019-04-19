@@ -28,6 +28,10 @@
 						{!! ($errors->has('naziv') ? $errors->first('naziv', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group">
+						<label>Opis rada:</label>
+						<input name="job_description" type="text" class="form-control" value="{{ $work->job_description }}" required>
+					</div>
+					<div class="form-group">
 						<label>Pravilnik:</label>
 						<select class="form-control" name="pravilnik" id="sel1" value="{{ old('pravilnik') }}">
 							<option selected="selected" name="pravilnik" value="{{ $work->pravilnik}}">{{ $work->pravilnik}}</option>
@@ -42,20 +46,22 @@
 					<div class="form-group {{ ($errors->has('user_id'))  ? 'has-error' : '' }}">
 					    <label>Nadređen djelatnik</label>
 						<select class="form-control" name="user_id" id="sel1" value="{{ old('user_id') }}"required>
-							<option selected="selected" name="user_id" value="{{ $work->user_id }}">{{  $work->nadredjeni['last_name'] . ' ' . $work->nadredjeni['first_name'] }}</option>
-						@foreach($users as $user)
-							<option name="user_id" value="{{ $user->employee_id }}">{{ $user->last_name . ' ' . $user->first_name }} </option>
-						@endforeach
+							@foreach($users as $user)
+								@if(! $terminations->where('employee_id', $user->employee_id)->first())
+									<option name="user_id" value="{{ $user->employee_id }}" {!! $user->employee_id == $work->user_id ? 'selected' : '' !!}>{{ $user->last_name . ' ' . $user->first_name }} </option>
+								@endif
+							@endforeach
 						</select>
 						{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group">
 					    <label>Prvi nadređen djelatnik</label>
 						<select class="form-control" name="prvi_userId" id="sel1" value="{{ old('prvi_userId') }}">
-							<option selected="selected" name="prvi_userId" value="{{ $work->prvi_userId }}">{{  $work->prvi_nadredjeni['last_name'] . ' ' . $work->prvi_nadredjeni['first_name'] }}</option>
-						@foreach($users as $user)
-							<option name="prvi_userId" value="{{ $user->employee_id }}">{{ $user->last_name . ' ' . $user->first_name }} </option>
-						@endforeach
+							@foreach($users as $user)
+								@if(! $terminations->where('employee_id', $user->employee_id)->first())
+									<option name="prvi_userId" value="{{ $user->employee_id }}" {!! $user->employee_id == $work->prvi_userId ? 'selected' : '' !!}>{{ $user->last_name . ' ' . $user->first_name }} </option>
+								@endif
+							@endforeach
 						</select>
 					</div>
 					{{ csrf_field() }}

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Work extends Model
 {
-    protected $fillable = ['odjel','naziv','pravilnik','tocke','user_id','prvi_userId'];
+    protected $fillable = ['odjel_id','odjel','naziv','job_description','pravilnik','tocke','user_id','prvi_userId'];
 	
 	/*
 	* The Eloquent employees model names

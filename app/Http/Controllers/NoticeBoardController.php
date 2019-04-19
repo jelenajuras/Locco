@@ -23,11 +23,15 @@ class NoticeBoardController extends Controller
 		$datum->modify('-8 day');
 		
 		$notices = Notice::orderBy('created_at','DESC')->where('created_at', '>', $datum)->get();
-				
+		//$notices = Notice::orderBy('created_at','DESC')->get();
+		
 		$user = Sentinel::getUser();
 		$employee = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('employees.first_name',$user->first_name)->where('employees.last_name',$user->last_name)->first();
-		$employee_departments = Employee_department::where('employee_id',$employee->employee_id )->get();
-
+		if($employee) {
+			$employee_departments = Employee_department::where('employee_id',$employee->employee_id )->get();
+		} else {
+			$employee_departments = Employee_department::get();
+		}
 		return view('admin.noticeBoard',['notices'=>$notices, 'employee_departments' => $employee_departments ]);
     }
 

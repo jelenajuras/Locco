@@ -9,9 +9,10 @@ use App\Models\Employee;
 use App\Models\EmployeeTermination;
 use App\Models\Registration;
 use App\Models\Department;
+use App\Models\Employee_department;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
-use Mail;
+//use Mail;
 use DB;
 
 class NoticeController extends Controller
@@ -52,7 +53,9 @@ class NoticeController extends Controller
 		$departments0 = Department::where('level',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level',1)->orderBy('name','ASC')->get();
 		$departments2 = Department::where('level',2)->orderBy('name','ASC')->get();
-		return view('admin.notices.create',['user'=>$user, 'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
+		$employee_departments = Employee_department::get();
+		
+		return view('admin.notices.create',['user'=>$user, 'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2, 'employee_departments'=>$employee_departments]);
     }
 
     /**
@@ -155,7 +158,8 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $notice = Notice::find($id);
+
+	   $notice = Notice::find($id);
 		
 		$poruka = $request['notice'];
 
@@ -194,7 +198,7 @@ class NoticeController extends Controller
 		$prima = $department->email;
 		$poruka = $notice->subject;
 		//$prima = 'jelena.juras@duplico.hr';
-		
+
 		Mail::queue(
 			'email.notice',
 			['poruka' => $poruka],
@@ -204,7 +208,7 @@ class NoticeController extends Controller
 					->subject('Ispravak obavijesti');
 			}
 		);
-		
+
 		$message = session()->flash('success', 'Obavijest je ispravljena');
 		
 		return redirect()->route('admin.notices.index')->withFlashMessage($message);

@@ -83,7 +83,7 @@ class EmployeeTerminationController extends Controller
 		$prezime = $djelatnik->last_name;
 		$radno_mj = $djelatnik->naziv;
 				
-		$zaduzene_osobe = array('pravni@duplico.hr','petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','tomislav.novosel@duplico.hr','matija.barberic@duplico.hr', 'marica.posaric@duplico.hr');
+		$zaduzene_osobe = array('pravni@duplico.hr','petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','tomislav.novosel@duplico.hr','matija.barberic@duplico.hr', 'marica.posaric@duplico.hr','nikolina.dujic@duplico.hr');
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
 		

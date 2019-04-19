@@ -335,10 +335,13 @@ summary {
 
 .evaluation {
 	width:100%;
+	padding:20px;
+	position:relative;
 }
 
 .tbl_ocjene {
-	width:100%
+	width:100%;
+
 }
 
 .tbl_ocjene tr td {
@@ -357,13 +360,62 @@ summary {
 	padding: 10px 0 !important;
 }
 
-.tbl_ocjene tbody  tr td{
+.tbl_ocjene tbody  tr td:not(.question_description ){
 	border-bottom: 1px solid #ccc;
-	padding: 10px 0 !important;
+	
+	
 }
 
 .tbl_ocjene tfoot  tr td{
 	padding: 20px 0 !important;
 	border-top: 1px solid #ccc;
 	font-weight:bold
+}
+
+.target, .comment, .rating {
+	border-radius:5px;
+	padding: 2px 0;
+}
+
+.target {
+	width:35%;
+}
+.rating  {
+	min-width: 50px;
+}
+
+.comment {
+	width:100%;
+	display:block;
+	background-color: cornsilk;
+}
+
+.comment_upravi {
+	width:100%;
+	display:block;
+	background-color: #f2dede;
+}
+
+.evaluation form {
+	position:relative;
+}
+.evaluation input#stil1 {
+	min-width: 100px;
+	max-width: 200px;
+}
+
+.question_description {
+	padding-left:20px;
+}
+
+.description {
+	padding: 5px 40px !important;
+	color: #337ab7;
+}
+.group {
+	box-shadow: 5px 5px 5px #ddd;
+}
+
+.tbl_ocjene tbody tr .question_description{
+	padding-left: 20px;
 }

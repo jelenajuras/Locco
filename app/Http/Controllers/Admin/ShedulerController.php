@@ -55,9 +55,10 @@ class ShedulerController extends Controller
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
-			$mjesec = strstr( $input['mjesec'],'-',true);
-			$godina = substr( $input['mjesec'],'-4');
 
+			$godina = strstr( $input['mjesec'],'-',true);
+			$mjesec = substr( $input['mjesec'],'-2');
+			
 			for($d=1; $d<=31; $d++)
 			{
 				$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
@@ -132,13 +133,12 @@ class ShedulerController extends Controller
 	{
 		$input = $request;
 		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
-		
-		
+
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
-		$mjesec = strstr( $input['mjesec'],'-',true);
-		$godina = substr( $input['mjesec'],'-4');
+		$godina = strstr( $input['mjesec'],'-',true);
+			$mjesec = substr( $input['mjesec'],'-2');
 
 		for($d=1; $d<=31; $d++)
 		{

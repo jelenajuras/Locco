@@ -49,7 +49,7 @@
 				<p>Neiskorišteno {{ $dani_GO }} dana godišnjeg odmora </p>
 			@endif
 			@if($vacationRequest->zahtjev == "SLD")
-				<p>Neiskorišteno {{ $slobodni_dani }} slobodnih dana  </p>
+				<p>Neiskorišteno {{ $slobodni_dani - $koristeni_slobodni_dani }} slobodnih dana  </p>
 			@endif
 			
 			
@@ -62,7 +62,7 @@
 			<input type="radio" name="odobreno" value="DA" checked> Odobreno
 			<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije odobreno<br>
 			
-			<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>
+		<!--	<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>-->
 
 			<input class="odobri" type="submit" value="Pošalji">
 

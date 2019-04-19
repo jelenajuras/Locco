@@ -19,7 +19,7 @@ class EvaluatingQuestion extends Model
 	* @var array
 	*/
 	
-	protected $fillable = ['group_id','naziv','opis'];
+	protected $fillable = ['group_id','naziv','opis','opis2'];
 	
 	/*
 	* The Eloquent group model name
