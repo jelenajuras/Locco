@@ -34,17 +34,11 @@
 					</div>
 					<div class="form-group">
 						<label>Datum rođenja</label>
-						<input name="datum_rodjenja" class="date form-control" type="text" value="{{ date('d-m-Y', strtotime($kid->datum_rodjenja)) }}">
+						<input name="datum_rodjenja" class="date form-control" type="date" value="{{ date('Y-m-d', strtotime($kid->datum_rodjenja)) }}">
 						{!! ($errors->has('datum_rodjenja') ? $errors->first('datum_rodjenja', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script> 
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke" id="stil1">
 				</form>
 			</div>

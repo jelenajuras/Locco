@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\AdCategory;
+use App\Models\Ad;
 
 class AdCategoryController extends Controller
 {
@@ -26,8 +27,9 @@ class AdCategoryController extends Controller
     public function index()
     {
 		$adCategories = AdCategory::get();
-
-		return view('admin.ad_categories.index', ['adCategories'=>$adCategories]);
+		$ads = Ad::get();
+		
+		return view('admin.ad_categories.index', ['adCategories'=> $adCategories, 'ads'=>$ads]);
     }
 
     /**

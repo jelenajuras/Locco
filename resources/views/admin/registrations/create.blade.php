@@ -36,7 +36,7 @@
 						{!! ($errors->has('radnoMjesto_id') ? $errors->first('radnoMjesto_id', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group">
 						<span><b>Datum prijave:</b></span>
-						<input name="datum_prijave" class="date form-control" type="text" value = "{{ Carbon\Carbon::now()->format('d-m-Y') }}">
+						<input name="datum_prijave" class="date form-control" type="date" value ="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
 						{!! ($errors->has('datum_prijave') ? $errors->first('datum_prijave', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('probni_rok'))  ? 'has-error' : '' }}">
@@ -46,25 +46,20 @@
 						{!! ($errors->has('probni_rok') ? $errors->first('probni_rok', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('staz'))  ? 'has-error' : '' }}">
 						<span><b>Staž kod prošlog poslodavca (godina-mjeseci-dana):</b></span><br>
-						<input name="stazY" type="text" class="staž" value="{{ old('stazY')}}">-
-						<input name="stazM" type="text" class="staž" value="{{ old('stazM')}}">-
-						<input name="stazD" type="text" class="staž" value="{{ old('stazD')}}">
+						<input name="stazY" type="text" class="staž" value="0">-
+						<input name="stazM" type="text" class="staž" value="0">-
+						<input name="stazD" type="text" class="staž" value="0">
 					</div>
 					<div class="form-group {{ ($errors->has('lijecn_pregled'))  ? 'has-error' : '' }}">
 						<label>Datum liječničkog pregleda: </label>
-						<input name="lijecn_pregled" class="date form-control" type="text" value = "{{ date('d-m-Y', strtotime($employee->lijecn_pregled)) }}">
+						<input name="lijecn_pregled" class="date form-control" type="date" value = "{{ date('Y-m-d', strtotime($employee->lijecn_pregled)) }}">
 					</div>
 					{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('ZNR'))  ? 'has-error' : '' }}">
 						<label>Datum obuke zaštite na radu: </label>
-						<input name="ZNR" class="date form-control" type="text" value ="{{ date('d-m-Y', strtotime($employee->ZNR)) }}">
+						<input name="ZNR" class="date form-control" type="date" value ="{{ date('Y-m-d', strtotime($employee->ZNR)) }}">
 					</div>
 					{!! ($errors->has('ZNR') ? $errors->first('ZNR', '<p class="text-danger">:message</p>') : '') !!}
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script> 
 					<div class="form-group">
 						<input type="checkbox" name="prekidStaza" value="DA" > Prekid radnog odnosa više od 8 dana
 					</div>

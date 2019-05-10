@@ -173,8 +173,8 @@ h2{
 
 @media only screen and (max-width: 630px) {
 	.dashboard_box1 > .BTNbox {
-		float: left;
-		width: 50%;
+		/*float: left;
+		width: 50%;*/
 	}
 	.disp_none {
 		display:none;

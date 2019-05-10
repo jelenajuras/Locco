@@ -30,6 +30,7 @@
 							<th>Točke</th>
 							<th>Nadređeni djelatnik</th>
 							<th>Prvi nadređeni djelatnik</th>
+							<th>Drugi nadređeni djelatnik</th>
                             <th class="not-export-column">Opcije</th>
                         </tr>
                     </thead>
@@ -41,8 +42,9 @@
 								<td>{{ $work->job_description }}</td>
 								<td>{{ $work->pravilnik }}</td>
 								<td>{{ $work->tocke }}</td>
-								<td>{{ $work->nadredjeni['first_name'] . ' ' .$work->nadredjeni['last_name'] }}</td>
+								<td>{{ $work->nadredjeni['first_name'] . ' ' . $work->nadredjeni['last_name'] }}</td>
 								<td>{{ $work->prvi_nadredjeni['first_name'] . ' ' . $work->prvi_nadredjeni['last_name'] }}</td>
+								<td>{{ $work->drugi_nadredjeni['first_name'] . ' ' . $work->drugi_nadredjeni['last_name'] }}</td>
                                   <td>
                                     <a href="{{ route('admin.works.edit', $work->id) }}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

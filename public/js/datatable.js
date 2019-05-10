@@ -34,7 +34,23 @@ $(document).ready(function() {
 			],
 	} );
 	} else {
-		 $('#table_id').DataTable();
+		var table = $('#table_id').DataTable( {
+		"paging": true,
+		language: {
+			paginate: {
+				previous: 'Prethodna',
+				next:     'Slijedeća',
+			},
+			"info": "Prikaz _START_ do _END_ od _TOTAL_ zapisa",
+			"search": "Filtriraj:",
+			"lengthMenu": "Prikaži _MENU_ zapisa"
+		},
+		 "lengthMenu": [ 25, 50, 75, 100 ],
+		 "pageLength": 50,
+		 "columnDefs": [
+                { "type": "numeric-comma", targets: 3 }
+            ]
+	} );
 	}
 	
 	

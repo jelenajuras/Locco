@@ -34,15 +34,9 @@
 					</div>
 					<div class="form-group">
 						<label>Datum rođenja</label>
-						<input name="datum_rodjenja" class="date form-control" type="text" value = "">
+						<input name="datum_rodjenja" class="date form-control" type="date" value = "">
 						{!! ($errors->has('datum_rodjenja') ? $errors->first('datum_rodjenja', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script> 
-					
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši dijete" id="stil1">
 				</form>

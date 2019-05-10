@@ -8,35 +8,43 @@
 	Natrag
 </a>
 <div class="noticeBoard">
+	<a class="gumb_arhiva" href="{{ route('admin.notices.index') }}">Arhiva</a>
 	<h1>Oglasna ploča</h1>
+	
 	<section class="notices">
-		@if(isset($employee_id))
-			@foreach($employee_departments as $employee_department)
-				@foreach($notices as $notice)
-					@if($notice->department['level'] == '2')
-						@if($notice->to_department_id == $employee_department->department_id )
-								<article class="notice" style="text-align:left;">
-									<h3>{{ $notice->subject }}</h3>
-									Ad<p >{!! $notice->notice !!}</p>
-								</article>
-						@endif
-					@else
-						@if($notice->to_department_id == $employee_department->department['level1'] || $notice->department['level'] == '0' )
-								<article class="notice">
-									<h3>{{ $notice->subject }}</h3>
-									<p style="text-align:left;">{!! $notice->notice !!}</p>
-								</article>
-						@endif
+		@if(isset($employee))
+			@foreach($notices as $notice)
+				@if($notice->department['level'] == '2')
+					@if($employee_departments->where('department_id', $notice->to_department_id)->first() )
+						<article class="notice" style="text-align:left;">
+							<h3>{{ $notice->subject }}</h3>
+							<p >{!! $notice->notice !!}</p>
+						</article>
 					@endif
-				@endforeach
+				@else
+					@if($notice->department['level'] == '0')
+						<article class="notice" style="text-align:left;">
+							<h3>{{ $notice->subject }}</h3>
+							<p >{!! $notice->notice !!}</p>
+						</article>
+					@endif
+					@foreach($employee_departments as $employee_department)
+						@if($notice->to_department_id == $employee_department->department['level1'] )
+							<article class="notice">
+								<h3>{{ $notice->subject }}</h3>
+								<p style="text-align:left;">{!! $notice->notice !!}</p>
+							</article>
+						@endif
+					@endforeach
+				@endif
 			@endforeach
 		@else  
 			@foreach($notices as $notice)
 				@if($notice->department['level'] == '0')
-						<article class="notice">
-							<h3>{{ $notice->subject }}</h3>
-							<p style="text-align:left;">{!! $notice->notice !!}</p>
-						</article>
+					<article class="notice">
+						<h3>{{ $notice->subject }}</h3>
+						<p style="text-align:left;">{!! $notice->notice !!}</p>
+					</article>
 				@endif
 			@endforeach
 		@endif

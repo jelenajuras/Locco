@@ -728,6 +728,7 @@ class GodisnjiController extends Controller
 		if($user->datum_prijave) {
 			$datum_prijave = $user->datum_prijave;
 			$datum_prijave = explode('-',$user->datum_prijave);
+			
 			$prijavaGodina = $datum_prijave[0];
 			$prijava = new DateTime($user->datum_prijave);
 			$staz = $prijava->diff($datum);   /* staz u Duplicu*/
@@ -761,7 +762,6 @@ class GodisnjiController extends Controller
 			$razmjeranGO = $GO;
 		}
 			
-		
 		return $razmjeranGO;
 	}
 	
@@ -769,6 +769,7 @@ class GodisnjiController extends Controller
 	public static function razmjeranGO_PG($user)    /************ RADI!!!!!!! ***************/
 	{
 		$datum = new DateTime('now');    /* današnji dan */
+		$ova_godina = date_format($datum,'Y');
 		$prosla_godina = date_format($datum,'Y')-1;
 		$datumPG = new DateTime($prosla_godina . '-12-31');
 		
@@ -776,16 +777,19 @@ class GodisnjiController extends Controller
 
 		if($user->datum_prijave) {
 			$datum_prijave = $user->datum_prijave;
-			$datum_prijave = explode('-',$user->datum_prijave);
+			$datum_prijave = explode('-', $user->datum_prijave);
 			$prijavaGodina = $datum_prijave[0];
 			$prijava = new DateTime($user->datum_prijave);
 			$staz = $prijava->diff($datumPG);   /* staz u Duplicu do 31.12. prošla godina*/
 			$mjesec = $staz->format('%m');
 			$dan = $staz->format('%d');
-			
+
 			if($prijavaGodina < $prosla_godina){
-				$razmjeranGO_PG = $GO;
-			} else {
+				$razmjeranGO_PG = $GO; 
+			}  elseif ($prijavaGodina == $prosla_godina) {
+				if($dan >= 15){
+					$mjesec +=1;
+				}
 				if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
 					if($mjesec >= 6){
 						$razmjeranGO_PG = $GO;
@@ -795,15 +799,15 @@ class GodisnjiController extends Controller
 				} else {
 					$razmjeranGO_PG = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
 				}
-			}
 			
-		} else {
-			$razmjeranGO_PG = 0;
+			} elseif ($prijavaGodina ==  $ova_godina) {
+				$razmjeranGO_PG = 0;
+			}
 		}
-		
 		if($prosla_godina == '2017'){
 			$razmjeranGO_PG = 0;
 		}
+
 		return $razmjeranGO_PG;
 	}
 	

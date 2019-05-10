@@ -35,26 +35,18 @@
 					</div>
 					<div class="form-group">
 						<label>Datum odjave: </label>
-						<input name="datum_odjave" class="date form-control" type="text" value = "{{ date('d-m-Y', strtotime($employee_termination->datum_odjave)) }}">
+						<input name="datum_odjave" class="date form-control" type="date" value = "{{ date('Y-m-d', strtotime($employee_termination->datum_odjave)) }}">
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script>
 					<div class="form-group">
 						<label>Napomena</label>
 						<textarea class="form-control" name="napomena">{{ $employee_termination->napomena }}</textarea>
 					</div>
-					
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
 					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi odjavu" id="stil1">
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-
 @stop

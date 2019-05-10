@@ -49,12 +49,12 @@
 					</div>
 					<div class="form-group {{ ($errors->has('oi_istek')) ? 'has-error' : '' }}">
 						<label>Datum isteka OI: </label>
-						<input name="oi_istek" class="date form-control" type="text" value = "{{ old('datum_rodjenja')}}">
+						<input name="oi_istek" class="date form-control" type="date" value = "{{ old('datum_rodjenja')}}">
 						{!! ($errors->has('oi_istek') ? $errors->first('oi_istek', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('datum_rodjenja')) ? 'has-error' : '' }}">
 						<label>Datum rođenja: </label>
-						<input name="datum_rodjenja" class="date form-control" type="text" value = "{{ old('datum_rodjenja')}}">
+						<input name="datum_rodjenja" class="date form-control" type="date" value = "{{ old('datum_rodjenja')}}">
 						{!! ($errors->has('datum_rodjenja') ? $errors->first('datum_rodjenja', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group">
@@ -136,12 +136,12 @@
 					
 					<div class="form-group {{ ($errors->has('lijecn_pregled'))  ? 'has-error' : '' }}">
 						<label>Datum liječničkog pregleda: </label>
-						<input name="lijecn_pregled" class="date form-control" type="text" value = "{{ old('lijecn_pregled')}}">
+						<input name="lijecn_pregled" class="date form-control" type="date" value = "{{ old('lijecn_pregled')}}">
 						{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('ZNR'))  ? 'has-error' : '' }}">
 						<label>Datum obuke zaštite na radu: </label>
-						<input name="ZNR" class="date form-control" type="text" value = "{{ old('ZNR')}}">
+						<input name="ZNR" class="date form-control" type="date" value = "{{ old('ZNR')}}">
 						{!! ($errors->has('ZNR') ? $errors->first('ZNR', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group">
@@ -152,13 +152,6 @@
 						<label>Broj cipela: </label>
 						<input name="broj_cipela" type="text" class="form-control" value="{{ old('broj_cipela') }}">
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy',
-								   startDate:'-60y',
-								   endDate:'+10y',
-								}); 
-					</script> 
 					<div class="form-group">
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena"></textarea>

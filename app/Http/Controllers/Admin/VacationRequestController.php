@@ -64,11 +64,12 @@ class VacationRequestController extends GodisnjiController
     {
 		$user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
+		
+		//$employee = Employee::where('id',45)->first();
 		$registration = Registration::where('registrations.employee_id', $employee->id)->first();
 		
 		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
-		$dani_GO = $this->godisnji($employee);
 		$razmjeranGO = $this->razmjeranGO($registration);
 		$razmjeranGO_PG = $this->razmjeranGO_PG($registration);
 		
@@ -210,31 +211,38 @@ class VacationRequestController extends GodisnjiController
 				
 				$employee = Employee::where('employees.id',$user->employee_id)->first();
 				
-				$work = Work::where('id', $user->radnoMjesto_id)->first();
-				$nadredjeni = $work->nadredjeni;
-				$prvi_nadredjeni_mail = null;
-				$nadredjeni_mail = null;
-				if($nadredjeni) {
-					$nadredjeni_mail = 	$nadredjeni->email;
-				}
-				$prvi_nadredjeni = $work->prvi_nadredjeni;
-				if($prvi_nadredjeni) {
-					$prvi_nadredjeni_mail = $prvi_nadredjeni->email;
-				}
-
-				$mail_to = array($prvi_nadredjeni_mail, $nadredjeni_mail, 'jelena.juras@duplico.hr');
-
-				foreach($mail_to as $email_to){
-					if(isset($email_to)){
-						Mail::queue(
-							'email.zahtjevGO',
-							['employee' => $employee,'vacationRequest' => $vacationRequest,'dani_GO' => $dani_GO ,'napomena' => $input['napomena'],'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak'], 'slobodni_dani' => $slobodni_dani, 'koristeni_slobodni_dani' => $koristeni_slobodni_dani],
-							function ($message) use ($email_to, $employee) {
-								$message->to($email_to)
-									->from('info@duplico.hr', 'Duplico')
-									->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
-							}
-						);
+				if($input['email'] == 'DA' ){
+					$work = Work::where('id', $user->radnoMjesto_id)->first();
+					$nadredjeni = $work->nadredjeni;
+					$prvi_nadredjeni_mail = null;
+					$drugi_nadredjeni_mail = null;
+					$nadredjeni_mail = null;
+					if($nadredjeni) {
+						$nadredjeni_mail = 	$nadredjeni->email;
+					}
+					$prvi_nadredjeni = $work->prvi_nadredjeni;
+					if($prvi_nadredjeni) {
+						$prvi_nadredjeni_mail = $prvi_nadredjeni->email;
+					}
+					$drugi_nadredjeni = $work->drugi_nadredjeni;
+					if($drugi_nadredjeni) {
+						$drugi_nadredjeni_mail = $drugi_nadredjeni->email;
+					}
+					$mail_to = array($prvi_nadredjeni_mail, $nadredjeni_mail, $drugi_nadredjeni_mail, 'jelena.juras@duplico.hr');
+					//$mail_to = array('jelena.juras@duplico.hr');
+					
+					foreach($mail_to as $email_to){
+						if(isset($email_to)){
+							Mail::queue(
+								'email.zahtjevGO',
+								['employee' => $employee,'vacationRequest' => $vacationRequest,'dani_GO' => $dani_GO ,'napomena' => $input['napomena'],'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak'], 'slobodni_dani' => $slobodni_dani, 'koristeni_slobodni_dani' => $koristeni_slobodni_dani],
+								function ($message) use ($email_to, $employee) {
+									$message->to($email_to)
+										->from('info@duplico.hr', 'Duplico')
+										->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
+								}
+							);
+						}
 					}
 				}
 			}

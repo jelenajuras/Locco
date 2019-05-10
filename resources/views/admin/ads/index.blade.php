@@ -6,14 +6,14 @@
 <div class="container-fluid">
      <div class="page-header">
         <div class='btn-toolbar pull-right' >
-            <a class="btn btn-primary btn-lg" href="{{ route('admin.ads.create', ['category_id' => $category_id]) }}" id="stil1" >
+            <a class="btn btn-primary btn-lg" href="{{ route('admin.ads.create') }}" id="stil1" >
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Novi oglas
             </a>
         </div>
         <h2>Oglasi</h2>
     </div>
-    <div class="row">
+    <div class="row ads">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="table-responsive">
 			@if(count($ads) > 0)
@@ -32,7 +32,7 @@
 					@foreach ($ads as $ad) 
                         <tr>
 							<td>{{ $ad->subject }}</td>
-							<td>{!! $ad->description !!}</td>
+							<td>{!! str_limit(strip_tags($ad->description),50) !!}<a href="{{ route('admin.ads.show', $ad->id) }}">prikaži oglas</a></td>
 							<td>{{ $ad->employee['first_name'] . ' ' . $ad->employee['last_name']  }}</td>
                              @if(Sentinel::inRole('administrator'))
 								<td>
@@ -49,7 +49,7 @@
 					</tbody>
                 </table>
 			@else
-				{{'Nema unesenih kategorija!'}}
+				{{'Nema unesenih oglasa!'}}
 			@endif
             </div>
         </div>

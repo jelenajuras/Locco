@@ -29,7 +29,7 @@
 					</div>
 					<div class="form-group">
 						<label>Opis rada:</label>
-						<input name="job_description" type="text" class="form-control" value="{{ $work->job_description }}" required>
+						<input name="job_description" type="text" class="form-control" value="{{ $work->job_description }}" >
 					</div>
 					<div class="form-group">
 						<label>Pravilnik:</label>
@@ -62,6 +62,17 @@
 									<option name="prvi_userId" value="{{ $user->employee_id }}" {!! $user->employee_id == $work->prvi_userId ? 'selected' : '' !!}>{{ $user->last_name . ' ' . $user->first_name }} </option>
 								@endif
 							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
+                        <label>Drugi nadređen djelatnik</label>
+						<select class="form-control" name="drugi_userId" id="sel1" value="{{ old('drugi_userId') }}" >
+							<option selected="selected"></option>
+						@foreach($users as $user)
+							@if(! $terminations->where('employee_id', $user->employee_id)->first())
+								<option name="drugi_userId" value="{{ $user->employee_id }}"  {!! $user->employee_id == $work->drugi_userId ? 'selected' : '' !!}>{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }}</option>
+							@endif
+						@endforeach
 						</select>
 					</div>
 					{{ csrf_field() }}

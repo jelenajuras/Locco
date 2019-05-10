@@ -37,7 +37,7 @@
 						{!! ($errors->has('radnoMjesto_id') ? $errors->first('radnoMjesto_id', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group">
 						<span><b>Datum prijave:</b></span>
-						<input name="datum_prijave" class="date form-control" type="text" value = "{{ date('d-m-Y', strtotime( $registration->datum_prijave)) }}">
+						<input name="datum_prijave" class="date form-control" type="date" value = "{{ date('Y-m-d', strtotime( $registration->datum_prijave)) }}">
 						{!! ($errors->has('datum_prijave') ? $errors->first('datum_prijave', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('probni_rok'))  ? 'has-error' : '' }}">
@@ -53,19 +53,14 @@
 					</div>
 					<div class="form-group {{ ($errors->has('lijecn_pregled'))  ? 'has-error' : '' }}">
 						<label>Datum liječničkog pregleda: </label>
-						<input name="lijecn_pregled" class="date form-control" type="text" value ="{{ date('d-m-Y', strtotime($registration->lijecn_pregled)) }}">
+						<input name="lijecn_pregled" class="date form-control" type="date" value ="{{ date('Y-m-d', strtotime($registration->lijecn_pregled)) }}">
 					</div>
 					{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('ZNR'))  ? 'has-error' : '' }}">
 						<label>Datum obuke zaštite na radu: </label>
-						<input name="ZNR" class="date form-control" type="text"  value ="{{ date('d-m-Y', strtotime($registration->ZNR)) }}">
+						<input name="ZNR" class="date form-control" type="date"  value ="{{ date('Y-m-d', strtotime($registration->ZNR)) }}">
 					</div>
 					{!! ($errors->has('ZNR') ? $errors->first('ZNR', '<p class="text-danger">:message</p>') : '') !!}
-					<script type="text/javascript">
-						$('.date').datepicker({  
-						   format: 'dd-mm-yyyy'
-						 });  
-					</script> 
 					<div class="form-group">
 						<input type="checkbox" name="prekidStaza" value="DA" {!! $registration->prekidStaza == 'DA' ? 'checked' : '' !!}> Prekid radnog odnosa više od 8 dana
 					</div>

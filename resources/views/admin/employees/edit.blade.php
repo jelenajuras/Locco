@@ -43,19 +43,14 @@
 					</div>
 					<div class="form-group {{ ($errors->has('oi_istek')) ? 'has-error' : '' }}">
 						<label>Datum isteka OI: </label>
-						<input name="oi_istek" class="date form-control" type="text" value = "{{ date('d-m-Y', strtotime($employee->oi_istek)) }}">
+						<input name="oi_istek" class="date form-control" type="date" value = "{{ date('Y-m-d', strtotime($employee->oi_istek)) }}">
 						{!! ($errors->has('oi_istek') ? $errors->first('oi_istek', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('datum_rodjenja')) ? 'has-error' : '' }}">
 						<label>Datum rođenja</label>
-						<input name="datum_rodjenja" class="date form-control" type="text" value ="{{ date('d-m-Y', strtotime($employee->datum_rodjenja)) }}">
+						<input name="datum_rodjenja" class="date form-control" type="date" value ="{{ date('Y-m-d', strtotime($employee->datum_rodjenja)) }}">
 						{!! ($errors->has('datum_rodjenja') ? $errors->first('datum_rodjenja', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script> 
 					<div class="form-group">
 						<label>Mjesto rođenja</label>
 						<input name="mjesto_rodjenja" type="text" class="form-control" value="{{ $employee->mjesto_rodjenja }}">
@@ -101,7 +96,6 @@
 							<input name="boraviste_grad" type="text" class="form-control" value="{{ $employee->boraviste_grad }}">
 						</div>				
 					</div>
-
 					<div class="form-group {{ ($errors->has('zvanje')) ? 'has-error' : '' }}">
 						<label>Zvanje:</label>
 						<input name="zvanje" type="text" class="form-control" value="{{ $employee->zvanje }}">
@@ -132,19 +126,15 @@
                     </div>
 					<div class="form-group {{ ($errors->has('lijecn_pregled'))  ? 'has-error' : '' }}">
 						<label>Datum liječničkog pregleda: </label>
-						<input name="lijecn_pregled" class="date form-control" type="text" value="{{ date('d-m-Y', strtotime($employee->lijecn_pregled)) }}">
+						<input name="lijecn_pregled" class="date form-control" type="date" value="{{ date('Y-m-d', strtotime($employee->lijecn_pregled)) }}">
 						{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('ZNR'))  ? 'has-error' : '' }}">
 						<label>Datum obuke zaštite na radu: </label>
-						<input name="ZNR" class="date form-control" type="text" value ="{{ date('d-m-Y', strtotime($employee->ZNR)) }}">
+						<input name="ZNR" class="date form-control" type="date" value ="{{ date('Y-m-d', strtotime($employee->ZNR)) }}">
 						{!! ($errors->has('ZNR') ? $errors->first('ZNR', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script> 
+					
 					<div class="form-group">
 						<label>Konfekcijski broj</label>
 						<input name="konf_velicina" type="text" class="form-control" value="{{ $employee->konf_velicina }}">
@@ -157,10 +147,8 @@
 						<label>Napomena: </label>
 						<textarea class="form-control" rows="4" name="napomena">{{ $employee->napomena }}</textarea>
 					</div>
-					
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke" id="stil1">
 				</form>
 

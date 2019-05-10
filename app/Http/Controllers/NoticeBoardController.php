@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Notice;
 use App\Models\Registration;
+use App\Models\Employee;
 use App\Models\Employee_department;
 use App\Http\Controllers\NoticeBoardController;
 use Sentinel;
@@ -23,16 +24,20 @@ class NoticeBoardController extends Controller
 		$datum->modify('-8 day');
 		
 		$notices = Notice::orderBy('created_at','DESC')->where('created_at', '>', $datum)->get();
-		//$notices = Notice::orderBy('created_at','DESC')->get();
+	//	$notices = Notice::orderBy('created_at','DESC')->get();
 		
 		$user = Sentinel::getUser();
-		$employee = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('employees.first_name',$user->first_name)->where('employees.last_name',$user->last_name)->first();
+		$employee = Employee::where('first_name',$user->first_name)->where('last_name',$user->last_name)->first();
+
 		if($employee) {
-			$employee_departments = Employee_department::where('employee_id',$employee->employee_id )->get();
+			$employee_departments = Employee_department::where('employee_id',$employee->id )->get();
+			return view('admin.noticeBoard',['notices'=>$notices, 'employee_departments' => $employee_departments, 'employee' => $employee ]);
 		} else {
 			$employee_departments = Employee_department::get();
+			return view('admin.noticeBoard',['notices'=>$notices]);
 		}
-		return view('admin.noticeBoard',['notices'=>$notices, 'employee_departments' => $employee_departments ]);
+
+		
     }
 
     /**

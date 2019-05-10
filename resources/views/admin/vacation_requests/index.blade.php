@@ -99,7 +99,7 @@
 									
 									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td><!-- Ukupan staž -->
 									<td>{{ $GO_PG }}</td> 							<!-- GO prošla godina -->
-									<td>{{ $daniZahtjeviPG }}</td>				<!-- iskorišteni dani prošla godina  -->
+									<td>{{ $daniZahtjeviPG  }}</td>				<!-- iskorišteni dani prošla godina  -->
 									<td>{{ $GO_PG - $daniZahtjeviPG }}</td>				<!-- neiskorišteni dani prošla godina  -->
 									<td>{{ $godisnjiUser }}</td>					 <!-- ukupno GO -->
 									<td>{{ $razmjeranGO }}</td> 					<!-- Razmjerni dani GO-->

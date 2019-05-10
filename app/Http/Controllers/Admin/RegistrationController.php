@@ -114,7 +114,7 @@ class RegistrationController extends Controller
 		$radno_mj = $djelatnik->naziv;
 		$ime = $djelatnik->first_name;
 		$prezime = $djelatnik->last_name;
-		$work = Work::leftjoin('employee','employee.employee_id','works.user_id')->where('works.id', $djelatnik->radnoMjesto_id)->first();
+		$work = Work::leftjoin('employees','employees.id','works.user_id')->where('works.id', $djelatnik->radnoMjesto_id)->first();
 		
 		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','petrapaola.bockor@duplico.hr','matija.barberic@duplico.hr','nikolina.dujic@duplico.hr');
 		

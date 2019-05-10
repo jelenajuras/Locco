@@ -19,7 +19,7 @@ class CreateAdsTable extends Migration
             $table->integer('category_id');
             $table->string('subject');
             $table->text('description');
-            $table->double('price');
+            $table->string('price');
             $table->timestamps();
         });
     }

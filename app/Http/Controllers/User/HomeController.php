@@ -18,6 +18,8 @@ use App\Models\EvaluatingGroup;
 use App\Models\EvaluatingQuestion;
 use App\Models\Education;
 use App\Models\EvaluationTarget;
+use App\Models\Presentation;
+use App\Models\Ad;
 use Sentinel;
 use DateTime;
 
@@ -52,8 +54,10 @@ class HomeController extends GodisnjiController
 			
 			// Edukacija
 			$educations = Education::where('status','aktivna')->get();
+			$presentations = Presentation::where('status','aktivan')->get();
+			$ads = Ad::get();
 			
-			return view('user.home', ['registration' => $registration,'ech' => $ech,'employee' => $employee,'zahtjeviD' => $zahtjeviD,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires, 'evaluatingGroups' => $evaluatingGroups, 'evaluatingQuestions' => $evaluatingQuestions, 'educations' => $educations, 'evaluationTargets' => $evaluationTargets, 'employeeDepartments' => $employeeDepartments, 'evaluations' => $evaluations]);
+			return view('user.home', ['registration' => $registration,'ech' => $ech,'employee' => $employee,'zahtjeviD' => $zahtjeviD,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires, 'evaluatingGroups' => $evaluatingGroups, 'evaluatingQuestions' => $evaluatingQuestions, 'educations' => $educations, 'evaluationTargets' => $evaluationTargets, 'employeeDepartments' => $employeeDepartments, 'evaluations' => $evaluations, 'presentations' => $presentations, 'ads' => $ads]);
 			
 		} else {
 			return view('user.home');

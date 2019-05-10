@@ -41,13 +41,8 @@
 					</div>
 					<div class="form-group">
 						<label>Datum odjave: </label>
-						<input name="datum_odjave" class="date form-control" type="text" value = "{{ Carbon\Carbon::now()->format('d-m-Y') }}">
+						<input name="datum_odjave" class="date form-control" type="date" value = "{{ Carbon\Carbon::now()->format('Y-m-d') }}">
 					</div>
-					<script type="text/javascript">
-								$('.date').datepicker({  
-								   format: 'dd-mm-yyyy'
-								 });  
-					</script>
 					<div class="form-group">
 						<label>Napomena</label>
 						<textarea class="form-control" name="napomena">{{ old('napomena') }}</textarea>

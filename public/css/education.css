@@ -12,3 +12,14 @@ input[type="radio"]{
 	width: 30%;
 }
 
+.pres_select {
+	padding: 5px;
+    border-radius: 5px;
+    margin-left: 20px;
+	max-width: 200px;
+}
+
+.select1 {
+	float:right;
+	margin-left: 15px;
+}

@@ -12,7 +12,7 @@ use App\Models\Department;
 use App\Models\Employee_department;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
-//use Mail;
+use Mail;
 use DB;
 
 class NoticeController extends Controller
@@ -142,7 +142,10 @@ class NoticeController extends Controller
      */
     public function edit($id)
     {
-        $user = Sentinel::getUser()->id;
+        $user1 = Sentinel::getUser();
+		$user = Employee::where('first_name',$user1->first_name)->where('last_name',$user1->last_name)->first();
+		$user = $user->id;
+		
 		$notice = Notice::find($id);
 		$departments = Department::orderBy('name','ASC')->get();
 
@@ -158,13 +161,12 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-	   $notice = Notice::find($id);
+		$notice = Notice::find($id);
 		
 		$poruka = $request['notice'];
 
 		$dom = new \DomDocument();
-		$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		$dom->loadHtml(mb_convert_encoding($poruka, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 		$images = $dom->getElementsByTagName('img');
 		
 		foreach($images as $k => $img){
@@ -194,11 +196,11 @@ class NoticeController extends Controller
 		
 		$notice->updateNotice($data1);
 		
+		
 		$department = Department::where('id',$notice->to_department_id)->first();
 		$prima = $department->email;
 		$poruka = $notice->subject;
-		//$prima = 'jelena.juras@duplico.hr';
-
+		
 		Mail::queue(
 			'email.notice',
 			['poruka' => $poruka],

@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css?family=Petit+Formal+Script');
+.oglasnik h1 {
+	font-family: 'Petit Formal Script', cursive;
+    font-weight: bold;
+    color: #337ab7;
+    padding: 20px 0;
+    font-size: 3rem;
+}
+.oglasnik header {
+	border-bottom: 1px solid #ddd;
+}
+
+.oglasnik header a {
+	font-size: 14px;
+}
+
+.ads {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+section.ad {
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 5px #ccc;
+    border-radius: 5px;
+    width: 20%;
+	height: auto !important;
+	margin: 20px;
+
+}
+
+section.ad p {
+	margin:0;
+}
+
+.ad_empl {
+	text-align:right;
+}
+
+.ad main, .ad header {
+	padding: 20px;
+	margin:0;
+}
+
+.ad footer{
+	padding: 10px 20px;
+	margin:0;
+}
+
+.ad footer {
+	border-top: 1px solid #eee;
+}
+
+.ad header {
+	background-color: #3682c3ab;
+    color: #ffffff;
+}
+.ads .ad img {
+	max-width:80%;
+	margin: auto;
+
+}
+
+.oglasnik input#myInput, .oglasnik .pres_select {
+    border-radius: 5px;
+    padding: 5px;
+    width: 30%;
+}
+
+.oglasnik .select1 {
+    float: right;
+    width: 30%;
+    text-align: right;
+}
+
+.ad_head h4 {
+	line-height: 20px;
+}   
+
+.ad_head span {
+	display: block;
+	color: #ddd;
+
+}
+
+@media only screen and (max-width: 420px){
+	.ads {
+		display:block;
+		
+	}
+	.ad footer {
+		margin-right: 0 !important;
+		margin-left: 0 !important;
+	}
+	
+	section.ad{
+		width: 100%;
+		margin: 10px 0;
+	}
+	.oglasnik header {
+		padding:0;
+		clear: left;
+		overflow: hidden;
+	}
+	.oglasnik .ad header{
+		padding:10px;
+	}
+	.oglasnik header .btn-toolbar a {
+		display: none;
+	}
+	.oglasnik h1 {
+		padding: 10px 0;
+	}
+	.oglasnik input#myInput {
+		width: 47%;
+		float:left;
+		margin-right: 5%;
+	}
+	.oglasnik .pres_select {
+		width: 100%;
+	}
+	.oglasnik .select1 {
+		float: left;
+		width: 48%;
+		text-align: left;
+
+	}
+	.oglasnik .select1 label {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: 1600px){
+	section.ad {
+		width: 30%;
+	}
+}
+
+@media only screen and (max-width: 1530px){
+	section.ad {
+		width: 40%;
+	}
+}
+
+@media only screen and (max-width: 900px){
+	section.ad {
+		width: 90%;
+	}
+}
+
+
+.note-insert {
+  display: none !important;
+}
+a.predaj {
+    border: 1px solid #ccc;
+    padding: 5px 20px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px #ccc;
+    background-color: #eee;
+	float:right;
+}

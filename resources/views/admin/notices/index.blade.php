@@ -6,12 +6,14 @@
 
 <div class="">
     <div class="page-header">
-        <div class='btn-toolbar pull-right' >
+        @if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))
+		<div class='btn-toolbar pull-right' >
             <a class="btn btn-primary btn-lg" href="{{ route('admin.notices.create') }}"  id="stil1" >
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Nova obavijest
             </a>
         </div>
+		@endif
         <h1>Obavijesti zaposlenicima</h1>
     </div>
     <div class="row">
@@ -25,7 +27,7 @@
 								<th>za</th>
 								<th>Subjekt</th>
 								<th>Datum</th>
-								<th class="not-export-column">Opcije</th>
+								@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))<th class="not-export-column">Opcije</th>@endif
 							</tr>
 						</thead>
 						<tbody id="myTable">
@@ -34,15 +36,15 @@
 									<td>{{ $notice->user['first_name'] . ' ' . $notice->user['last_name'] }}</td>
 									<td>{{  $notice->department['name'] }}</td>
 									<td style="width:25%"><a href="{{ route('admin.notices.show', $notice->id ) }}">{{ $notice->subject }}</a></td>
-									<td>{{ date('d.m.Y', strtotime($notice->created_at)) }}</td>
-									<td>
+									<td>{{ date('Y.m.d', strtotime($notice->created_at)) }}</td>
+									@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))<td>
 										<a href="{{ route('admin.notices.edit', $notice->id) }}">
-											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+											<i class="far fa-edit"></i>
 										</a>
 										<a href="{{ route('admin.notices.destroy', $notice->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
 										</a>
-									</td>
+									</td>@endif
 								</tr>
 							@endforeach
 						</tbody>
@@ -63,4 +65,5 @@ $(document).ready(function() {
   });
 });
 </script>
+
 @stop

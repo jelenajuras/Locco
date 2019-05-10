@@ -19,7 +19,6 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		
 		<!-- style --> 
-		
 		<link rel="stylesheet" href="{{ URL::asset('css/admin.css') }}" type="text/css" >
 		<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
 		
@@ -57,7 +56,8 @@
 				@if(Sentinel::check())
 					<a href="{{ route('home') }}" class="naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
-					<a class="" href="{{ route('admin.ad_categories.index') }}">Predaj oglas</a>
+					<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
+					
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') )
 						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
 					@endif
@@ -77,6 +77,7 @@
 							<a class="" href="{{ route('admin.departments.index') }}">Odjeli</a>
 							<a class="" href="{{ route('admin.terminations.index') }}">Otkazi</a>
 							<a class="" href="{{ route('admin.equipments.index') }}" >Radna oprema</a>
+							<a class="" href="{{ route('admin.trainings.index') }}">Osposobljavanja</a>
 							<a class="" href="{{ route('admin.cars.index') }}">Vozila</a>	
 						</div>
 						<button class="collapsible poruke {{ !Sentinel::inRole('administrator') ? 'isDisabled' : '' }}"><span>Administracija<i class="fas fa-caret-down"></i></span></button>
@@ -84,6 +85,7 @@
 							<a class="" href="{{ route('admin.job_interviews.index') }}">Razgovori za posao</a>
 							<a class="" href="{{ route('admin.employees.index') }}">Kandidati za posao</a>
 							<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
+							<a class="" href="{{ route('admin.employee_trainings.index') }}">Osposobljavanja radnika</a>
 							<a class="" href="{{ route('admin.employee_departments.index') }}">Zaposenici po odjelima</a>
 							<a class="" href="{{ route('admin.employee_equipments.index') }}">Zadužena oprema</a>
 							<a class="" href="{{ route('admin.kids.index') }}">Djeca zaposlenika</a>
@@ -126,8 +128,8 @@
 							<a class="" href="{{ route('admin.educations.index') }}">Edukacije</a>
 							<a class="" href="{{ route('admin.education_themes.index') }}">Teme</a>
 							<a class="" href="{{ route('admin.education_articles.index') }}">Članci</a>
+							<a class="" href="{{ route('admin.presentations.index') }}">Prezentacije</a>
 						</div>
-						
 					@endif
 					<div class="noticesHome">
 						<!--@if(DB::table('notices')->take(5)->get())
@@ -174,15 +176,11 @@
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
 		
 		<!-- DataTables -->
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
-  
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.css"/>
-		 
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
-		
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/datatables.min.css"/>
+ 
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/datatables.min.js"></script>
 		<script src="{{ asset('js/datatable.js') }}"></script>
 		<script src="{{ asset('js/collaps.js') }}"></script>
 		

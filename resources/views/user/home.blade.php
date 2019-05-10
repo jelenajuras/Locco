@@ -14,8 +14,12 @@
 			<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{{  number_format($ech['effective_cost'],2,",",".") . ' kn' }}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
 		</div>
 		@endif
-		
 		<div class="dashboard_box1">
+			<div class="BTNbox">
+				<div class="dashboard_box2 oglasna">
+					<a class="" href="{{ route('admin.noticeBoard') }}"  ><span>Oglasna ploča</span></a>
+				</div>
+			</div>
 			@if(isset($employee))
 			<div class="BTNbox">
 				<div class="dashboard_box2 benefits">
@@ -23,12 +27,20 @@
 				</div>
 			</div>
 			@endif
+
+			@if(count($ads))
 			<div class="BTNbox">
-				<div class="dashboard_box2 oglasna">
-					<a class="" href="{{ route('admin.noticeBoard') }}"  ><span>Oglasna ploča</span></a>
+				<div class="dashboard_box2 oglasnik">
+					<a href="{{ route('admin.oglasnik') }}">
+						<span>Naše Njuškalo</span></a>
 				</div>
 			</div>
-			@if(isset($employee))
+			@endif
+
+		</div>
+		@if(isset($employee))
+			<div class="dashboard_box1">
+			
 				<div class="BTNbox">
 					<div class="dashboard_box2">
 						<a class="" href="{{ route('admin.vacation_requests.index') }}"><span>Godišnji odmor i izostanci</span></a>
@@ -53,14 +65,22 @@
 						@endif
 					</div>
 				</div>
-				
 				<div class="BTNbox">
 					<div class="dashboard_box2">
 						<a href="{{ route('admin.registrations.show', $registration->id) }}">
 							<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
 					</div>
 				</div>
-				
+				@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
+					<div class="BTNbox">
+						<div class="dashboard_box2">
+							<a href="{{ route('admin.notices.create') }}">
+								<span>Nova obavijest</span></a>
+						</div>
+					</div>
+				@endif
+			</div>
+			<div class="dashboard_box1">
 				@if($questionnaires)
 					@foreach($questionnaires->where('status','aktivna') as $questionnaire)
 						<div class="BTNbox">
@@ -81,23 +101,16 @@
 						</div>
 						@endforeach
 				@endif
-				@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
+				@if(count($presentations))
 					<div class="BTNbox">
-						<div class="dashboard_box2">
-							<a href="{{ route('admin.notices.create') }}">
-								<span>Nova obavijest</span></a>
+						<div class="dashboard_box2 prezentacije">
+							<a href="{{ route('admin.presentations.show', '0') }}">
+								<span>Edukacijske prezentacije</span></a>
 						</div>
 					</div>
 				@endif
-				<div class="BTNbox">
-					<div class="dashboard_box2 oglasnik">
-						<a href="">
-							<span>Naše njuškalo</span></a>
-					</div>
-				</div>
-			@endif
-				
-		</div>
+			</div>
+		@endif
 	</div>
 	<div class="row">
 	@if(Sentinel::inRole('administrator'))

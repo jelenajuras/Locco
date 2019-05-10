@@ -64,7 +64,7 @@
 					{!! ($errors->has('radnoMjesto_id') ? $errors->first('radnoMjesto_id', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('datum'))  ? 'has-error' : '' }}">
 						<label>Datum razgovora:</label>
-						<input name="datum" class="date form-control" type="text" value = "{{ Carbon\Carbon::now()->format('d-m-Y') }}">
+						<input name="datum" class="date form-control" type="date" value = "{{ Carbon\Carbon::now()->format('Y-m-d') }}">
 					{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('godine_iskustva'))  ? 'has-error' : '' }}">

@@ -13,7 +13,7 @@
 						<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 					
 					<div class="datum form-group">
-						<input name="datum" class="date form-control" type="text" value = "{{  date('d-m-Y', strtotime($afterHour->datum)) }}" id="date1" ><i class="far fa-calendar-alt" ></i>
+						<input name="datum" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($afterHour->datum)) }}" id="date1" ><i class="far fa-calendar-alt" ></i>
 						{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 
@@ -33,14 +33,5 @@
 				</form>
 			</div>
 		</div>
-		
-		<script type="text/javascript">
-			$('.date').datepicker({  
-			   format: 'yyyy-mm-dd',
-			   startDate:'-60y',
-			   endDate:'+1y',
-			}); 
-		</script> 
-		
 @stop
 

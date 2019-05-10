@@ -35,9 +35,11 @@
 									<a href="{{ route('admin.ad_categories.edit', $adCategory->id) }}">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 									</a>
-									<a href="{{ route('admin.ad_categories.destroy', $adCategory->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
-										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-									</a>
+									@if(! $ads->where('category_id', $adCategory->id)->first())
+										<a href="{{ route('admin.ad_categories.destroy', $adCategory->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</a>
+									@endif
 								</td>
 							@endif
                         </tr>

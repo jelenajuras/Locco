@@ -40,12 +40,12 @@
 						</p>
 					@endif
 					<div class="datum form-group editOption1" >
-						<input name="GOpocetak" class="date form-control" type="text" value = "{{  date('d-m-Y', strtotime($vacationRequest->GOpocetak)) }}"><i class="far fa-calendar-alt"></i>
+						<input name="GOpocetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOpocetak)) }}"><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<span class="editOption2 do" >do</span>
 					<div class="datum form-group editOption2">
-						<input name="GOzavršetak" class="date form-control" type="text" value = "{{  date('d-m-Y', strtotime($vacationRequest->GOzavršetak)) }}"><i class="far fa-calendar-alt"></i>
+						<input name="GOzavršetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOzavršetak)) }}"><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="datum2 form-group editOption3" {!! ($vacationRequest->zahtjev == 'GO' || $vacationRequest->zahtjev == 'Bolovanje' ? ' style="display:none;" ': '') !!}>

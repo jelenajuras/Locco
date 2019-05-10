@@ -66,7 +66,9 @@ class WorkController extends Controller
 		if($input['prvi_userId']){
 			$data += ['prvi_userId' => $input['prvi_userId']];
 		}
-		
+		if($input['drugi_userId']){
+			$data += ['drugi_userId' => $input['drugi_userId']];
+		}
 		
 		$work = new Work();
 		$work->saveWork($data);
@@ -131,6 +133,9 @@ class WorkController extends Controller
 		
 		if($input['prvi_userId']){
 			$data += ['prvi_userId' => $input['prvi_userId']];
+		}
+		if($input['drugi_userId']){
+			$data += ['drugi_userId' => $input['drugi_userId']];
 		}
 		
 		$work->updateWork($data);

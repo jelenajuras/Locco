@@ -103,33 +103,33 @@ class DocumentController extends Controller
 
 		// Check if file already exists
 		if (file_exists($target_file)) {
-			return redirect()->back()->with('danger', 'Sorry, file already exists.');  
+			return redirect()->back()->with('error', 'Sorry, file already exists.');  
 			$uploadOk = 0;
 		}
-		/* Check file size
+		/*Check file size*/
 		if ($_FILES["fileToUpload"]["size"] > 500000) {
-			return redirect()->back()->with('danger', 'Sorry, your file is too large.');  
+			return redirect()->back()->with('error', 'Sorry, your file is too large.');  
 			$uploadOk = 0;
-		}*/
+		}
 		/* Allow certain file formats
 		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 		&& $imageFileType != "gif" && $imageFileType != "pdf") {
-			return redirect()->back()->with('danger', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+			return redirect()->back()->with('error', 'Dozvoljen unos samo jpg, png, pdf, gif');  
 			$uploadOk = 0;
 		}*/
 		if($imageFileType == "exe" || $imageFileType == "bin") {
-			return redirect()->back()->with('danger', 'Nije dozvoljen unos exe, bin dokumenta');  
+			return redirect()->back()->with('error', 'Nije dozvoljen unos exe, bin dokumenta');  
 			$uploadOk = 0;
 		}
 		// Check if $uploadOk is set to 0 by an error
 		if ($uploadOk == 0) {
-			return redirect()->back()->with('danger', 'Sorry, your file was not uploaded.'); 
+			return redirect()->back()->with('error', 'Sorry, your file was not uploaded.'); 
 		// if everything is ok, try to upload file
 		} else {
 			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 				return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
 			} else {
-				return redirect()->back()->with('danger', 'Sorry, there was an error uploading your file.'); 
+				return redirect()->back()->with('error', 'Sorry, there was an error uploading your file.'); 
 			}
 		}
     }

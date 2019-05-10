@@ -41,7 +41,7 @@
 								<td>{{ $meeting->description }}</td>
                                 <td>
                                     <a href="{{ route('admin.meetings.edit', $meeting->id) }}">
-                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                        <i class="far fa-edit"></i>
                                     </a>
                                     <a href="{{ route('admin.meetings.destroy', $meeting->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
                                         <i class="far fa-trash-alt"></i>

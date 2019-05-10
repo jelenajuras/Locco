@@ -16,8 +16,10 @@ class CreateEducationArticlesTable extends Migration
         Schema::create('education_articles', function (Blueprint $table) {
 			$table->increments('id');
 			$table->text('article');
+			$table->string('subject');
 			$table->integer('employee_id');
 			$table->integer('theme_id');
+			$table->string('status');
 			$table->timestamps();
 		});
     }

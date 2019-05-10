@@ -47,9 +47,9 @@
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
 				<p class="editOption4 iskorišteno display-none" >
-					<input type="hidden" value="{{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
-					@if($razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi > 0)
-							Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
+					<input type="hidden" value="{{ $razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi }}" name="Dani" />
+					@if($razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi > 0)
+							Neiskorišteno {{ $razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
 					@else
 							Svi dani godišnjeg odmora su iskorišteni! <br>
 							Nemoguće je poslati zahtjev za godišnji odmor.
@@ -81,8 +81,14 @@
 					<textarea rows="4" id="napomena" name="napomena" type="text" class="form-control" value="{{ old('napomena') }} " required></textarea>
 					{!! ($errors->has('napomena') ? $errors->first('napomena', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-				
-				<input name="_token" value="{{ csrf_token() }}" type="hidden">
+				@if (Sentinel::inRole('administrator'))
+					<div class="form-group">
+						<label for="email">Slanje emaila:</label>
+						<input type="radio" name="email" value="DA" checked> Poslati e-mail<br>
+						<input type="radio" name="email" value="NE"> Ne slati mail
+					</div>
+				@endif
+				{{ csrf_field() }}
 				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" >
 			</form>
 		</div>

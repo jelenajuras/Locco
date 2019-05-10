@@ -22,7 +22,7 @@
                     </div>
 					<div class="form-group {{ ($errors->has('opis'))  ? 'has-error' : '' }}">
                         <label>Opis</label>
-						<textarea name="opis" type="text" class="form-control" value="{{ old('naziv') }}"></textarea>
+						<textarea name="opis" type="text" class="form-control" value="{{ old('opis') }}"></textarea>
 						{!! ($errors->has('opis') ? $errors->first('opis', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					<div class="aktivna form-group {{ ($errors->has('status'))  ? 'has-error' : '' }}">
