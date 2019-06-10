@@ -446,6 +446,15 @@ Route::group(['prefix' => 'admin'], function () {
 	'update'		=> 'admin.employee_trainings.update', 
 	'destroy'		=> 'admin.employee_trainings.destroy'
 	]]);
+	Route::resource('job_records', 'Admin\JobRecordController', ['names' => [
+	'index' 		=> 'admin.job_records.index', 
+	'create' 		=> 'admin.job_records.create', 
+	'store' 		=> 'admin.job_records.store', 
+	'show' 			=> 'admin.job_records.show', 
+	'edit' 			=> 'admin.job_records.edit',  
+	'update'		=> 'admin.job_records.update', 
+	'destroy'		=> 'admin.job_records.destroy'
+	]]);
 });
 
 

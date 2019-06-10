@@ -27,8 +27,7 @@
 				</div>
 			</div>
 			@endif
-
-			@if(count($ads))
+			@if(isset($ads))
 			<div class="BTNbox">
 				<div class="dashboard_box2 oglasnik">
 					<a href="{{ route('admin.oglasnik') }}">
@@ -56,6 +55,7 @@
 						<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
 					</div>
 				</div>
+				@if(isset($afterHours))
 				<div class="BTNbox">
 					<div class="dashboard_box2">
 						@if (Sentinel::inRole('administrator'))
@@ -65,6 +65,7 @@
 						@endif
 					</div>
 				</div>
+				@endif
 				<div class="BTNbox">
 					<div class="dashboard_box2">
 						<a href="{{ route('admin.registrations.show', $registration->id) }}">
@@ -114,6 +115,7 @@
 	</div>
 	<div class="row">
 	@if(Sentinel::inRole('administrator'))
+		@if(isset($afterHours))	
 		@if(count($afterHours->where('odobreno', '')) > 0)
 			<div class="dashboard_box" style="overflow-x:auto;">
 				<button class="collapsible">Neodobreni prekovremeni rad</button>
@@ -149,6 +151,8 @@
 				</div>
 			</div>
 		@endif
+		@endif
+		@if(isset($zahtjeviD))	
 		@if(count($zahtjeviD->where('odobreno', '')) > 0)
 		<div class="dashboard_box" style="overflow-x:auto;">
 			<button class="collapsible">Neodobreni zahtjevi izostanaka</button>
@@ -170,7 +174,6 @@
 								<tr>
 									<td>
 										<a class="" href="{{ route('admin.confirmation_show',[ 'vacationRequest_id' => $zahtjevD->id] ) }}"><i class="far fa-check-square"></i></a>
-
 									</td>
 									<td>{{ $zahtjevD->employee['first_name'] . ' ' . $zahtjevD->employee['last_name'] }}</td>
 									<td>{{ date('d.m.Y.', strtotime( $zahtjevD->GOpocetak)) }}<br>
@@ -205,6 +208,7 @@
 				</table>
 			</div>
 		</div>
+		@endif
 		@endif
 		<div class="dashboard_box" style="overflow-x:auto;">
 			<button class="collapsible">Odobreni zahtjevi zaposlenika</button>
@@ -262,7 +266,6 @@
 	</div>
 	@if(isset($employee))
 	<footer>
-
 		@foreach($questionnaires as $questionnaire)
 			@if(count($evaluations->where('questionnaire_id', $questionnaire->id)) > 0)
 				<div class="ech">

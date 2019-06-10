@@ -13,7 +13,6 @@ use Sentinel;
 use Mail;
 use DateTime;
 
-
 class AfterHoursController extends GodisnjiController
 {
    /**

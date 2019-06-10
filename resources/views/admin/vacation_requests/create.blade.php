@@ -87,6 +87,8 @@
 						<input type="radio" name="email" value="DA" checked> Poslati e-mail<br>
 						<input type="radio" name="email" value="NE"> Ne slati mail
 					</div>
+				@else
+					<input type="hidden" name="email" value="DA">
 				@endif
 				{{ csrf_field() }}
 				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" >

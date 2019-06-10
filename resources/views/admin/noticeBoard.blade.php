@@ -50,4 +50,11 @@
 		@endif
 	</section>
 </div>
+<script>
+$( document ).ready(function() {
+  $('.notice span').css("font-size","16");
+  $('.notice span').css("font-family","Arial");
+  $('.notice span').css("line-height:","20px");
+});
+</script>
 @stop

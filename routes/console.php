@@ -60,3 +60,7 @@ Artisan::command('email:Odjava', function () {
 Artisan::command('email:Anketa', function () {
     $this->comment(Anketa::quote());
 })->describe('Display an Anketa quote');
+
+Artisan::command('email:Osposobljavanje', function () {
+    $this->comment(Osposobljavanje::quote());
+})->describe('Display an Osposobljavanje quote');

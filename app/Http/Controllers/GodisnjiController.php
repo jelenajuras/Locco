@@ -334,8 +334,6 @@ class GodisnjiController extends Controller
 		return $ukupnoGO;
 	}
 
-	
-	
 	// Računa broj radnih dana između dva datuma
 	public static function daniGO($zahtjev)
 	{
@@ -394,13 +392,27 @@ class GodisnjiController extends Controller
 	{
 		$prekovremeniEmpl = AfterHour::where('employee_id',$user->employee_id)->get();
 		$razlika =0;
-		
+
 		foreach($prekovremeniEmpl as $prekovremeni){
 			if($prekovremeni->odobreno == 'DA'){
 				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
 				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
-				$razlika += (int)$razlika_vremena->h;
+				
+				// konvert vremena u decimalan broj
+				$razlika_vremena = $razlika_vremena->h . ':' . $razlika_vremena->i;
+				$hm = explode(":", $razlika_vremena);
+				$razlika_vremena = $hm[0] + ($hm[1]/60);
+	
+				$dan_prekovremeni = new DateTime($prekovremeni->datum);
+				if(date_format($dan_prekovremeni,'N') == 6) {
+					$razlika_vremena = $razlika_vremena * 1.3;
+				} elseif (date_format($dan_prekovremeni,'N') == 7) {
+					$razlika_vremena = $razlika_vremena * 1.4;
+				} else {
+					$razlika_vremena = $razlika_vremena;
+				}
+				$razlika += $razlika_vremena;
 			}
 		}
 		return $razlika;
@@ -418,7 +430,20 @@ class GodisnjiController extends Controller
 				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
 				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
-				$razlika += (int)$razlika_vremena->h;
+				// konvert vremena u decimalan broj
+				$razlika_vremena = $razlika_vremena->h . ':' . $razlika_vremena->i;
+				$hm = explode(":", $razlika_vremena);
+				$razlika_vremena = $hm[0] + ($hm[1]/60);
+				
+				$dan_prekovremeni = new DateTime($prekovremeni->datum);
+				if(date_format($dan_prekovremeni,'N') == 6) {
+					$razlika_vremena = $razlika_vremena * 1.3;
+				} elseif (date_format($dan_prekovremeni,'N') == 7) {
+					$razlika_vremena = $razlika_vremena * 1.4;
+				} else {
+					$razlika_vremena = $razlika_vremena;
+				}
+				$razlika += $razlika_vremena;
 			}
 		}
 		return $razlika;
@@ -496,20 +521,25 @@ class GodisnjiController extends Controller
 	/* računa broj slobodnih dana prema prekovremenim satima */   /************ RADI!!!!!!! ***************/
 	public static function slobodni_dani($user)
 	{
-		// $user = $registration
-		// $registration = Registration::where('registrations.employee_id', $user->id)->first();
-		$prekovremeniEmpl = AfterHour::where('employee_id',$user->employee_id)->get();
+		$prekovremeniEmpl = GodisnjiController::prekovremeni_sati($user);
 		
-		$razlika =0;
-		foreach($prekovremeniEmpl as $prekovremeni){
-			if($prekovremeni->odobreno == 'DA'){
-				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
-				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
-				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
-				$razlika += (int)$razlika_vremena->h;
-			}
-		}
+		$razlika = 0;
+		
+		if($prekovremeniEmpl >= 8){
+			$razlika = round($prekovremeniEmpl / 8, 0, PHP_ROUND_HALF_DOWN);
+		} 
 
+		return $razlika;
+	}
+	
+	/* oduzima izlaske od prekovremenih sati i računa slobodne dane  */   /************ RADI!!!!!!! ***************/
+	public static function prekovremeni_bez_izlazaka($user)
+	{
+		$prekovremeniEmpl = GodisnjiController::prekovremeni_sati($user);
+		$sati_izlazaka = (int) substr(GodisnjiController::izlasci_ukupno($user),0,-2);
+		
+		$razlika = $prekovremeniEmpl - $sati_izlazaka;
+		
 		if($razlika >= 8){
 			$razlika = round($razlika / 8, 0, PHP_ROUND_HALF_DOWN);
 		} else {
@@ -522,9 +552,6 @@ class GodisnjiController extends Controller
 	/* računa iskorištene slobodne dane  - odobrene */          /************ RADI!!!!!!! ***************/
 	public static function koristeni_slobodni_dani($user)
 	{
-		// $user = $registration
-		//$registration = Registration::where('registrations.employee_id', $user->id)->first();
-
 		$sl_dani = VacationRequest::where('employee_id',$user->employee_id)->where('zahtjev','SLD')->get();
 		
 		$SLdan = 0;
@@ -561,10 +588,8 @@ class GodisnjiController extends Controller
 							}
 					}
 				}
-				
 			}
 		}
-
 		return $SLdan;
 	}
 	

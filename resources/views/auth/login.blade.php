@@ -27,7 +27,7 @@
 						</div>
 						<input name="_token" value="{{ csrf_token() }}" type="hidden">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi me" id="stil1">
-						<!--<p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">Zaboravio si lozinku?</a></p>-->
+						<p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">Zaboravio si lozinku?</a></p>
 					</fieldset>
                 </form>
             </div>

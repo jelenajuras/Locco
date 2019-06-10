@@ -13,6 +13,7 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	text-align:justify;
+	font-family
 }
 
 .notice {
@@ -38,12 +39,12 @@ img {
 	.notice {
 	width: 100%;
 	}
-
 }
 
 .notice h3 {
 	border-bottom:1px solid #ccc;
 	text-align: center;
+	padding-bottom: 20px;
 }
 
 a.gumb_arhiva {

@@ -75,7 +75,7 @@ class VacationRequestController extends GodisnjiController
 		
 		$daniZahtjevi = $this->daniZahtjevi($registration);
 		$daniZahtjevi_PG = $this->daniZahtjeviPG($registration);
-		$slobodni_dani = $this->slobodni_dani($registration);
+		$slobodni_dani = $this->prekovremeni_bez_izlazaka($registration);
 		$koristeni_slobodni_dani =  $this->koristeni_slobodni_dani($registration);
 		
 		return view('admin.vacation_requests.create')->with('registration', $registration)->with('registrations', $registrations)->with('employee', $employee)->with('daniZahtjevi', $daniZahtjevi)->with('daniZahtjevi_PG', $daniZahtjevi_PG)->with('slobodni_dani', $slobodni_dani )->with('koristeni_slobodni_dani', $koristeni_slobodni_dani)->with('razmjeranGO', $razmjeranGO)->with('razmjeranGO_PG', $razmjeranGO_PG );
@@ -156,7 +156,7 @@ class VacationRequestController extends GodisnjiController
 			$dani_zahtjev = $this->daniGO($zahtjev); //vraća dane zahtjeva
 			$razlika_dana =  $dani_GO - $dani_zahtjev;
 			
-			$slobodni_dani = $this->slobodni_dani($user); /* računa broj slobodnih dana prema prekovremenim satima */
+			$slobodni_dani = $this->prekovremeni_bez_izlazaka($user); /* računa broj slobodnih dana prema prekovremenim satima */
 			$koristeni_slobodni_dani = $this->koristeni_slobodni_dani($user);/* računa iskorištene slobodne dane */
 			
 			$ukupnoDani = $this->ukupnoDani($zahtjev); //vraća dane zahtjeva
@@ -214,13 +214,14 @@ class VacationRequestController extends GodisnjiController
 				if($input['email'] == 'DA' ){
 					$work = Work::where('id', $user->radnoMjesto_id)->first();
 					$nadredjeni = $work->nadredjeni;
+					$prvi_nadredjeni = $work->prvi_nadredjeni;
+					
 					$prvi_nadredjeni_mail = null;
 					$drugi_nadredjeni_mail = null;
 					$nadredjeni_mail = null;
 					if($nadredjeni) {
 						$nadredjeni_mail = 	$nadredjeni->email;
 					}
-					$prvi_nadredjeni = $work->prvi_nadredjeni;
 					if($prvi_nadredjeni) {
 						$prvi_nadredjeni_mail = $prvi_nadredjeni->email;
 					}
@@ -228,7 +229,7 @@ class VacationRequestController extends GodisnjiController
 					if($drugi_nadredjeni) {
 						$drugi_nadredjeni_mail = $drugi_nadredjeni->email;
 					}
-					$mail_to = array($prvi_nadredjeni_mail, $nadredjeni_mail, $drugi_nadredjeni_mail, 'jelena.juras@duplico.hr');
+					$mail_to = array_unique(array($prvi_nadredjeni_mail, $nadredjeni_mail, $drugi_nadredjeni_mail, 'jelena.juras@duplico.hr'));
 					//$mail_to = array('jelena.juras@duplico.hr');
 					
 					foreach($mail_to as $email_to){
@@ -296,7 +297,7 @@ class VacationRequestController extends GodisnjiController
 		$daniZahtjevi = $this->daniZahtjevi($registration);
 		$daniZahtjevi_PG = $this->daniZahtjeviPG($registration);
 		
-		$slobodni_dani = $this->slobodni_dani($registration);
+		$slobodni_dani = $this->prekovremeni_bez_izlazaka($registration);
 		$koristeni_slobodni_dani =  $this->koristeni_slobodni_dani($registration);
 
 		return view('admin.vacation_requests.edit', ['vacationRequest' => $vacationRequest])->with('registration', $registration)->with('registrations', $registrations)->with('employee', $employee)->with('daniZahtjevi', $daniZahtjevi)->with('daniZahtjevi_PG', $daniZahtjevi_PG)->with('slobodni_dani', $slobodni_dani )->with('koristeni_slobodni_dani', $koristeni_slobodni_dani)->with('razmjeranGO', $razmjeranGO)->with('razmjeranGO_PG', $razmjeranGO_PG );
@@ -344,7 +345,7 @@ class VacationRequestController extends GodisnjiController
 		$dani_zahtjev = $this->daniGO($zahtjev); //vraća dane zahtjeva
 		$razlika_dana =  $dani_GO - $dani_zahtjev;
 		
-		$slobodni_dani = $this->slobodni_dani($user); /* računa broj slobodnih dana prema prekovremenim satima */
+		$slobodni_dani = $this->prekovremeni_bez_izlazaka($user); /* računa broj slobodnih dana prema prekovremenim satima */
 		$koristeni_slobodni_dani =  $this->koristeni_slobodni_dani($user);/* računa iskorištene slobodne dane */
 		
 		$ukupnoDani = $this->ukupnoDani($zahtjev); //vraća dane zahtjeva
@@ -397,6 +398,8 @@ class VacationRequestController extends GodisnjiController
 				$vrijeme="";
 			}
 			
+			
+			
 			if($input['email'] == 'DA' ){
 				$work = Work::where('id', $user->radnoMjesto_id)->first();
 				$nadredjeni = $work->nadredjeni;
@@ -411,7 +414,8 @@ class VacationRequestController extends GodisnjiController
 				}
 
 				$mail_to = array($prvi_nadredjeni_mail, $nadredjeni_mail,'jelena.juras@duplico.hr');
-
+				
+				
 				foreach($mail_to as $email_to){
 					Mail::queue(
 						'email.zahtjevGO',
@@ -582,8 +586,8 @@ class VacationRequestController extends GodisnjiController
 	
 	public function AllVacationRequest(Request $request)
 	{
-		$mjesec = strstr( $request['mjesec'],'-',true);
 		$godina = substr( $request['mjesec'],'-4');
+		$mjesec = strstr( $request['mjesec'],"-",true);
 
 		$vacationRequests = VacationRequest::where('odobreno','DA')->whereMonth('GOpocetak',$mjesec)->whereYear('GOpocetak',$godina)->get();
 		

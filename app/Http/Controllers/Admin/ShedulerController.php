@@ -31,12 +31,6 @@ class ShedulerController extends Controller
         $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		return view('admin.shedulers.index')->with('requests',$requests);
-		
-		
-		/*$shedulers = Sheduler::get();
-		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('last_name','ASC')->get();
-		
-		return view('admin.shedulers.index')->with('shedulers',$shedulers)->with('employees',$employees);*/
     }
 
     /**
@@ -48,24 +42,21 @@ class ShedulerController extends Controller
     {
 		$input = $request;
 		
-		//$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
-		
 		$employees = Registration::join('employees','registrations.employee_id','employees.id')->leftJoin('employee_terminations','registrations.employee_id', '=', 'employee_terminations.employee_id')->select('registrations.*','employees.first_name', 'employees.last_name', 'employee_terminations.datum_odjave')->orderBy('employees.last_name','ASC')->get();
 
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
-
-			$godina = strstr( $input['mjesec'],'-',true);
-			$mjesec = substr( $input['mjesec'],'-2');
-			
-			for($d=1; $d<=31; $d++)
-			{
-				$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
-				if (date('m', $time)==$mjesec){   
-						$list[]=date('Y/m/d/D', $time);
-				}
+		$godina = substr( $input['mjesec'],'-4');
+		$mjesec = strstr( $input['mjesec'],"-",true);
+	
+		for($d=1; $d<=31; $d++)
+		{
+			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
+			if (date('m', $time)==$mjesec){   
+					$list[]=date('Y/m/d/D', $time);
 			}
+		}
 
 		return view('admin.shedulers.create')->with('employees',$employees)->with('mjesec', $mjesec)->with('godina', $godina)->with('list', $list)->with('requests', $requests);
     
@@ -137,8 +128,8 @@ class ShedulerController extends Controller
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
-		$godina = strstr( $input['mjesec'],'-',true);
-			$mjesec = substr( $input['mjesec'],'-2');
+		$godina = substr( $input['mjesec'],'-4');
+		$mjesec = strstr( $input['mjesec'],"-",true);
 
 		for($d=1; $d<=31; $d++)
 		{

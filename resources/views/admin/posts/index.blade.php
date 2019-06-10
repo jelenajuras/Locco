@@ -50,10 +50,12 @@
 										$to = 'Racunovodstvo';
 									}elseif($post->to_employee_id == '48758322'){
 										$to = 'IT služba';
+									} else {
+										$to = $post->to_employee['first_name'] . ' ' . $post->to_employee['last_name']; 
 									}
 
 									?>
-									<td>{!! $to !!}</td>
+									<td>@if(isset($to)){!! $to !!}@endif</td>
 									<td>
 										<a href="{{ route('admin.posts.edit', $post->id)}}">
 											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

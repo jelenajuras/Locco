@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\JobInterview;
 use App\Models\Work;
 use App\Http\Requests\JobInterviewRequest;
-
 use Sentinel;
 
 class JobInterviewController extends Controller

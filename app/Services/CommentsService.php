@@ -6,8 +6,6 @@ use Illuminate\View\Factory;
 use Sentinel;
 use App\Models\Post;
 
-
-
 class CommentsService
 {
 	protected $view;

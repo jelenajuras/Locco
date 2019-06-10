@@ -46,7 +46,6 @@
                             <th onclick="sortTable(8)">Neiskorišteno dana  {{ $ova_godina}}</th>
 							<th onclick="sortTable(8)">Ukupno neiskorišteno dana  GO</th>
 							<th onclick="sortTable(9)">Neiskorišteni slobodni dani</th>
-							
                         </tr>
                     </thead>
 					
@@ -68,7 +67,7 @@
 								$godisnjiUser  = GodisnjiController::godisnjiUser($registration);
 								
 								$daniZahtjevi = GodisnjiController::daniZahtjevi($registration);
-								$slDani = GodisnjiController::slobodni_dani($registration);
+								$slDani = GodisnjiController::prekovremeni_bez_izlazaka($registration);
 								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);
 								
 								$razmjeranGO = GodisnjiController::razmjeranGO($registration);
@@ -91,9 +90,8 @@
 								}
 								?>
 								
-								
 								<tr>
-									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
+									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;color:blue">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
 									<td>{{  $registration->work['odjel'] }}</td> 
 									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> <!-- staž Duplico -->
 									
@@ -106,9 +104,9 @@
 									<td>{{ $daniZahtjevi }}</td> 				<!-- // iskorišteni dani ova godina -->
 									<td>{{ $razmjeranGO - $daniZahtjevi }}</td>  <!-- // neiskorišteni dani godišnjeg odmora ova godina -->
 									<td>{{ $GO_PG - $daniZahtjeviPG + $razmjeranGO - $daniZahtjevi }}</td> 
-									<td class="width_10">{{ $slDani - $koristeni_slDani  }}</td>
+									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif
+									</td>
 								</tr>
-									
 							@endif
 						 @endforeach
                     </tbody>

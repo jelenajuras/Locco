@@ -6,7 +6,6 @@ use Illuminate\Foundation\AliasLoader; // servis koji registrira alias
 use Illuminate\Support\ServiceProvider;
 use App\Services\CommentsService;
 
-
 class CommentServiceProvider extends ServiceProvider
 {
 	 /**

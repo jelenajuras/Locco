@@ -29,6 +29,7 @@
 }
 .date {
 	min-width:130px;
+	line-height: 100% !important;
 }
 .datum {
 	width:40%;
@@ -81,7 +82,7 @@
 }
 
 .datum i {
-	left: 0;
+	left: 10px;
 	top:10px;
     position: absolute;
 	padding-left:15px;
@@ -247,3 +248,4 @@ p {
 .display-none {
 	display:none;
 }
+

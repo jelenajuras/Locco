@@ -148,6 +148,7 @@ class PostController extends Controller
 			
 			$post = new Post();
 			$post->savePost($data);
+			//$prima = 'jelena.juras@duplico.hr';
 
 			$post_id = $post->id;
 			$poruka = 'http://administracija.duplico.hr/admin/posts/' . $post_id;

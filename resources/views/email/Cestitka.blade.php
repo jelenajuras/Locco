@@ -21,7 +21,7 @@
 	</style>
 	<body>
 		<div class="content">
-			<h3>Sve sto zivot cini ljepim, a tebe sretnim, neka ti donese ovaj dan! Sretan rođendan.</h3>
+			<h3>Sve sto život čini lijepim, a tebe sretnim, neka ti donese ovaj dan! Sretan rođendan.</h3>
 		</div>
 	</body>
 </html>

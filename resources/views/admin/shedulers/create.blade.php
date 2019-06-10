@@ -53,7 +53,6 @@
 						<tbody id="myTable">
 							@foreach($employees as $djelatnik)
 								@if( !$djelatnik->datum_odjave || date('mm-YY', strtotime($djelatnik->datum_odjave )) == date('mm-YY',strtotime($value)) )
-									
 								<?php 
 									$zahtjev="";
 									$redovan_Rad = '8:00';

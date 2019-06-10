@@ -59,12 +59,14 @@ class PasswordController extends Controller
             // Send the email
             $code = $reminder->code;
             $email = $user->email;
+			
             Mail::queue(
                 'email.reset',
                 ['code' => $code],
                 function ($message) use ($email) {
                     $message->to($email)
-                        ->subject('Password Reset Link');
+                        ->from('info@duplico.hr')
+						->subject('Password Reset Link');
                 }
             );
         }

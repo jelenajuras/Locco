@@ -46,7 +46,7 @@ class HomeController extends GodisnjiController
 			$zahtjeviD = VacationRequest::orderBy('GOpocetak','DESC')->take(30)->get();
 			
 			// ANKETE
-			$questionnaires = Questionnaire::where('status','aktivna')->get();
+			$questionnaires = Questionnaire::get();
 			$evaluatingGroups = EvaluatingGroup::get();
 			$evaluatingQuestions = EvaluatingQuestion::get();
 			$evaluationTargets = EvaluationTarget::where('employee_id',$employee->id)->orderBy('created_at','DESC')->get();
