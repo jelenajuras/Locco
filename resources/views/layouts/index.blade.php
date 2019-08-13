@@ -36,7 +36,7 @@
 					<li><a href="{{ route('auth.logout') }}">Odjava</a></li>
 				@else
 					<li><a href="{{ route('auth.login.form') }}">Login</a></li>
-					<li><a href="{{ route('auth.register.form') }}">Register</a></li>
+					<!--<li><a href="{{ route('auth.register.form') }}">Register</a></li>-->
 				@endif
 			</ul>
 	</header>

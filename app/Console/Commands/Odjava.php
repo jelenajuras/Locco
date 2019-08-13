@@ -56,9 +56,10 @@ class Odjava extends Command
 						->cc('pravni@duplico.hr')
 						->cc('petrapaola.bockor@duplico.hr')
 						->cc('tomislav.novosel@duplico.hr')
+						->cc('marina.sindik@duplico.hr')
 						->cc('marica.posaric@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')
-						->subject('Odjava radnika ' . $djelatnik->first_name . ' ' . $djelatnik->last_name);
+						->subject('Odjava radnika ' . ' - ' . $djelatnik->first_name . ' ' . $djelatnik->last_name);
 				});
 
 		}

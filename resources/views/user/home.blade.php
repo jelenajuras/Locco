@@ -224,7 +224,7 @@
 							
 						</tr>
 					</thead>
-					@foreach($zahtjeviD as $zahtjevD)
+					@foreach($zahtjeviD->take(30) as $zahtjevD)
 						@if($zahtjevD->odobreno != '')
 							<tbody>
 								@if(date('Y', strtotime( $zahtjevD->GOzavršetak)) == $ova_godina)

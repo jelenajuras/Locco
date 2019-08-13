@@ -21,6 +21,9 @@ body {
 	pointer-events: none;
 }
 
+a:hover {
+	cursor:pointer;
+}
 a.btn.btn-md.pull-left {
 	width:100%;
 	text-align:left;
@@ -694,4 +697,30 @@ textarea {
 
 input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"] {
 	line-height: 100%;
+}
+
+.btn1 {
+	border: 1px solid #777;
+    padding: 5px 20px;
+    border-radius: 5px;
+    background-color: #eee;
+    color: #777;
+	margin: 0 10px;
+}
+
+.odobreno{
+	text-align: left;
+    width: 50%;
+    border: 1px solid #ccc;
+    margin: 40px auto;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.odobreno h3 {
+    padding-bottom: 20px;
+}
+
+.odobreno h4 {
+    padding: 20px 0;
 }

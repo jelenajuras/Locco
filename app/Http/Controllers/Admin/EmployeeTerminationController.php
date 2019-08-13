@@ -56,7 +56,7 @@ class EmployeeTerminationController extends Controller
     public function store(EmployeeTerminationRequest $request)
     {
         $input = $request->except(['_token']);
-		//dd($input);
+
 		$data = array(
 			'employee_id'  	 => $input['employee_id'],
 			'otkaz_id'   	 => $input['otkaz_id'],
@@ -74,8 +74,6 @@ class EmployeeTerminationController extends Controller
 		$djelatnik = Registration::where('employee_id', $input['employee_id']);
 		$djelatnik->update($odjava);
 		
-		
-		
 		$employee = $input['employee_id'];
 		$djelatnik = EmployeeTermination::join('employees','employee_terminations.employee_id', '=', 'employees.id')->join('registrations','employee_terminations.employee_id', '=', 'registrations.employee_id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('employee_terminations.*','employees.first_name','employees.last_name','works.odjel','works.naziv')->where('employee_terminations.employee_id', $employee)->first();
 
@@ -83,7 +81,7 @@ class EmployeeTerminationController extends Controller
 		$prezime = $djelatnik->last_name;
 		$radno_mj = $djelatnik->naziv;
 				
-		$zaduzene_osobe = array('pravni@duplico.hr','petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','tomislav.novosel@duplico.hr','matija.barberic@duplico.hr', 'marica.posaric@duplico.hr','nikolina.dujic@duplico.hr');
+		$zaduzene_osobe = array('pravni@duplico.hr','petrapaola.bockor@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','tomislav.novosel@duplico.hr','matija.barberic@duplico.hr', 'marica.posaric@duplico.hr','nikolina.dujic@duplico.hr','marina.sindik@duplico.hr');
 		
 		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
 		

@@ -64,8 +64,9 @@ class RegistrationController extends Controller
     public function create(Request $request)
     {
 		$employee = Employee::where('id', $request->id)->first();
+		$employees = Employee::where('id','<>',$request->id)->orderBy('last_name','ASC')->get();
 		
-		return view('admin.registrations.create',['employee' => $employee]);
+		return view('admin.registrations.create',['employee' => $employee, 'employees' => $employees]);
     }
 
     /**
@@ -76,6 +77,7 @@ class RegistrationController extends Controller
      */
     public function store(RegistrationRequest $request)
     {
+		
 		$input = $request->except(['_token']);
 		
 		if($input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'] == '--'){
@@ -96,13 +98,24 @@ class RegistrationController extends Controller
 			'slDani'  	    	=> $input['slDani']
 		);
 		
+		if(isset($input['stranac'])) {
+			if($input['stranac'] == 1 ) {
+				$data += ['stranac'  		=> $input['stranac']];
+				$data += ['datum_dozvola'  => $input['datum_dozvola']];
+			}
+		}
+		
+		if( $input['superior_id'] != 0 ) {
+			$data += ['superior_id'  => $input['superior_id']];
+		} 
+		
 		if($request['prekidStaza']){
 			$data += ['prekidStaza' => $input['prekidStaza']];
 		}
 		if($request['prvoZaposlenje'] != ''){
 			$data += ['prvoZaposlenje' => $input['prvoZaposlenje']];
 		}
-		
+	
 		$registration = new Registration();
 		$registration->saveRegistration($data);
 		
@@ -110,20 +123,19 @@ class RegistrationController extends Controller
 		
 		$djelatnik = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->join('works','registrations.radnoMjesto_id', '=', 'works.id')->select('registrations.*','employees.first_name','employees.email','employees.last_name','works.odjel','works.naziv')->where('registrations.employee_id', $employee)->first();
 
-
 		$radno_mj = $djelatnik->naziv;
 		$ime = $djelatnik->first_name;
 		$prezime = $djelatnik->last_name;
 		$work = Work::leftjoin('employees','employees.id','works.user_id')->where('works.id', $djelatnik->radnoMjesto_id)->first();
 		
-		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','petrapaola.bockor@duplico.hr','matija.barberic@duplico.hr','nikolina.dujic@duplico.hr');
+		$zaduzene_osobe = array('andrea.glivarec@duplico.hr','marica.posaric@duplico.hr','jelena.juras@duplico.hr','uprava@duplico.hr','petrapaola.bockor@duplico.hr','matija.barberic@duplico.hr','nikolina.dujic@duplico.hr','marina.sindik@duplico.hr' );
 		
-		//$zaduzene_osobe = array('jelena.juras@duplico.hr','jelena.juras@duplico.hr');
-		
+		//$zaduzene_osobe = array('jelena.juras@duplico.hr');
+	
 		foreach($zaduzene_osobe as $key => $zaduzena_osoba){
 			Mail::queue(
 			'email.prijava3',
-			['djelatnik' => $djelatnik,'zaduzena_osoba' => $zaduzena_osoba,'napomena' => $input['napomena'], 'radno_mj' => $radno_mj, 'ime' => $ime, 'prezime' => $prezime ],
+			['djelatnik' => $djelatnik,'napomena' => $input['napomena'], 'radno_mj' => $radno_mj, 'ime' => $ime, 'prezime' => $prezime ],
 			function ($message) use ($zaduzena_osoba) {
 				$message->to($zaduzena_osoba)
 					->subject('Novi djelatnik - obavijest o' . ' početku ' . ' rada');
@@ -151,7 +163,9 @@ class RegistrationController extends Controller
 		
 		// Create directory
 		$path = 'storage/' . $prezime_ime;
-		mkdir($path);
+		if(!file_exists($path)){
+			mkdir($path);
+		}
 		
 		$message = session()->flash('success', 'Novi djelatnik je prijavljen');
 		
@@ -192,8 +206,9 @@ class RegistrationController extends Controller
 		$stažM = $staž[1];
 		$stažD = $staž[2];
 		}
-
-		return view('admin.registrations.edit', ['registration' => $registration])->with('stažY', $stažY)->with('stažM', $stažM)->with('stažD', $stažD);
+		$employees = Employee::where('id','<>',$id)->orderBy('last_name','ASC')->get(); // za nadređenu osobu
+		
+		return view('admin.registrations.edit', ['registration' => $registration, 'employees' => $employees, 'stažY' => $stažY, 'stažM' => $stažM, 'stažD'  => $stažD]);
     }
 
     /**
@@ -221,6 +236,17 @@ class RegistrationController extends Controller
 			'napomena'  	    => $input['napomena'],
 			'slDani'  	    	=> $input['slDani']
 		);
+		if(isset($input['stranac'])) {
+			if($input['stranac'] == 1 ) {
+				$data += ['stranac'  		=> $input['stranac']];
+				$data += ['datum_dozvola'  => $input['datum_dozvola']];
+			}
+		}
+		
+		
+		if( $input['superior_id'] != 0 ) {
+			$data += ['superior_id'  => $input['superior_id']];
+		} 
 		
 		if($request['prekidStaza']){
 			$data += ['prekidStaza' => $input['prekidStaza']];

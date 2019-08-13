@@ -68,8 +68,8 @@
 										<?php 
 											$iskorišteno_mj = GodisnjiController::daniZahtjevi_mj($djelatnik, 'GO' ,$mjesec, $godina );
 											
-											$daniZahtjevi = GodisnjiController::daniZahtjevi($djelatnik);
-											$daniZahtjeviPG = GodisnjiController::daniZahtjeviPG($djelatnik);
+											$daniZahtjevi = GodisnjiController::zahtjevi_novo($djelatnik)['zahtjevi_Dani_OG'];
+											$daniZahtjeviPG = GodisnjiController::zahtjevi_novo($djelatnik)['zahtjevi_Dani_PG'] ;
 											$GO_PG = GodisnjiController::razmjeranGO_PG($djelatnik); // razmjerni dani prošla godina
 											$neiskPG = 0;
 											$neiskPG = $GO_PG - $daniZahtjeviPG;

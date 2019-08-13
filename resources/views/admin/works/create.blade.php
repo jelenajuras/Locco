@@ -46,7 +46,7 @@
 					<div class="form-group {{ ($errors->has('user_id'))  ? 'has-error' : '' }}">
                         <label>Nadređen djelatnik</label>
 						<select class="form-control" name="user_id" id="sel1" value="{{ old('user_id') }}"required>
-							<option selected="selected"></option>
+							<option value="" selected disabled></option>
 						@foreach($users as $user)
 							@if(! $terminations->where('employee_id', $user->employee_id)->first())
 								<option name="user_id" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }} </option>
@@ -58,7 +58,7 @@
 					<div class="form-group">
                         <label>Prvi nadređen djelatnik</label>
 						<select class="form-control" name="prvi_userId" id="sel1" value="{{ old('prvi_userId') }}" >
-							<option selected="selected"></option>
+							<option value="" selected disabled></option>
 						@foreach($users as $user)
 							@if(! $terminations->where('employee_id', $user->employee_id)->first())
 								<option name="prvi_userId" value="{{ $user->employee_id }}">{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }}</option>

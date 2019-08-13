@@ -46,7 +46,6 @@
                             <th onclick="sortTable(8)">Neiskorišteno dana  {{ $ova_godina}}</th>
 							<th onclick="sortTable(8)">Ukupno neiskorišteno dana  GO</th>
 							<th onclick="sortTable(9)">Neiskorišteni slobodni dani</th>
-							<th onclick="sortTable(9)">test</th>
                         </tr>
                     </thead>
                     <tbody id="myTable">
@@ -89,21 +88,23 @@
 									}
 								}
 								?>
+								
 								<tr>
 									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;color:blue">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
 									<td>{{  $registration->work['odjel'] }}</td> 
-									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> 		<!-- staž Duplico -->
+									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> <!-- staž Duplico -->
+									
 									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td><!-- Ukupan staž -->
-									<td>{{ $GO_PG }}</td> 										<!-- GO prošla godina -->
-									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_PG']   }}</td>								<!-- iskorišteni dani prošla godina  -->
-									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_PG'] }}</td>						<!-- neiskorišteni dani prošla godina  -->
-									<td>{{ $godisnjiUser }}</td>					 			<!-- ukupno GO -->
-									<td>{{ $razmjeranGO }}</td> 								<!-- Razmjerni dani GO-->
-									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_OG'] }}</td> 			<!-- // iskorišteni dani ova godina -->
-									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_OG'] }}</td>  				<!-- // neiskorišteni dani godišnjeg odmora ova godina -->
-									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_ukupno'] }}</td> 						<!-- // ukupno neiskorišteni dani godišnjeg odmora -->
-									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td>
-									<td></td>
+									<td>{{ $GO_PG }}</td> 							<!-- GO prošla godina -->
+									<td>{{ $daniZahtjeviPG  }}</td>				<!-- iskorišteni dani prošla godina  -->
+									<td>{{ $GO_PG - $daniZahtjeviPG }}</td>				<!-- neiskorišteni dani prošla godina  -->
+									<td>{{ $godisnjiUser }}</td>					 <!-- ukupno GO -->
+									<td>{{ $razmjeranGO }}</td> 					<!-- Razmjerni dani GO-->
+									<td>{{ $daniZahtjevi }}</td> 				<!-- // iskorišteni dani ova godina -->
+									<td>{{ $razmjeranGO - $daniZahtjevi }}</td>  <!-- // neiskorišteni dani godišnjeg odmora ova godina -->
+									<td>{{ $GO_PG - $daniZahtjeviPG + $razmjeranGO - $daniZahtjevi }}</td> <!-- // ukupno neiskorišteni dani godišnjeg odmora -->
+									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif
+									</td>
 								</tr>
 							@endif
 						 @endforeach

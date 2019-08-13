@@ -21,20 +21,27 @@ class NoticeBoardController extends Controller
     public function index()
     {
 		$datum = new DateTime('now');    /* današnji dan */
-		$datum->modify('-8 day');
+		$datum->modify('-14 day');
 		
 		$notices = Notice::orderBy('created_at','DESC')->where('created_at', '>', $datum)->get();
-	//	$notices = Notice::orderBy('created_at','DESC')->get();
-		
+    //    $notices = Notice::orderBy('created_at','DESC')->get();
+
 		$user = Sentinel::getUser();
 		$employee = Employee::where('first_name',$user->first_name)->where('last_name',$user->last_name)->first();
-
+        $employee_departments = array();
 		if($employee) {
-			$employee_departments = Employee_department::where('employee_id',$employee->id )->get();
+            $departments = Employee_department::where('employee_id',$employee->id )->get();
+            foreach( $departments as $department) {
+                array_push($employee_departments,$department->department_id);
+                array_push($employee_departments, 10); // odjel "svi"
+                if ($department->level == 2 ) {
+                    array_push($employee_departments,$department->level1);
+                } 
+            }
+        
 			return view('admin.noticeBoard',['notices'=>$notices, 'employee_departments' => $employee_departments, 'employee' => $employee ]);
 		} else {
-			$employee_departments = Employee_department::get();
-			return view('admin.noticeBoard',['notices'=>$notices]);
+            return view('admin.noticeBoard',['notices'=>$notices]);
 		}
 
 		

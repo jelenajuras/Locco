@@ -133,9 +133,13 @@ class WorkController extends Controller
 		
 		if($input['prvi_userId']){
 			$data += ['prvi_userId' => $input['prvi_userId']];
+		} else {
+			$data += ['prvi_userId' => null];
 		}
 		if($input['drugi_userId']){
 			$data += ['drugi_userId' => $input['drugi_userId']];
+		} else {
+			$data += ['drugi_userId' => null];
 		}
 		
 		$work->updateWork($data);

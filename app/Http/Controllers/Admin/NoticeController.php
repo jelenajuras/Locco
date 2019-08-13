@@ -66,6 +66,8 @@ class NoticeController extends Controller
      */
     public function store(NoticeRequest $request)
     {
+		$to_department_id = implode(',', $request['to_department_id']);
+
 		$notice = $request['notice'];
 		$dom = new \DomDocument();
 		$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
@@ -86,28 +88,25 @@ class NoticeController extends Controller
 			
 		$notice = $dom->saveHTML();
 
-		$input = $request->except(['_token']);
+		$data1 = array(
+			'employee_id'   	=> $request['employee_id'],
+			'to_department_id'  => $to_department_id,
+			'subject'  			=> $request['subject'],
+			'notice'  			=> $notice
+		);
+		
+		$notice1 = new Notice();
+		$notice1->saveNotice($data1);
+
 		
 		foreach($request['to_department_id'] as $department) {
-			$notice1 ="";
-			$data1 = array(
-				'employee_id'   	=> $input['employee_id'],
-				'to_department_id'  => $department,
-				'subject'  			=> $input['subject'],
-				'notice'  			=> $notice
-			);
-			
-			$notice1 = new Notice();
-			$notice1->saveNotice($data1);
-
-			$department = Department::where('id',$notice1->to_department_id)->first();
+			$department = Department::where('id', $department)->first();
 			$prima = $department->email;
-			$poruka = $notice1->subject;
 			
 			Mail::queue(
 				'email.notice',
-				['poruka' => $poruka],
-				function ($message) use ($prima , $poruka) {
+				['poruka' => $notice1->subject],
+				function ($message) use ($prima) {
 					$message->to($prima)
 						->from('info@duplico.hr', 'Duplico')
 						->subject('Obavijest uprave');
@@ -184,32 +183,33 @@ class NoticeController extends Controller
         }
 
         $poruka = $dom->saveHTML();
-		
+		$to_department_id = implode(',', $request['to_department_id']);
 		$input = $request->except(['_token']);
 		
 		$data1 = array(
 			'employee_id'   	=> $input['employee_id'],
-			'to_department_id'  => $input['to_department_id'],
+			'to_department_id'  => $to_department_id,
 			'subject'  			=> $input['subject'],
 			'notice'  			=> $poruka
 		);
 		
 		$notice->updateNotice($data1);
-		
-		
-		$department = Department::where('id',$notice->to_department_id)->first();
-		$prima = $department->email;
-		$poruka = $notice->subject;
-		
-		Mail::queue(
-			'email.notice',
-			['poruka' => $poruka],
-			function ($message) use ($prima , $poruka) {
-				$message->to($prima)
-					->from('info@duplico.hr', 'Duplico')
-					->subject('Ispravak obavijesti');
-			}
-		);
+
+		foreach($request['to_department_id'] as $department) {
+			$department = Department::where('id', $department)->first();
+			$prima = $department->email;
+			
+			Mail::queue(
+				'email.notice',
+				['poruka' => $notice->subject],
+				function ($message) use ($prima) {
+					$message->to($prima)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Ispravak obavijesti');
+				}
+			);
+			
+		}
 
 		$message = session()->flash('success', 'Obavijest je ispravljena');
 		

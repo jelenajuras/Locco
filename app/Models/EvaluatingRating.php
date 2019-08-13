@@ -42,6 +42,4 @@ class EvaluatingRating extends Model
 	{
 		return $this->update($evaluatingRating);
 	}	
-	
-	
 }

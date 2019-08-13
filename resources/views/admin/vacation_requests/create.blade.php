@@ -4,12 +4,13 @@
 <link rel="stylesheet" href="{{ URL::asset('css/create.css') }}"/>
 
 @section('content')
-
 	<div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
 		<h2 id="zahtjev">Zahtjev - Obavijest</h2>
 		<div class="panel-body">
 			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}"  onsubmit="return validateForm()">
 				@if (Sentinel::inRole('administrator'))
+				<input 	name="role" hidden value="{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}"/>
+
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 						<label class="padd_10">Djelatnik</label>
 						<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
@@ -47,9 +48,9 @@
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
 				<p class="editOption4 iskorišteno display-none" >
-					<input type="hidden" value="{{ $razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi }}" name="Dani" />
-					@if($razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi > 0)
-							Neiskorišteno {{ $razmjeranGO_PG + $razmjeranGO - $daniZahtjevi_PG  - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
+					<input type="hidden" value="{{ $preostali_dani }}" name="Dani" />
+					@if($preostali_dani > 0)
+							Neiskorišteno {{ $preostali_dani }} dana razmjernog godišnjeg odmora 
 					@else
 							Svi dani godišnjeg odmora su iskorišteni! <br>
 							Nemoguće je poslati zahtjev za godišnji odmor.
@@ -147,15 +148,19 @@
 				var x = document.forms["myForm"]["zahtjev"].value;
 				var y = document.forms["myForm"]["Dani"].value;
 				var z = document.forms["myForm"]["GOpocetak"].value;
-
+				var role = document.forms["myForm"]["role"].value;
+				console.log(role);
 				if (z == "") {
 					alert("Nemoguće poslati zahtjev. Nije upisan početan datum");
 					return false;
 				}
-				if (x == "GO" & y <= 0 ) {
-					alert("Nemoguće poslati zahtjev. Svi dani godišnjeg odmora su iskorišteni");
-					return false;
+				if(role !='admin'){
+					if (x == "GO" & y <= 0) {
+						alert("Nemoguće poslati zahtjev. Svi dani godišnjeg odmora su iskorišteni");
+					//	return false;
+					}
 				}
+				
 				
 			}
 		</script>

@@ -22,7 +22,7 @@
 					<div class="form-group {{ ($errors->has('employee_id'))  ? 'has-error' : '' }}">
 						<span><b>Ime i prezime:</b></span>
 						<h3>{{ $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] }}</h3>
-						<input type="text" name="employee_id" type="text" class="form-control" value="{{ $registration->employee_id }}">
+						<input name="employee_id" type="hidden" class="form-control" value="{{ $registration->employee_id }}" >
 					</div>
 					{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 					<div class="form-group {{ ($errors->has('radnoMjesto_id'))  ? 'has-error' : '' }}">
@@ -33,8 +33,18 @@
 								<option name="radnoMjesto_id" value="{{ $work->id }}">{{ $work->odjel . ' - '. $work->naziv }}</option>
 							@endforeach	
 						</select>
-					</div>	
 						{!! ($errors->has('radnoMjesto_id') ? $errors->first('radnoMjesto_id', '<p class="text-danger">:message</p>') : '') !!}
+					</div>	
+					<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
+						<span><b>Nadređeni djelatnik:</b></span>
+						<select class="form-control" name="superior_id" id="sel1" >
+							<option selected value="0"></option>
+							@foreach($employees as $employee)
+								<option name="superior_id" value="{{ $employee->id }}" {!! $employee->id ==  $registration->superior_id ? 'selected' : '' !!}>{{ $employee->last_name . ' '. $employee->first_name }}</option>
+							@endforeach	
+						</select>
+						{!! ($errors->has('superior_id') ? $errors->first('superior_id', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
 					<div class="form-group">
 						<span><b>Datum prijave:</b></span>
 						<input name="datum_prijave" class="date form-control" type="date" value = "{{ date('Y-m-d', strtotime( $registration->datum_prijave)) }}">
@@ -79,15 +89,26 @@
 							<option name="slDani" value="0" {!! $registration->slDani == "0" ? 'selected' : '' !!} >Isplata</option>
 						</select>
 					</div>
+					<div class="form-group">
+						<input type="checkbox" name="stranac" value="1" id="stranac" > <label for="stranac">Djelatnik je stranac</label>
+					</div>
+					<div class="form-group" hidden id="dozvola">
+						<label>Datum isteka dozvole boravka u RH: </label>
+						<input name="datum_dozvola" class="date form-control" type="date">
+					</div>
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
 					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke radnika" id="stil1">
 				</form>
-
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+$('#stranac').change(function(){
+	$('#dozvola').toggle();
 
+});
+</script>
 @stop

@@ -52,6 +52,10 @@
 				<p><b>Liječnički pregled: </b>{{ date('d.m.Y', strtotime($registration->employee['lijecn_pregled'] ))  }}</p>
 				<p><b>Zaštita na radu: </b>{{ date('d.m.Y', strtotime($registration->employee['ZNR'] ))  }}</p>
 				</br>
+				@if($registration->stranac== 1)
+					<p><b>Istek dozvole za boravak i rad u RH: </b> {{ date('d.m.Y', strtotime( $registration->datum_dozvola ))  }}</p>
+				@endif
+				</br>
 				<p><b>Zadužena oprema: </b>
 				@foreach(DB::table('employee_equipments')->where('employee_id', $registration->employee_id )->get() as $oprema)
 				<p id="padding">{{ DB::table('equipment')->where('id', $oprema->equipment_id)->value('naziv') . ' - '.  $oprema->kolicina . ' kom'}}

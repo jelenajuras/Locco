@@ -61,7 +61,7 @@ class Rodjendan extends Command
 					$mail->to('uprava@duplico.hr')
 						->cc('jelena.juras@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')
-						->subject('Rođendan ' . ' djelatnika ' . $djelatnik->first_name . ' '. $djelatnik->last_name);
+						->subject('Rođendan ' . ' djelatnika ' . ' - ' . $djelatnik->first_name . ' '. $djelatnik->last_name);
 				});
 				Mail::queue('email.Cestitka', ['datum_rodjenja' => $datum_rodjenja,'djelatnik' => $djelatnik,'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik) {
 					$mail->to($djelatnik->email)

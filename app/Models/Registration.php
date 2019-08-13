@@ -11,7 +11,7 @@ class Registration extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','radnoMjesto_id','datum_prijave','probni_rok','staz','lijecn_pregled','ZNR','napomena','slDani','prekidStaza','prvoZaposlenje'];
+	protected $fillable = ['employee_id','radnoMjesto_id','superior_id','datum_prijave','probni_rok','staz','lijecn_pregled','ZNR','napomena','slDani','prekidStaza','prvoZaposlenje','stranac','datum_dozvola'];
 	
 	/*
 	* The Eloquent employee model name
@@ -45,6 +45,16 @@ class Registration extends Model
 	public function employee()
 	{
 		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
+	
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function superior()
+	{
+		return $this->belongsTo(static::$employeeModel,'superior_id');
 	}
 	
 	/*

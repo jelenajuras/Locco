@@ -57,6 +57,7 @@
 					<div class="form-group">
 					    <label>Prvi nadređen djelatnik</label>
 						<select class="form-control" name="prvi_userId" id="sel1" value="{{ old('prvi_userId') }}">
+							<option value="" selected ></option>
 							@foreach($users as $user)
 								@if(! $terminations->where('employee_id', $user->employee_id)->first())
 									<option name="prvi_userId" value="{{ $user->employee_id }}" {!! $user->employee_id == $work->prvi_userId ? 'selected' : '' !!}>{{ $user->last_name . ' ' . $user->first_name }} </option>
@@ -67,7 +68,7 @@
 					<div class="form-group">
                         <label>Drugi nadređen djelatnik</label>
 						<select class="form-control" name="drugi_userId" id="sel1" value="{{ old('drugi_userId') }}" >
-							<option selected="selected"></option>
+							<option value="" selected ></option>
 						@foreach($users as $user)
 							@if(! $terminations->where('employee_id', $user->employee_id)->first())
 								<option name="drugi_userId" value="{{ $user->employee_id }}"  {!! $user->employee_id == $work->drugi_userId ? 'selected' : '' !!}>{{ $user->employee['last_name'] . ' ' . $user->employee['first_name'] }}</option>

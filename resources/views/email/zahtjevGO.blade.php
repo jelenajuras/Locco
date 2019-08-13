@@ -61,7 +61,7 @@
 			<input type="hidden" name="id" value="{{$vacationRequest->id}}"><br>
 			<input type="radio" name="odobreno" value="DA" checked> Odobreno
 			<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije odobreno<br>
-			
+			<input type="hidden" name="email" value="DA" checked> Poslati e-mail<br>
 		<!--	<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>-->
 
 			<input class="odobri" type="submit" value="Pošalji">

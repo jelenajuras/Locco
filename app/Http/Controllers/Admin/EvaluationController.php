@@ -69,7 +69,7 @@ class EvaluationController extends Controller
     {
 		$datum = new DateTime('now');
 		$mjesec_godina = date_format($datum,'Y-m');
-		$emp = Registration::where('employee_id', $request['employee_id'])->first();
+		$emp = Employee::where('id', $request['employee_id'])->first(); //
 
 		if(!$request['rating']) {
 				$message = session()->flash('error', 'Ne može se spremiti anketa bez ocjena');

@@ -10,34 +10,26 @@
 <div class="noticeBoard">
 	<a class="gumb_arhiva" href="{{ route('admin.notices.index') }}">Arhiva</a>
 	<h1>Oglasna ploča</h1>
-	
 	<section class="notices">
 		@if(isset($employee))
-			@foreach($notices as $notice)
-				@if($notice->department['level'] == '2')
-					@if($employee_departments->where('department_id', $notice->to_department_id)->first() )
-						<article class="notice" style="text-align:left;">
-							<h3>{{ $notice->subject }}</h3>
-							<p >{!! $notice->notice !!}</p>
-						</article>
-					@endif
-				@else
-					@if($notice->department['level'] == '0')
-						<article class="notice" style="text-align:left;">
-							<h3>{{ $notice->subject }}</h3>
-							<p >{!! $notice->notice !!}</p>
-						</article>
-					@endif
-					@foreach($employee_departments as $employee_department)
-						@if($notice->to_department_id == $employee_department->department['level1'] )
-							<article class="notice">
+			@if(count($notices)> 0)
+				@foreach($notices as $notice)
+					<?php 
+						$departments = explode(',', $notice->to_department_id);
+					?>
+					@foreach ($employee_departments as $employee_department)
+						@if(in_array( $employee_department, $departments))
+							<article class="notice" style="text-align:left;">
 								<h3>{{ $notice->subject }}</h3>
-								<p style="text-align:left;">{!! $notice->notice !!}</p>
+								<p >{!! $notice->notice !!}</p>
 							</article>
+							<?php break; ?>
 						@endif
 					@endforeach
-				@endif
-			@endforeach
+				@endforeach	
+			@else
+				Nema novih obavijesti!
+			@endif
 		@else  
 			@foreach($notices as $notice)
 				@if($notice->department['level'] == '0')

@@ -60,7 +60,7 @@ class Probni2 extends Command
 						->cc('matija.barberic@duplico.hr')
 						->cc('jelena.juras@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')
-						->subject('Probni ' . ' ' . ' rok' . $djelatnik->first_name . ' ' . $djelatnik->last_name);
+						->subject('Probni ' . ' ' . ' rok ' . $djelatnik->first_name . ' ' . $djelatnik->last_name);
 				});
 			}
 		}

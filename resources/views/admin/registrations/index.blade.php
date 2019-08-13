@@ -35,7 +35,8 @@ input {
 							<th width="80" onclick="sortTable(1)">Datum prijave</th>
                             <th width="80" onclick="sortTable(2)">Datum rođenja</th>
 							<th width="150" onclick="sortTable(3)">Radno mjesto</th>
-							<th width="150" onclick="sortTable(4)">
+							<th width="150" onclick="sortTable(4)">Nadređeni djelatnik</th>
+							<th width="150" onclick="sortTable(5)">
 								Obračun<br>prokovremenih
 							</th>
                             <th width="150" class="not-export-column">Opcije</th>
@@ -57,6 +58,7 @@ input {
                                 <td>{{ date('d.m.Y.', strtotime($registration->datum_prijave)) }}</td>
 								<td>{{ date('d.m.Y.', strtotime($registration->employee['datum_rodjenja'])) }}</td>
 								<td>{{ $registration->work['odjel'] . ' - ' . $registration->work['naziv'] }}</td>
+								<td>{{ $registration->superior['last_name'] . ' ' . $registration->superior['first_name'] }}</td>
 								<td>{!! $registration->slDani === 1 ? 'Slobodan dan' : '' !!} 
 									{!! $registration->slDani === 0 ? 'Isplata' : '' !!} 
 								</td>

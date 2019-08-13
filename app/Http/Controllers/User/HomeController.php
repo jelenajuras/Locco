@@ -43,7 +43,7 @@ class HomeController extends GodisnjiController
 			$datum = new DateTime('now');    /* današnji dan */
 			$ova_godina = date_format($datum,'Y');
 		
-			$zahtjeviD = VacationRequest::orderBy('GOpocetak','DESC')->take(30)->get();
+			$zahtjeviD = VacationRequest::orderBy('GOpocetak','DESC')->get();
 			
 			// ANKETE
 			$questionnaires = Questionnaire::get();

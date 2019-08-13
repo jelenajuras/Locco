@@ -8,7 +8,7 @@
 		Natrag
 	</a>
 <section>
-	<div class="ankete">
+	<div class="">
 		<h2>Grupa: {{ $evaluatingGroup->naziv }}</h2>
 
 		<div class="kategorije">

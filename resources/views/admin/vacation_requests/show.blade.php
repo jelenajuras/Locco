@@ -125,14 +125,12 @@
 								$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 								$ukupna_razlika += $razlika_vremena->h;
 								?>
-
 								<tr>
 									<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
 									<td>>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
 									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do . '(' .   $razlika_vremena->h . ' h)'   }}</td>
 									<td>{{ $afterHour->napomena }}</td>
 									<td>{{ $afterHour->odobreno }}</td>
-									
 									<td>
 										<a href="{{ route('admin.confirmationAfter_show', ['id' => $afterHour->id]) }}" class="btn" title="Odobri">
 											<i class="fas fa-check"></i>

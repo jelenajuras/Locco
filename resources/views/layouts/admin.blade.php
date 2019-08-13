@@ -54,7 +54,7 @@
 		<section class="Body_section">
 			<input type="hidden" id="rola" {!! Sentinel::inRole('basic') ? 'value="basic"' : '' !!} />
 			<nav class="topnav col-xs-12 col-sm-3 col-md-3 col-lg-2" id="myTopnav">
-				@if(Sentinel::check())
+				@if(Sentinel::check() && !Sentinel::inRole('otkaz'))
 					<a href="{{ route('home') }}" class="naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
 					<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
@@ -153,15 +153,18 @@
 							@endif
 						@endif
 					</div>
-				@endif
+				
 				<a href="javascript:void(0);" class="icon" onclick="myFunction()">
 				 <i class="fa fa-bars"></i>
 				</a>
+				@endif
 			</nav>
-			<section class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
-					@include('notifications')
-					@yield('content')
-			</section>
+			@if(Sentinel::check() && !Sentinel::inRole('otkaz'))
+				<section class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+						@include('notifications')
+						@yield('content')
+				</section>
+			@endif
 		
 		</section>
         
