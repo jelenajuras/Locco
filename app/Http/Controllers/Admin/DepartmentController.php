@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Department;
+use App\Models\Registration;
 use App\Http\Controllers\Controller;
 
 class DepartmentController extends Controller
@@ -37,9 +38,10 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        $departments = Department::where('level',1 || 0)->orderBy('name','ASC')->get();
-		
-		return view('admin.departments.create',['departments'=>$departments]);
+        $departments = Department::orderBy('level','ASC')->get();
+        $registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('registrations.odjava',null)->orderBy('employees.last_name','ASC')->get();
+
+		return view('admin.departments.create',['departments'=>$departments, 'registrations'=>$registrations]);
     }
 
     /**
@@ -52,15 +54,12 @@ class DepartmentController extends Controller
     {
         $input = $request->except(['_token']);
 
-		if($input['level'] == 1){
-			$input['level1'] = 0;
-		}
-		
 		$data = array(
 			'name'  			=> $input['name'],
 			'email'     		=> $input['email'],
 			'level'	 			=> $input['level'],
-			'level1'	 		=> $input['level1']
+            'level1'	 		=> $input['level1'],
+            'employee_id'	 	=> $input['employee_id']
 		);
 		
 		$department = new Department();
@@ -91,9 +90,10 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department = Department::find($id);
-		$departments = Department::where('level',1 || 0)->orderBy('name','ASC')->get();
-	
-		return view('admin.departments.edit', ['department' => $department,'departments'=>$departments]);
+        $departments = Department::orderBy('level','ASC')->get();
+        $registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('registrations.odjava',null)->orderBy('employees.last_name','ASC')->get();
+
+		return view('admin.departments.edit', ['department' => $department,'departments'=>$departments, 'registrations'=>$registrations]);
     }
 
     /**
@@ -108,7 +108,7 @@ class DepartmentController extends Controller
         $department = Department::find($id);
 		$input = $request->except(['_token']);
 		
-		if($input['level'] == 1){
+		if($input['level'] == 0){
 			$input['level1'] = '0';
 		}
 		
@@ -116,7 +116,8 @@ class DepartmentController extends Controller
 			'name'	 			=> $input['name'],
 			'email'     		=> $input['email'],
 			'level'	 			=> $input['level'],
-			'level1'	 		=> $input['level1']
+            'level1'	 		=> $input['level1'],
+            'employee_id'	 	=> $input['employee_id']
 		);
 		
 		$department->updateDepartment($data);

@@ -5,6 +5,10 @@
 @section('content')
 <div class="post" >
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		<a class="btn btn-md pull-left" href="{{ url()->previous() }}">
+			<i class="fas fa-angle-double-left"></i>
+			Natrag
+		</a>
 		<h3>{{ $education->name }}</h3>
 		<input type="text" id="myInput" onkeyup="mySearch()" placeholder="Search..." title="Type in...">
 		<div id="articles">

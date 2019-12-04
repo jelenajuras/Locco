@@ -29,10 +29,9 @@
                         <label>Naziv kategorije</label>
 						<input name="name" type="text" class="form-control" value="{{ $educationTheme->name }}">
 						{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
-                    </div>
-					{{ csrf_field() }}
+					</div>
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>
 			</div>

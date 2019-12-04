@@ -40,12 +40,12 @@
 						</p>
 					@endif
 					<div class="datum form-group editOption1" >
-						<input name="GOpocetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOpocetak)) }}"><i class="far fa-calendar-alt"></i>
+						<input name="GOpocetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOpocetak)) }}" required><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<span class="editOption2 do" >do</span>
 					<div class="datum form-group editOption2">
-						<input name="GOzavršetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOzavršetak)) }}"><i class="far fa-calendar-alt"></i>
+						<input name="GOzavršetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOzavršetak)) }}" ><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="datum2 form-group editOption3" {!! ($vacationRequest->zahtjev == 'GO' || $vacationRequest->zahtjev == 'Bolovanje' ? ' style="display:none;" ': '') !!}>
@@ -64,9 +64,8 @@
 							
 						</div>
 					@endif
-					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-block" type="submit" value="Ispravi zahtjev" id="stil1">
 				</form>
 			</div>

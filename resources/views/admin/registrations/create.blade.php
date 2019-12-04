@@ -94,7 +94,7 @@
 						<label>Datum isteka dozvole boravka u RH: </label>
 						<input name="datum_dozvola" class="date form-control" type="date">
 					</div>
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi radnika" id="stil1">
 				</form>
 

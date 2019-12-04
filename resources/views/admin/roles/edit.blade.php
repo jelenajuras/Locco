@@ -32,9 +32,8 @@
 								@endforeach
 							@endforeach
 						</div>
-
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
-                    <input name="_method" value="PUT" type="hidden">
+                    {{ csrf_field() }}
+                    {{ method_field('PUT') }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" id="stil1">
                 </form>
 			</div>

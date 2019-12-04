@@ -55,7 +55,7 @@ class Stranci extends Command
 			$ime = $djelatnik->first_name;
 			$prezime = $djelatnik->last_name;
 			// Send the email to user
-				Mail::queue('email.Lijecnicki', ['djelatnik' => $djelatnik,'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik ) {
+				Mail::queue('email.Stranci', ['djelatnik' => $djelatnik,'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik ) {
 					$mail->to('pravni@duplico.hr')
 						->to('uprava@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')

@@ -26,9 +26,8 @@
 						<textarea rows="4" id="napomena" name="napomena" type="text" class="form-control">{{ $afterHour->napomena }}</textarea>
 						{!! ($errors->has('napomena') ? $errors->first('napomena', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-block editOption5" type="submit" value="Ispravi zahtjev" id="stil1" onclick="GO_dani()">
 				</form>
 			</div>

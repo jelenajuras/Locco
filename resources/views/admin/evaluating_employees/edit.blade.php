@@ -48,9 +48,8 @@
 						<input class="date-own" type="month" name="mjesec_godina" id="mjesec" value="{{$evaluatingEmployee->mjesec_godina }}" placeholder="Izbor mjeseca"/><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('mjesec_godina') ? $errors->first('mjesec_godina', '<p class="text-danger">:message</p>') : '') !!}
 					</div>-->
-					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
 					<input class="btn_align" type="hidden" value="&#10004" title="Snimi promjenu" >
 				</form>
 			</div>

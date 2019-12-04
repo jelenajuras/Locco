@@ -32,6 +32,25 @@ class Employee extends Model
 	}
 	
 	/*
+	* The Eloquent employeeDepartment model names
+	* 
+	* @var string
+	*/
+	protected static $EmployeeDepartmentModel = 'App\Models\Employee_department';
+
+
+	/*
+	* Returns the comments relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function departments()
+	{
+		return $this->hasMany(static::$EmployeeDepartmentModel,'employee_id','id')->get();
+	}	
+
+	/*
 	* Save Employee
 	* 
 	* @param array $employee

@@ -16,7 +16,8 @@
         "anam/phantommagick": "^2.0",
         "anam/phantomjs-linux-x86-binary": "^2.1",
         "predis/predis": "^1.1",
-        "twbs/bootstrap": "4.2.1"
+        "twbs/bootstrap": "4.2.1",
+        "spatie/calendar-links": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

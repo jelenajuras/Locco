@@ -27,7 +27,7 @@
 			<p class="">Ovaj zahtjev podnesen je osobno od strane radnika elektroničkim putem te je kao takav valjan bez potpisa radnika</p>
 			<div class="odobrio">
 				<p>Zahtjev odobrio: {{ $vacationRequest->authorized['first_name'] . ' ' . $vacationRequest->authorized['last_name'] }}</p>
-				<p>dana: {{ date('d.m.Y', strtotime( $vacationRequest->datum_odobrenja )) }} </p>
+				<p>dana: @if($vacationRequest->datum_odobrenja){{ date('d.m.Y', strtotime( $vacationRequest->datum_odobrenja )) }} @endif</p>
 			</div>
 		</footer>
 	</div>

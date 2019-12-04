@@ -421,13 +421,18 @@ class GodisnjiController extends Controller
 	// računa broj prekovremenih sati po zahtjevima  /************ RADI!!!!!!! ***************/
 	public static function prekovremeni_sati($user)  //user = registration!!!
 	{
-		$prekovremeniEmpl = AfterHour::where('employee_id',$user->employee_id)->get();
-		$razlika =0;
+		$prekovremeniEmpl = AfterHour::where('employee_id', $user->employee_id)->get();
+		$razlika = 0;
 
 		foreach($prekovremeniEmpl as $prekovremeni){
 			if($prekovremeni->odobreno == 'DA'){
 				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
-				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				if($prekovremeni->vrijeme_do == '00:00:00') {
+					$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
+				} else {
+					$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				}
+				
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 				
 				// konvert vremena u decimalan broj
@@ -459,7 +464,11 @@ class GodisnjiController extends Controller
 		foreach($prekovremeniEmpl as $prekovremeni){
 			if($prekovremeni->odobreno == 'DA'){
 				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
-				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				if($prekovremeni->vrijeme_do == '00:00:00') {
+					$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
+				} else {
+					$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				}
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 				// konvert vremena u decimalan broj
 				$razlika_vremena = $razlika_vremena->h . ':' . $razlika_vremena->i;
@@ -503,8 +512,8 @@ class GodisnjiController extends Controller
 	{
 		$izlasci = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','Izlazak')->where('odobreno','DA')->get();
 		
-		$razlika_h =0;
-		$razlika_m =0;
+		$razlika_h = 0;
+		$razlika_m = 0;
 		
 		foreach($izlasci as $izlazak){
 			$vrijeme_1 = new DateTime($izlazak->vrijeme_od);  /* vrijeme od */
@@ -661,6 +670,7 @@ class GodisnjiController extends Controller
 	public static function stazUkupno($user)   /************ RADI!!!!!!! ***************/
 	{
 		$stazDuplico = GodisnjiController::stazDuplico($user);
+		
 		$godina = $stazDuplico->format('%y');  
 		$mjeseci = $stazDuplico->format('%m');
 		$dana = $stazDuplico->format('%d');
@@ -675,28 +685,23 @@ class GodisnjiController extends Controller
 			$stazM = $stazPrijasnji[1];
 			$stazD = $stazPrijasnji[2];
 		} 
-		
+
 		/* Staž ukupan */
-		$danaUk=0;
-		$mjeseciUk=0;
-		$godinaUk=0;
+		$danaUk = $dana + $stazD;
+		$mjeseciUk = $mjeseci + $stazM;
+		$godinaUk = $godina + $stazY;
 		
-		if(($dana+$stazD) > 30){
-			$danaUk = ($dana+$stazD) -30;
-			$mjeseciUk = 1;
-		}else {
-			$danaUk = ($dana+$stazD);
-		}
-		
-		if(($mjeseci+$stazM) > 12){
-			$mjeseciUk += ($mjeseci+$stazM) -12;
-			$godinaUk = 1;
-		}else {
-			$mjeseciUk += ($mjeseci+$stazM);
-		}
-		$godinaUk += ($godina + $stazY);
-								
-		$staz = array($godinaUk,$mjeseciUk,$danaUk);
+		if( $danaUk >= 30){
+			$danaUk -= 30;
+			$mjeseciUk += 1;
+		} 
+
+		if ( $mjeseciUk >= 12 ){
+			$mjeseciUk -= 12;
+			$godinaUk += 1;
+		} 
+
+		$staz = array($godinaUk, $mjeseciUk, $danaUk);
 		
 		return $staz;
 	}
@@ -771,13 +776,19 @@ class GodisnjiController extends Controller
 
 
 	/*  računa razmjeran GO na traženi datum */
-	public static function razmjeranGO_date($user, $date)    /************ RADI!!!!!!! ***************/
-	{
+	public static function razmjeranGO_date($user, $request)    /************ RADI!!!!!!! ***************/
+	{	
+		//početak zahtjeva
+		$godina_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
+		$mjesec_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
+		$dan_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
+		//kraj zahtjeva
+		$ova_godina = date('Y', strtotime($request['GOzavršetak']));
+		$ovaj_mjesec = date('m', strtotime($request['GOzavršetak']));
+		$ovaj_dan = date('d', strtotime($request['GOzavršetak']));
 
-		$ova_godina = date_format($date,'Y');
-		$ovaj_mjesec = date_format($date,'m');
-		$ovaj_dan = date_format($date,'d');
-		
+		$date = new DateTime($request['GOzavršetak']);
+
 		if($ovaj_dan < 15){
 			$ovaj_mjesec -=1;
 		} 
@@ -793,20 +804,39 @@ class GodisnjiController extends Controller
 			$staz = $prijava->diff($date);   /* staz u Duplicu*/
 			$mjesec = $staz->format('%m');
 			$dan = $staz->format('%d');
-			if($dan >= 15){
+			if($dan >= 15) {
 				$mjesec +=1;
 			}
-			if($prijavaGodina < $ova_godina){
-				$razmjeranGO = round($GO/12 * $ovaj_mjesec, 0, PHP_ROUND_HALF_UP);
-			} else {
-				if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
-					if($mjesec >= 6){
-						$razmjeranGO = $GO;
+			
+			if($godina_pocetak_zahtjeva < $ova_godina ) {
+				if($prijavaGodina < $godina_pocetak_zahtjeva){
+					$razmjeranGO = round($GO/12 * $mjesec_pocetak_zahtjeva, 0, PHP_ROUND_HALF_UP);
+				} else {
+					if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
+						if($mjesec >= 6){
+							$razmjeranGO = $GO;
+						} else {
+							$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+						}
 					} else {
 						$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
 					}
+				}				
+			//	$razmjeranGO += 2;
+
+			} else {
+				if($prijavaGodina < $ova_godina){
+					$razmjeranGO = round($GO/12 * $ovaj_mjesec, 0, PHP_ROUND_HALF_UP);
 				} else {
-					$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+					if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
+						if($mjesec >= 6){
+							$razmjeranGO = $GO;
+						} else {
+							$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+						}
+					} else {
+						$razmjeranGO = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+					}
 				}
 			}
 			

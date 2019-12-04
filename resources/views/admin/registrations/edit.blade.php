@@ -90,15 +90,14 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<input type="checkbox" name="stranac" value="1" id="stranac" > <label for="stranac">Djelatnik je stranac</label>
+						<input type="checkbox" name="stranac" value="{!! $registration->stranac == '1'? 1 : 0 !!}" id="stranac" {!! $registration->stranac == '1'? 'checked' : '' !!}> <label for="stranac">Djelatnik je stranac</label>
 					</div>
 					<div class="form-group" hidden id="dozvola">
 						<label>Datum isteka dozvole boravka u RH: </label>
-						<input name="datum_dozvola" class="date form-control" type="date">
+						<input name="datum_dozvola" class="date form-control" type="date" value="{{ $registration->datum_dozvola }}">
 					</div>
-					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke radnika" id="stil1">
 				</form>
 			</div>
@@ -110,5 +109,10 @@ $('#stranac').change(function(){
 	$('#dozvola').toggle();
 
 });
+if($('#stranac').val() == 1 ){
+	$('#dozvola').show();
+} else {
+	$('#dozvola').hide();
+}
 </script>
 @stop

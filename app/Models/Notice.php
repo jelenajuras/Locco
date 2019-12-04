@@ -11,7 +11,7 @@ class Notice extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','to','subject','notice','to_department_id'];
+	protected $fillable = ['employee_id','to','subject','notice','to_department_id','type'];
 
 	/*
 	* The Eloquent employee model name

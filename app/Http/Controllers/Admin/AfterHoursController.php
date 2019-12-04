@@ -238,5 +238,25 @@ class AfterHoursController extends GodisnjiController
 		
 		return view('admin.confirmationAfterHour')->with('afterHour_id', $request->id)->with('nadredjeni1', $nadredjeni1->id);
 	}
+
+	public function confDirectorAfter(Request $request)
+	{
+		$afterHour = AfterHour::find($request['id']);
+
+		$datum = new DateTime('now');
+		$user = Sentinel::getUser(); 	// prijavljena osoba - odobrava
+		$odobrio_user = Employee::where('employees.first_name', $user->first_name)->where('employees.last_name', $user->last_name)->first(); // prijavljeni djelatnik - odobrava
+		
+		$data = array(
+			'odobreno'  		=> $request['odobreno'],
+			'odobrio_id'    	=> $odobrio_user->id,
+			'razlog'  			=>  $request['razlog'],
+			'datum_odobrenja'	=>  date_format($datum,'Y-m-d')
+		);
+
+		$afterHour->updateAfterHour($data);
+
+		return redirect()->back();	
+	}
 	
 }

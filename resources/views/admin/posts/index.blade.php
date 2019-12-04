@@ -41,21 +41,7 @@
 										</a>
 									</td>
 									<td>{{ $post->user['first_name'] . ' ' . $post->user['last_name']}}</td>
-									<?php 
-									if($post->to_employee_id == '877282'){
-										$to = 'Uprava';
-									}elseif($post->to_employee_id == '772864'){
-										$to = 'Pravni';
-									}elseif($post->to_employee_id == '72286'){
-										$to = 'Racunovodstvo';
-									}elseif($post->to_employee_id == '48758322'){
-										$to = 'IT služba';
-									} else {
-										$to = $post->to_employee['first_name'] . ' ' . $post->to_employee['last_name']; 
-									}
-
-									?>
-									<td>@if(isset($to)){!! $to !!}@endif</td>
+									<td>{{ $post->department['name'] }}</td>
 									<td>
 										<a href="{{ route('admin.posts.edit', $post->id)}}">
 											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

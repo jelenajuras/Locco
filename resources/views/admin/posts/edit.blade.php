@@ -18,15 +18,34 @@ Ispravi {{ $post->title }}
             <div class="panel-body">
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.posts.update', $post->id) }}">
                 <fieldset>
-                    <div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
-						<select class="form-control" name="to_employee_id" id="sel1" value="{{ old('to_employee_id') }}">
-							<option name="uprava" value="uprava" {!! ($post->to_employee_id =='877282' ? 'selected ': '') !!} >Uprava</option>
-							<option name="pravni" value="pravni"  {!! ($post->to_employee_id =='772864' ? 'selected ': '') !!}>Pravna služba</option>
-							<option name="it" value="it"  {!! ($post->to_employee_id =='it' ? '48758322 ': '') !!}>IT služba</option>
-							<option name="racunovodstvo" value="racunovodstvo"  {!! ($post->to_employee_id =='72286' ? 'selected ': '') !!}>Računovodstvo</option>
-
-						</select>
-					</div>
+                    <div class="form-group {{ ($errors->has('to_department_id')) ? 'has-error' : '' }}">
+                        <label>Prima:</label>
+                        @if(Sentinel::inRole('administrator'))
+                            <select class="form-control" name="to_department_id" id="sel1"  required >
+                                @foreach($departments->where('level',0) as $department0)
+                                    <option value="{{ $department0->id }}" {!! ($post->to_department_id == $department0->id ? 'selected ': '') !!}>{{ $department0->name }}</option>
+                                @endforeach
+                                @foreach($departments->where('level',1) as $department1)
+                                    <option value="{{ $department1->id }}" {!! ($post->to_department_id == $department1->id ? 'selected ': '') !!}>{{ $department1->name }}</option>
+                                    @foreach($departments->where('level',2) as $department2)
+                                        @if($department2->level1 == $department1->id)
+                                        <option value="{{ $department2->id }}" {!! ($post->to_department_id == $department2->id ? 'selected ': '') !!}>-  {{ $department2->name }}</option>
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                            </select>
+                        @else
+                            <select class="form-control" name="to_department_id[]" id="sel1" value="{{ old('to_employee_id') }}" required>
+                                <option selected value="">Prima...</option>
+                                <option value="{{ $departments->where('email','uprava@duplico.hr')->first()->id }}">{{ $departments->where('email', 'uprava@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email','pravni@duplico.hr')->first()->id }}">{{ $departments->where('email','pravni@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email','itodrzavanje@duplico.hr')->first()->id }}">{{ $departments->where('email', 'itpodrska@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email', 'racunovodstvo@duplico.hr')->first()->id }}">{{ $departments->where('email','racunovodstvo@duplico.hr')->first()->name }}</option>
+                    
+                            </select>
+                        @endif
+                        {!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
+                    </div>
 					<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
                         <input class="form-control" placeholder="Post title" name="title" type="text" value="{{ $post->title }}" />
                         {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
@@ -37,9 +56,8 @@ Ispravi {{ $post->title }}
                         {!! ($errors->has('content') ? $errors->first('content', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					
-					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    {{ csrf_field() }}
                     <input class="btn btn-lg  btn-block" type="submit" value="Ispravi" >
                 </fieldset>
                 </form>

@@ -40,7 +40,6 @@ Route::get('password/reset', ['as' => 'auth.password.request.form', 'uses' => 'A
 Route::post('password/reset', ['as' => 'auth.password.request.attempt', 'uses' => 'Auth\PasswordController@postRequest']);
 
 
-
 /*############# ADMIN ##############*/
 Route::group(['prefix' => 'admin'], function () {
 	// Dashboard
@@ -455,6 +454,51 @@ Route::group(['prefix' => 'admin'], function () {
 	'update'		=> 'admin.job_records.update', 
 	'destroy'		=> 'admin.job_records.destroy'
 	]]);
+	Route::resource('events', 'Admin\EventController', ['names' => [
+		'index' 		=> 'admin.events.index', 
+		'create' 		=> 'admin.events.create', 
+		'store' 		=> 'admin.events.store', 
+		'show' 			=> 'admin.events.show', 
+		'edit' 			=> 'admin.events.edit',  
+		'update'		=> 'admin.events.update', 
+		'destroy'		=> 'admin.events.destroy'
+	]]);
+	Route::resource('catalog_categories', 'Admin\CatalogCategoryController', ['names' => [
+		'index' 		=> 'admin.catalog_categories.index', 
+		'create' 		=> 'admin.catalog_categories.create', 
+		'store' 		=> 'admin.catalog_categories.store', 
+		'show' 			=> 'admin.catalog_categories.show', 
+		'edit' 			=> 'admin.catalog_categories.edit',  
+		'update'		=> 'admin.catalog_categories.update', 
+		'destroy'		=> 'admin.catalog_categories.destroy'
+	]]);
+	Route::resource('catalog_manufacturers', 'Admin\CatalogManufacturerController', ['names' => [
+		'index' 		=> 'admin.catalog_manufacturers.index', 
+		'create' 		=> 'admin.catalog_manufacturers.create', 
+		'store' 		=> 'admin.catalog_manufacturers.store', 
+		'show' 			=> 'admin.catalog_manufacturers.show', 
+		'edit' 			=> 'admin.catalog_manufacturers.edit',  
+		'update'		=> 'admin.catalog_manufacturers.update', 
+		'destroy'		=> 'admin.catalog_manufacturers.destroy'
+	]]);
+	Route::resource('instructions', 'Admin\InstructionController', ['names' => [
+		'index' 		=> 'admin.instructions.index', 
+		'create' 		=> 'admin.instructions.create', 
+		'store' 		=> 'admin.instructions.store', 
+		'show' 			=> 'admin.instructions.show', 
+		'edit' 			=> 'admin.instructions.edit',  
+		'update'		=> 'admin.instructions.update', 
+		'destroy'		=> 'admin.instructions.destroy'
+	]]);
+	Route::resource('comment_instructions', 'Admin\CommentInstructionController', ['names' => [
+		'index' 		=> 'admin.comment_instructions.index', 
+		'create' 		=> 'admin.comment_instructions.create', 
+		'store' 		=> 'admin.comment_instructions.store', 
+		'show' 			=> 'admin.comment_instructions.show', 
+		'edit' 			=> 'admin.comment_instructions.edit',  
+		'update'		=> 'admin.comment_instructions.update', 
+		'destroy'		=> 'admin.comment_instructions.destroy'
+	]]);
 });
 
 
@@ -478,20 +522,29 @@ Route::get('/prijava_pdf/{employee_id}','Admin\EmployeeController@prijava_pdf');
 Route::get('/{id}','DocumentController@generate_pdf');
 
 Route::get('admin/confirmation', ['as' => 'admin.confirmation', 'uses' => 'Admin\VacationRequestController@storeConf']);
-Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses' => 'Admin\AfterHoursController@storeConf']);
-
-Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
-Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
-Route::get('admin/prezentacije', ['as' => 'admin.prezentacije', 'uses' => 'Admin\Presentations@prezentacije']);
-/* Oglasnik*/
-Route::get('admin/oglasnik', ['as' => 'admin.oglasnik', 'uses' => 'Admin\AdController@oglasnik']);
-
-Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\PostController@shedulePost']);
+Route::get('admin/confDirector', ['as' => 'admin.confDirector', 'uses' => 'Admin\VacationRequestController@confDirector']);
 Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses' => 'Admin\VacationRequestController@confirmation_show']);
 Route::get('admin/VacationRequest', ['as' => 'admin.VacationRequest', 'uses' => 'Admin\VacationRequestController@VacationRequest']);
 Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'uses' => 'Admin\VacationRequestController@AllVacationRequest']);
 
+Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses' => 'Admin\AfterHoursController@storeConf']);
+Route::get('admin/confDirectorAfter', ['as' => 'admin.confDirectorAfter', 'uses' => 'Admin\AfterHoursController@confDirectorAfter']);
 Route::get('admin/confirmationAfter_show', ['as' => 'admin.confirmationAfter_show', 'uses' => 'Admin\AfterHoursController@confirmationAfter_show']);
+
+Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
+
+Route::get('admin/noticeBoard', ['as' => 'admin.noticeBoard', 'uses' => 'NoticeBoardController@index']);
+Route::get('admin/announcement', ['as' => 'admin.announcement', 'uses' => 'NoticeBoardController@announcement']);
+
+Route::get('admin/show_instructions', ['as' => 'admin.show_instructions', 'uses' => 'Admin\InstructionController@show_instructions']);
+
+Route::get('admin/prezentacije', ['as' => 'admin.prezentacije', 'uses' => 'Admin\Presentations@prezentacije']);
+
+/* Oglasnik*/
+Route::get('admin/oglasnik', ['as' => 'admin.oglasnik', 'uses' => 'Admin\AdController@oglasnik']);
+
+Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\PostController@shedulePost']);
+
 Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
 
 

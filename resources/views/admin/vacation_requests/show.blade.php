@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Izostanci djelatnika' . ' - ' . $employee->first_name . ' ' . $employee->last_name )
+@section('title', 'Izostanci djelatnika' . ' - ' . $registration->employee['first_name'] . ' ' .  $registration->employee['last_name'] )
 <?php
 	use App\Http\Controllers\GodisnjiController;
 	$ukupna_razlika = 0;
@@ -11,23 +11,28 @@
 ?>
 @section('content')
 <div class="row">
+		<a class="btn btn-md pull-left" href="{{ url()->previous() }}">
+			<i class="fas fa-angle-double-left"></i>
+			Natrag
+		</a>
     <div class="page-header">
-        <h1>Godišnji odmori i izostanci - {{ $employee->first_name . ' ' . $employee->last_name }}</h1>
+        <h1>Godišnji odmori i izostanci - {{ $registration->employee['first_name'] . ' ' .  $registration->employee['last_name'] }}</h1>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
            <div class="table-responsive">
 			@if(count($vacationRequests) > 0)
-				<table id="table_id" class="display" style="width: 100%;">
+				<table id="table_id" class="display sort_2_desc" style="width: 100%;">
 					<thead>
 						<tr>
 							<th class="not-export-column">Opcije</th>
-							<th>Do</th>
+							<th>Od</th>
 							<th>Do</th>
 							<th>Period</th>
 							<th>Vrijeme</th>
 							<th>Zahtjev</th>
 							<th>Napomena</th>
+							<th>Odobrio voditelj</th>
 							<th>Odobreno</th>
 							<th >Odobrio</th>
 							<th>Datum odobrenja</th>
@@ -75,6 +80,7 @@
 								
 							</td>
 							<td>{{ $vacationRequest->napomena }}</td>
+							<td>{{ $vacationRequest->odobreno2 }}</td>
 							<td>{{ $vacationRequest->odobreno }}  {{ $vacationRequest->razlog  }}</td>
 							<td>{{ $vacationRequest->authorized['first_name'] . ' ' . $vacationRequest->authorized['last_name']}}</td>
 							<td>
@@ -112,23 +118,29 @@
 								<th style="border-bottom: 1px double #ccc;">Datum</th>
 								<th style="border-bottom: 1px double #ccc;">Vrijeme</th>
 								<th style="border-bottom: 1px double #ccc;">Napomena</th>
-								<th style="border-bottom: 1px double #ccc;">Odobrenje</th>
+								<th style="border-bottom: 1px double #ccc;">Odobrila uprava</th>
 								<th  style="border-bottom: 1px double #ccc;" class="not-export-column">Opcije</th>
 							</tr>
 						</thead>
 						<tbody id="myTable">
 							@foreach ($afterHours as $afterHour)
 								<?php
+								$vrijeme_1 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_od);  /* vrijeme od */
+								$vrijeme_2 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_do);  /* vrijeme do */
 								
-								$vrijeme_1 = new DateTime($afterHour->vrijeme_od);  /* vrijeme od */
-								$vrijeme_2 = new DateTime($afterHour->vrijeme_do);  /* vrijeme do */
-								$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+								if($afterHour->vrijeme_do == '00:00:00' || $afterHour->vrijeme_do == '00:00:00.000000') {
+									$vrijeme_2->modify('+1 day');
+									$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+								} else {
+									$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+								}
+								
 								$ukupna_razlika += $razlika_vremena->h;
 								?>
 								<tr>
 									<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
-									<td>>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
-									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do . '(' .   $razlika_vremena->h . ' h)'   }}</td>
+									<td>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
+									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do . '(' .   $razlika_vremena->h  . ':' . $razlika_vremena->i  . ' h)'   }}</td>
 									<td>{{ $afterHour->napomena }}</td>
 									<td>{{ $afterHour->odobreno }}</td>
 									<td>
@@ -147,9 +159,13 @@
 							@endforeach
 						</tbody>
 					</table>
+					@php
+					
+					@endphp
 					<div class="page-footer">
-						<h4>Ukupno prekovremenih sati {{ $ukupna_razlika }}</h4>
-						<h4>Ukupno slobodnih dana {{ floor($ukupna_razlika/8) }}</h4>
+						<h4>Ukupno prekovremenih sati {{ round(GodisnjiController::prekovremeni_sati( $registration ),0,1) }}</h4>
+						<h4>Ukupno izlazaka {{ GodisnjiController::izlasci_ukupno( $registration ) }} </h4>
+						<h4>Ukupno slobodnih dana {{ GodisnjiController::prekovremeni_bez_izlazaka( $registration ) }} </h4>
 					</div>
 		
 				@else

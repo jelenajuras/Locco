@@ -34,6 +34,9 @@
 				</div>
 			</div>
 			<div class="group">
+				Obavezno pročitajte Radne upute koje se nalaze Portalu zaposlenika na linku "Radne upute" koje sadrže osnovne informacije i obaveze za svakog zaposlenika tvrtke Duplico.
+			</div>
+			<div class="group">
 				<p>Nakon prvog pristupa stranici obavezno promijenite lozinku.</p>
 				<p>Svoje pristupne podatke nemojte odavati drugiom osobama.</p>
 			</div>

@@ -10,8 +10,11 @@
 		<!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		
-		 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<!-- Date picker-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+
 		<!-- Awesome icon -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,7 +22,8 @@
 		<!-- style --> 
 		<link rel="stylesheet" href="{{ URL::asset('css/admin.css') }}" type="text/css" >
 		<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
-		
+
+
 		<!-- jQuery Timepicker --> 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 		
@@ -32,10 +36,13 @@
 		<!-- include summernote css/js -->
 		<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+		
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	 
-	   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	 	<!-- include pignose css -->
+		<link rel="stylesheet" href="{{ URL::asset('node_modules/pg-calendar/dist/css/pignose.calendar.min.css') }}" />
+
+		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
 	 
 		@stack('stylesheet')
     </head>
@@ -60,7 +67,12 @@
 					<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
 					
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') )
+						@if(isset($reg_employee) && $reg_employee)
 						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
+						@endif
+					@endif
+					@if(Sentinel::getUser()->email == 'marina.sindik@duplico.hr')
+						<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
 					@endif
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))
 					<!--<a href="{{ route('admin.gantt') }}" >Kalendar</a>-->
@@ -106,6 +118,8 @@
 						</div>
 						<button class="collapsible poruke"><span>Ostalo<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse ">
+							<a class="" href="{{ route('admin.instructions.index') }}">Radne upute</a>
+							<a class="" href="{{ route('admin.catalog_categories.index') }}">Katalog opreme</a>
 							<a class="" href="{{ route('admin.benefits.index') }}">Pogodnosti za zaposlenike</a>
 							<a class="" href="{{ route('admin.notices.index') }}">Obavijesti</a>
 							<!--<a class="" href="{{ route('admin.showKalendar') }}">Kalendar sastanaka</a>-->

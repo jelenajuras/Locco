@@ -51,16 +51,38 @@ class EffectiveHourController extends Controller
      */
     public function store(EffectiveHourRequest $request)
     {
-        $input = $request;
-		
-		$data = array(
-			'employee_id'     => $input['employee_id'],
-			'effective_cost'  => str_replace(',','.', $input['effective_cost']),
-			'brutto'   		  => str_replace(',','.', $input['brutto']),
-		);
 
-		$effectiveHour = new EffectiveHour();
-		$effectiveHour->saveEffectiveHour($data);
+        $input = $request;
+        
+        foreach($input['employee_id'] as $key => $employee){
+            $effectiveHour_employee = EffectiveHour::where('employee_id',  $employee)->first();
+ 
+            foreach($input['effective_cost'] as $key2 => $value2){
+                if($key2 === $key){
+                   $efc = $value2;
+                }
+            }
+            foreach($input['brutto'] as $key3 => $value3){
+                if($key3 === $key){
+                   $brutto = $value3;
+                }
+            }
+
+            $data = array(
+                'employee_id'     =>  $employee,
+                'effective_cost'  => str_replace(',','.', $efc),
+                'brutto'   		  => str_replace(',','.', $brutto),
+            );
+
+            if( $brutto != '' || $efc != '' ) {
+                if($effectiveHour_employee == null ) {
+                    $effectiveHour = new EffectiveHour();
+                    $effectiveHour->saveEffectiveHour($data);
+                } else {
+                    $effectiveHour_employee->updateEffectiveHour($data);
+                }
+            }
+        }
 		
 		$message = session()->flash('success', 'Uneseno!');
 		

@@ -7,7 +7,10 @@
 	body { 
 		font-family: DejaVu Sans, sans-serif;
 		font-size: 10px;
-		max-width:500px;
+		max-width: 500px;
+		padding: 20px;
+		height: auto;
+		overflow: hidden;
 	}
 	.odobri{
 		width:150px;
@@ -51,22 +54,19 @@
 			@if($vacationRequest->zahtjev == "SLD")
 				<p>Neiskorišteno {{ $slobodni_dani - $koristeni_slobodni_dani }} slobodnih dana  </p>
 			@endif
-			
-			
-			
 		</div>		
 		@if($vacationRequest->zahtjev != "Bolovanje")
-		<form name="contactform" method="get" target="_blank" action="{{ route('admin.confirmation') }}">
-			<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="razlog" value=""><br>
-			<input type="hidden" name="id" value="{{$vacationRequest->id}}"><br>
-			<input type="radio" name="odobreno" value="DA" checked> Odobreno
-			<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije odobreno<br>
-			<input type="hidden" name="email" value="DA" checked> Poslati e-mail<br>
-		<!--	<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>-->
+			<form name="contactform" method="get" target="_blank" action="{{ route('admin.confirmation') }}">
+				<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="razlog" value=""><br>
+				<input type="hidden" name="id" value="{{$vacationRequest->id}}"><br>
+				<input type="radio" name="odobreno" value="DA" checked> Odobreno
+				<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije odobreno<br>
+				<input type="hidden" name="email" value="DA" checked><br>
+			<!--	<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>-->
 
-			<input class="odobri" type="submit" value="Pošalji">
+				<input class="odobri" type="submit" value="Pošalji">
 
-		</form>
-		@endif
+			</form>
+			@endif
 	</body>
 </html>

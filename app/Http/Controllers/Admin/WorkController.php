@@ -28,7 +28,7 @@ class WorkController extends Controller
     {
         $works = Work::orderBy('odjel','ASC')->orderBy('naziv','ASC')->paginate(100);
 				
-		return view('admin.works.index',['works'=>$works]);
+		  return view('admin.works.index',['works'=>$works]);
     }
 
     /**
@@ -38,10 +38,10 @@ class WorkController extends Controller
      */
     public function create()
     {
-	   $users = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
-	   $terminations = Termination::get();
-	   
-	   return view('admin.works.create',['users'=>$users, 'terminations'=>$terminations]);
+      $users = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
+      $terminations = Termination::get();
+
+      return view('admin.works.create',['users'=>$users, 'terminations'=>$terminations]);
     }
 
     /**
@@ -52,31 +52,31 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
-		$input = $request->except(['_token']);
+      $input = $request->except(['_token']);
 
-		$data = array(
-			'odjel'  => $input['odjel'],
-			'naziv'  => $input['naziv'],
-			'job_description'  => $input['job_description'],
-			'pravilnik'  => $input['pravilnik'],
-			'tocke'  => $input['tocke'],
-			'user_id'  => $input['user_id']
-		);
-		
-		if($input['prvi_userId']){
-			$data += ['prvi_userId' => $input['prvi_userId']];
-		}
-		if($input['drugi_userId']){
-			$data += ['drugi_userId' => $input['drugi_userId']];
-		}
-		
-		$work = new Work();
-		$work->saveWork($data);
-		
-		$message = session()->flash('success', 'Dodano je novo radno mjesto');
-		
-		//return redirect()->back()->withFlashMessage($messange);
-		return redirect()->route('admin.works.index')->withFlashMessage($message);
+      $data = array(
+        'odjel'  => $input['odjel'],
+        'naziv'  => $input['naziv'],
+        'job_description'  => $input['job_description'],
+        'pravilnik'  => $input['pravilnik'],
+        'tocke'  => $input['tocke'],
+        'user_id'  => $input['user_id']
+      );
+      
+      if($input['prvi_userId']){
+        $data += ['prvi_userId' => $input['prvi_userId']];
+      }
+      if($input['drugi_userId']){
+        $data += ['drugi_userId' => $input['drugi_userId']];
+      }
+      
+      $work = new Work();
+      $work->saveWork($data);
+      
+      $message = session()->flash('success', 'Dodano je novo radno mjesto');
+      
+      //return redirect()->back()->withFlashMessage($messange);
+      return redirect()->route('admin.works.index')->withFlashMessage($message);
     }
 
     /**
@@ -120,33 +120,34 @@ class WorkController extends Controller
     public function update(Request $request, $id)
     {
         $work = Work::find($id);
-		$input = $request->except(['_token']);
+        $input = $request->except(['_token']);
 
-		$data = array(
-			'odjel'  => $input['odjel'],
-			'naziv'  => $input['naziv'],
-			'job_description'  => $input['job_description'],
-			'pravilnik'  => $input['pravilnik'],
-			'tocke'  => $input['tocke'],
-			'user_id'  => $input['user_id']
-		);
-		
-		if($input['prvi_userId']){
-			$data += ['prvi_userId' => $input['prvi_userId']];
-		} else {
-			$data += ['prvi_userId' => null];
-		}
-		if($input['drugi_userId']){
-			$data += ['drugi_userId' => $input['drugi_userId']];
-		} else {
-			$data += ['drugi_userId' => null];
-		}
-		
-		$work->updateWork($data);
-		
-		$message = session()->flash('success', 'Radno mjesto je ispravljeno');
-		
-		return redirect()->route('admin.works.index')->withFlashMessage($message);
+        $data = array(
+          'odjel'  => $input['odjel'],
+          'naziv'  => $input['naziv'],
+          'job_description'  => $input['job_description'],
+          'pravilnik'  => $input['pravilnik'],
+          'tocke'  => $input['tocke'],
+          'user_id'  => $input['user_id']
+        );
+        
+        if($input['prvi_userId']){
+          $data += ['prvi_userId' => $input['prvi_userId']];
+        } else {
+          $data += ['prvi_userId' => null];
+        }
+        
+        if($input['drugi_userId']){
+          $data += ['drugi_userId' => $input['drugi_userId']];
+        } else {
+          $data += ['drugi_userId' => null];
+        }
+        
+        $work->updateWork($data);
+        
+        $message = session()->flash('success', 'Radno mjesto je ispravljeno');
+        
+        return redirect()->route('admin.works.index')->withFlashMessage($message);
     }
 
     /**

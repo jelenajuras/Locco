@@ -104,3 +104,7 @@ input[id^="myInput"], input[Type="search"]{
 	border-bottom: 1px solid #ccc;
 	padding: 10px 0;
 }
+
+.employee_ex {
+	display:none;
+}

@@ -14,19 +14,12 @@
 	}
 	</style>
 	<body>
-		<h3>Izostanci</h3>
+		<h3>Izostanci za dan: {{ $datum }} </h3>
 		@foreach($dan_izostanci as $djelatnik)
 			<div>
 				{{ $djelatnik['zahtjev'] . ', ' . $djelatnik['ime'] . ', ' . (string)$djelatnik['period'] }} 
 					@if($djelatnik['zahtjev'] == 'Izostanak' || $djelatnik['zahtjev'] == 'Izlazak')
-					{{', ' . $djelatnik['vrijeme'] . ', ' . $djelatnik['napomena']}}
-					@endif
-					@if($djelatnik['zahtjev'] == 'GO')
-						@if($djelatnik['dani_GO'] != '' && $djelatnik['dani_GO'] >= 0)
-						{{ ', neiskorišteno ' . $djelatnik['dani_GO'] . ' dana' }}
-						@elseif($djelatnik['dani_GO'] != '' && $djelatnik['dani_GO']< 0)
-						<span class="red">{{ ', iskorišteno ' . $djelatnik['dani_GO'] . ' dana više' }}</span>
-						@endif
+					{{', ' . $djelatnik['vrijeme'] }}
 					@endif
 			</div>
 		@endforeach

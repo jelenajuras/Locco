@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\UserController;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Centaur\AuthManager;
 use Sentinel;
-use DB;
 use Session;
 use PDF;
 use DateTime;

@@ -179,11 +179,9 @@ class UserController extends Controller
         // Validate the form data
         $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'password' => 'confirmed|min:6',
+           
         ]);
-		
-		
-		
+				
         // Assemble the updated attributes
         $attributes = [
             'email' => trim($request->get('email')),

@@ -31,7 +31,7 @@
 				Izaberi dokument 
 				<div class="form-group">
 					<input type="file" name="fileToUpload" required>
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
 				</div>
 				<input type="submit" value="Upload Image" name="submit">
 			</form>

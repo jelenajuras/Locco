@@ -65,7 +65,6 @@ class Rodjendan extends Command
 				});
 				Mail::queue('email.Cestitka', ['datum_rodjenja' => $datum_rodjenja,'djelatnik' => $djelatnik,'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik) {
 					$mail->to($djelatnik->email)
-						->cc('jelena.juras@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')
 						->subject('Čestitka!');
 				});

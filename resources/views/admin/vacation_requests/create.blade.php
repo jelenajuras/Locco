@@ -10,7 +10,6 @@
 			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}"  onsubmit="return validateForm()">
 				@if (Sentinel::inRole('administrator'))
 				<input 	name="role" hidden value="{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}"/>
-
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 						<label class="padd_10">Djelatnik</label>
 						<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
@@ -58,14 +57,14 @@
 				</p>
 				<p class="editOption5 iskorišteno display-none">
 					@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
-						Neiskorišteno {{ $slobodni_dani }} slobodnih dana
+						Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
 					@else
 						Svi slobodni dani su iskorišteni! <br>
 						Nemoguće je poslati zahtjev za slobodni dan.
 					@endif
 				</p>
 				<div class="datum form-group editOption1 display-none {{ ($errors->has('GOpocetak')) ? 'has-error' : '' }}" >
-					<input name="GOpocetak" class="date form-control" type="date" value = "{{ old('GOpocetak')}}" id="date1" ><i class="far fa-calendar-alt" required ></i>
+					<input name="GOpocetak" class="date form-control" type="date" value = "{{ old('GOpocetak')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
 					{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<span class="editOption2 do display-none" >do</span>

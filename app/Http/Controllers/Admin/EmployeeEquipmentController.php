@@ -14,7 +14,6 @@ use App\Models\Equipment;
 use App\Models\Users;
 use App\Models\Work;
 use PDF;
-use DB;
 use Mail;
 
 

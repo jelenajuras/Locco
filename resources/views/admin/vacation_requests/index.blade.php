@@ -14,10 +14,11 @@
 <div class="">
      <div class="page-header">
         <div class='btn-toolbar pull-right' >
-            <a class="btn btn-primary btn-lg" href="{{ route('admin.vacation_requests.create') }}"  id="stil1" >
+            <a class="btn btn-primary btn-lg vacation_new" href="{{ route('admin.vacation_requests.create') }}"  id="stil1" >
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Novi zahtjev
-            </a>
+			</a>
+			<button class="show_ex gumb_stil2" >Prikaži sve</button>
         </div>
         <h2>Godišnji odmori i izostanci</h2>
     </div>
@@ -51,8 +52,7 @@
                     </thead>
                     <tbody id="myTable">
 						@foreach ($registrations as $registration)
-							@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
-								<?php 
+							<?php 
 								/* Staž Duplico */
 								$stazDuplico = GodisnjiController::stazDuplico($registration);
 								$godina = $stazDuplico->format('%y');  
@@ -88,8 +88,27 @@
 										$daniZahtjevi -= $neiskPG;
 									}
 								}
-								?>
+							?>
+							@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
 								<tr>
+									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;color:blue">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
+									<td>{{  $registration->work['odjel'] }}</td> 
+									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> 		<!-- staž Duplico -->
+									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td><!-- Ukupan staž -->
+									<td>{{ $GO_PG }}</td> 										<!-- GO prošla godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_PG']   }}</td>								<!-- iskorišteni dani prošla godina  -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_PG'] }}</td>						<!-- neiskorišteni dani prošla godina  -->
+									<td>{{ $godisnjiUser }}</td>					 			<!-- ukupno GO -->
+									<td>{{ $razmjeranGO }}</td> 								<!-- Razmjerni dani GO-->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_OG'] }}</td> 			<!-- // iskorišteni dani ova godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_OG'] }}</td>  				<!-- // neiskorišteni dani godišnjeg odmora ova godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_ukupno'] }}</td> 						<!-- // ukupno neiskorišteni dani godišnjeg odmora -->
+									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td>
+									<td></td>
+								</tr>
+							@endif
+							@if(DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
+								<tr class="employee_ex">
 									<td class="show_go"><a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;color:blue">{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</a></td>
 									<td>{{  $registration->work['odjel'] }}</td> 
 									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> 		<!-- staž Duplico -->
@@ -118,6 +137,11 @@
         </div>
     </div>
 </div>
+<script>
+	$('.show_ex').click(function(){
+		$('.employee_ex').toggle();
+	});
+</script>
 <!--
 <div class="uputa">
 	<p>*** Napomena:</p>

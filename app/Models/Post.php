@@ -13,7 +13,7 @@ class Post extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','to_employee_id','title','slug','content'];
+	protected $fillable = ['employee_id','to_employee_id','to_department_id','title','slug','content'];
 	
 	/*
 	* The Eloquent employee model names
@@ -30,11 +30,18 @@ class Post extends Model
 	protected static $userModel = 'App\Models\Employee'; /* putanja do modela user
 	
 	/*
+	* The Eloquent department model names
+	* 
+	* @var string
+	*/
+	protected static $departmenteModel = 'App\Models\Department'; 
+
+	/*
 	* The Eloquent comments model name
 	* 
 	* @var string
 	*/
-	protected static $commentsModel = 'App\Models\Comment'; 	
+	protected static $commentsModel = 'App\Models\Comment';
 	
 	/*
 	* Returns the users relationship
@@ -52,6 +59,11 @@ class Post extends Model
 		return $this->belongsTo(static::$employeeModel,'to_employee_id');
 	}
 	
+	public function department()
+	{
+		return $this->belongsTo(static::$departmenteModel,'to_department_id');
+	}
+
 	/*
 	* Returns the comments relationship
 	* 

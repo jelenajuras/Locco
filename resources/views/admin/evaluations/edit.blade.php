@@ -78,9 +78,8 @@
 					@endforeach
 				</div>
 			</section>
-			{{ csrf_field() }}
 			{{ method_field('PUT') }}
-			<input name="_token" value="{{ csrf_token() }}" type="hidden">
+			{{ csrf_field() }}
 			<input class="btn btn-lg btn-primary" type="submit" value="Upiši" id="stil1">
 		</form>
 	</div>

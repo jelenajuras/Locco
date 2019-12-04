@@ -48,7 +48,7 @@
 						<textarea class="form-control" name="napomena">{{ old('napomena') }}</textarea>
 					</div>
 					
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
 					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Otkaži djelatnika" id="stil1">
 				</form>
 			</div>

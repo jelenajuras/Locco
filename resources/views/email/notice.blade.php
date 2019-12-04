@@ -30,6 +30,11 @@
 	}
 	</style>
 	<body>
-		<h4>Na portalu <a href="http://administracija.duplico.hr/">administracija.duplico.hr</a> je objavljena nova obavijest uprave</h4>
+		@if($type == 'uprava' || $type == null)
+			<h4>Na portalu je objavljena nova <a href="{{ $link }}">obavijest</a> uprave.</h4>
+		@elseif($type == 'najava')
+			<h4>Na portaluje objavljena nova <a href="{{ $link }}">najava aktivnosti.</a></h4>
+		@endif
+
 	</body>
 </html>

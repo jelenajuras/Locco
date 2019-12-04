@@ -15,7 +15,23 @@ class Work extends Model
 	*/
 	protected static $employeesModel = 'App\Models\Employee';
 	
+	/*
+	* The Eloquent employees model names
+	* 
+	* @var string
+	*/
+	protected static $departmentModel = 'App\Models\Department';
 			
+	/*
+	* Returns the employee relationship
+	* 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function department()
+	{
+		return $this->belongsTo(static::$departmentModel,'odjel_id');
+	}	
+		
 	/*
 	* Returns the employee relationship
 	* 	* @return \Illuminate\Database\Eloquent\Relations\HasMany

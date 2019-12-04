@@ -41,7 +41,7 @@
 						<i class="far fa-calendar-alt" ></i>
 						{!! ($errors->has('mjesec_godina') ? $errors->first('mjesec_godina', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
 					<input class="btn_align" type="submit" value="&#10004" title="Snimi promjenu" >
 				</form>
 			</div>

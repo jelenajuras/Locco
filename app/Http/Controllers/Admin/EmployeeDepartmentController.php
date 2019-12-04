@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\Registration;
 use App\Models\Department;
+use App\Models\Employee;
 use App\Models\Employee_department;
 use App\Http\Controllers\Controller;
 
@@ -40,13 +41,15 @@ class EmployeeDepartmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $departments = Department::get();
+ 
+        $employee = Employee::where('id', $request['employee_id'])->first();
         $empl_departments = Employee_department::get();
-		$registrations = Registration::join('employees','employees.id','registrations.employee_id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
-		
-		return view('admin.employee_departments.create',['empl_departments'=>$empl_departments, 'departments'=>$departments, 'registrations'=>$registrations]);
+        $employee_departments = $empl_departments->where('employee_id', $employee->id );
+        $departments = Department::get();
+        
+		return view('admin.employee_departments.create',['employee'=>$employee,'empl_departments'=>$empl_departments, 'departments'=>$departments, 'employee_departments'=>$employee_departments]);
     }
 	
 	/**
@@ -57,21 +60,50 @@ class EmployeeDepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->except(['_token']);
+        $employeeDepartments = Employee_department::where('employee_id',$request['employee_id'])->get();
+        if($employeeDepartments){
+            foreach($employeeDepartments as $employeeDepartment){
+                $this->destroy($employeeDepartment->id);
+            }
+        }
+        if(is_array( $request['department_id'])) {
+            foreach($request['department_id'] as $department_id) {
+                $data = array(
+                    'employee_id'  		=> $request['employee_id'],
+                    'department_id'     => $department_id
+                );
+                $employeeDepartment = new Employee_department();
+                $employeeDepartment->saveEmployeeDepartment($data);
+            }
+        } else if (isset( $request['department_id'])){
+            $data = array(
+                'employee_id'  		=> $request['employee_id'],
+                'department_id'     =>  $request['department_id'],
+            );
+            $employeeDepartment = new Employee_department();
+            $employeeDepartment->saveEmployeeDepartment($data);
+        }
 
-		foreach($input['department_id'] as $department) {
-			$data = array(
-			'employee_id'  		=> $input['employee_id'],
-			'department_id'     => $department
-			);
-			$employeeDepartment = new Employee_department();
-			$employeeDepartment->saveEmployeeDepartment($data);
-		}
-	
-		$message = session()->flash('success', 'Novi odjel je snimljen');
+		$message = session()->flash('success', 'Odjeli su snimljeni');
 		
-		return redirect()->route('admin.employee_departments.create')->withFlashMessage($message);
+		return redirect()->back()->withFlashMessage($message);
     }
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $department = Department::find($id);
+        $employeeDepartments = Employee_department::where('department_id',$department->id)->get();
+		$registrations = Registration::join('employees','employees.id','registrations.employee_id')->select('registrations.*','employees.first_name','employees.last_name')->where('odjava',null)->orderBy('employees.last_name','ASC')->get();
+
+		return view('admin.employee_departments.edit', ['employeeDepartments' => $employeeDepartments,'department'=>$department, 'registrations'=>$registrations]);
+    }
+
 	
 	/**
      * Update the specified resource in storage.
@@ -81,27 +113,35 @@ class EmployeeDepartmentController extends Controller
      * @return \Illuminate\Http\Response
      */
 	public function update(Request $request, $id)
-    {
-        $input = $request->except(['_token']);
-	    $employeeDepartments = Employee_department::where('employee_id',$request['employee_id'])->get();
-		if($employeeDepartments){
-			foreach($employeeDepartments as $employeeDepartment){
-				$this->destroy($employeeDepartment->id);
-			}
-		}
+    {       
+        if(is_array( $request['employee_id'])) {
+            $employeeDepartments = Employee_department::where('department_id',$request['department_id'])->get();
+            if($employeeDepartments){
+                foreach($employeeDepartments as $employeeDepartment){
+                    $this->destroy($employeeDepartment->id);
+                }
+            }
 
-		foreach($input['department_id'] as $department) {
-			$data = array(
-			'employee_id'  		=> $input['employee_id'],
-			'department_id'     => $department
-			);
-			$employeeDepartment = new Employee_department();
-			$employeeDepartment->saveEmployeeDepartment($data);
-		}
+            foreach($request['employee_id'] as $employee_id) {
+                $data = array(
+                    'employee_id'  		=> $employee_id,
+                    'department_id'     => $request['department_id']
+                );
+                $employeeDepartment = new Employee_department();
+                $employeeDepartment->saveEmployeeDepartment($data);
+            }
+        } else {
+            $data = array(
+                'employee_id'  		=> $request['employee_id'],
+                'department_id'     => $request['department_id']
+            );
+            $employeeDepartment = new Employee_department();
+            $employeeDepartment->saveEmployeeDepartment($data);
+        }
 
 		$message = session()->flash('success', 'Podaci su ispravljeni');
 		
-		return redirect()->route('admin.employee_departments.create')->withFlashMessage($message);
+		return redirect()->back()->withFlashMessage($message);
     }
 	
 	 /**

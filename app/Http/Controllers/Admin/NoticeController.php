@@ -13,7 +13,6 @@ use App\Models\Employee_department;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\Controller;
 use Mail;
-use DB;
 
 class NoticeController extends Controller
 {
@@ -34,9 +33,35 @@ class NoticeController extends Controller
      */
     public function index()
     {
-        $notices = Notice::orderBy('created_at','DESC')->get();
+		$notices = Notice::orderBy('created_at','DESC')->get();
+		$departments = Department::orderBy('name','ASC')->get();
+
+		$user = Sentinel::getUser();
+		$employee = Employee::where('first_name',$user->first_name)->where('last_name',$user->last_name)->first();
+		$reg_employee = Registration::where('employee_id', $employee->id)->first();		
+		$employee_departments = array();
 		
-		return view('admin.notices.index',['notices'=>$notices]);
+        if ($reg_employee) {
+            if ( Sentinel::inRole('administrator')) {
+				return view('admin.notices.index', ['notices'=>$notices,'employee'=>$employee,'departments'=>$departments ]);    
+            } else {
+                $departments = Employee_department::where('employee_id',$employee->id )->get();
+                foreach( $departments as $department) {
+                    array_push($employee_departments, $department->department_id);
+                    array_push($employee_departments, 10); // odjel "svi"
+                    if ($department->level == 2 ) {
+                        array_push($employee_departments,$department->level1);
+                    } 
+				}
+
+                return view('admin.notices.index',['notices'=>$notices, 'employee_departments' => $employee_departments,'employee'=>$employee,'departments'=>$departments  ]);
+            }
+			
+		} else {
+			array_push($employee_departments, 10); // odjel "svi"
+			
+			return view('admin.notices.index', ['notices'=>$notices, 'employee_departments' => $employee_departments,'departments'=>$departments ]);       
+        }
     }
 
     /**
@@ -50,12 +75,11 @@ class NoticeController extends Controller
 		$user = Employee::where('first_name',$user1->first_name)->where('last_name',$user1->last_name)->first();
 		$user = $user->id;
 
-		$departments0 = Department::where('level',0)->orderBy('name','ASC')->get();
-		$departments1 = Department::where('level',1)->orderBy('name','ASC')->get();
-		$departments2 = Department::where('level',2)->orderBy('name','ASC')->get();
+		$departments = Department::orderBy('name','ASC')->get();
+		
 		$employee_departments = Employee_department::get();
 		
-		return view('admin.notices.create',['user'=>$user, 'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2, 'employee_departments'=>$employee_departments]);
+		return view('admin.notices.create',['user'=>$user, 'departments'=>$departments, 'employee_departments'=>$employee_departments]);
     }
 
     /**
@@ -66,11 +90,24 @@ class NoticeController extends Controller
      */
     public function store(NoticeRequest $request)
     {
-		$to_department_id = implode(',', $request['to_department_id']);
 
+		$to_department_id = implode(',', $request['to_department_id']);
+		$departments = Department::get();
+		$employees = Registration::where('odjava',null)->get();
+		$employee_departments = Employee_department::get();
+		$mail_to_employees = array();
+		$emails = array();
+		
 		$notice = $request['notice'];
 		$dom = new \DomDocument();
-		$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		try {
+			$dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		} catch (\Throwable $th) {
+			$message = session()->flash('error', 'Nešto je pošlo krivo...');
+		
+			return redirect()->back()->withFlashMessage($message);
+		}
+		
 		$images = $dom->getElementsByTagName('img');
 		
 		foreach($images as $k => $img){
@@ -91,6 +128,7 @@ class NoticeController extends Controller
 		$data1 = array(
 			'employee_id'   	=> $request['employee_id'],
 			'to_department_id'  => $to_department_id,
+			'type'  			=> $request['type'],
 			'subject'  			=> $request['subject'],
 			'notice'  			=> $notice
 		);
@@ -98,22 +136,73 @@ class NoticeController extends Controller
 		$notice1 = new Notice();
 		$notice1->saveNotice($data1);
 
-		
-		foreach($request['to_department_id'] as $department) {
-			$department = Department::where('id', $department)->first();
-			$prima = $department->email;
-			
-			Mail::queue(
-				'email.notice',
-				['poruka' => $notice1->subject],
-				function ($message) use ($prima) {
-					$message->to($prima)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Obavijest uprave');
-				}
-			);
-			
+		$title = 'Nova poruka';
+
+		if($notice1->type == 'najava') {
+			$title = 'Najava aktivnosti';
 		}
+		if($notice1->type == 'uprava') {
+			$title = 'Obavijest uprave';
+		}
+
+		foreach ($request['to_department_id']  as $department_id) {
+			$department = $departments->where('id', $department_id )->first();
+
+			if($department->level == 0 && $department->name != 'Uprava' ) {
+				foreach ($employees as $employee) {
+					if($employee->employee['email'] != null) {
+						array_push($emails, $employee->employee['email']);
+					}
+				}
+			} else if ($department->level == 1) {
+				$departments_level2 = $departments->where('level1', $department->id );
+
+				foreach ($departments_level2 as $department_level2) {
+					$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+
+					foreach ($employees_dep as $employee_dep) {
+						array_push($mail_to_employees, $employee_dep);
+					}
+				}
+				foreach ($mail_to_employees as $to_employee) {
+					if($employees->where('employee_id', $to_employee->employee_id)->first() && $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email']);
+					}
+				}
+			} else  {
+				$department_level2 = $department->where('id', $department->id )->first();
+				$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+
+				foreach ($employees_dep as $employee_dep) {
+					array_push($mail_to_employees, $employee_dep);
+				}
+				foreach ($mail_to_employees as $to_employee) {
+					if($employees->where('employee_id', $to_employee->employee_id)->first() && $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email']);
+					}
+				}
+			}
+		}
+		$link = 'http://' . $_SERVER['HTTP_HOST'] . '/admin/notices/'. $notice1->id ;
+
+		try {
+			foreach(array_unique($emails) as $email_to_employee) {
+
+				Mail::queue(
+					'email.notice',
+					['poruka' => $notice1->subject, 'type' => $notice1->type, 'link' => $link],
+					function ($message) use ($email_to_employee, $title) {
+						$message->to($email_to_employee)
+							->from('info@duplico.hr', 'Duplico')
+							->subject($title);
+					}
+				);
+			}
+		} catch (\Throwable $th) {
+			$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
+			return redirect()->back()->withFlashMessage($message);
+		}
+		
 		
 		$message = session()->flash('success', 'Obavijest je poslana');
 		
@@ -189,28 +278,71 @@ class NoticeController extends Controller
 		$data1 = array(
 			'employee_id'   	=> $input['employee_id'],
 			'to_department_id'  => $to_department_id,
+			'type'  			=> $request['type'],
 			'subject'  			=> $input['subject'],
 			'notice'  			=> $poruka
 		);
-		
+		 
 		$notice->updateNotice($data1);
 
-		foreach($request['to_department_id'] as $department) {
-			$department = Department::where('id', $department)->first();
-			$prima = $department->email;
-			
-			Mail::queue(
-				'email.notice',
-				['poruka' => $notice->subject],
-				function ($message) use ($prima) {
-					$message->to($prima)
-						->from('info@duplico.hr', 'Duplico')
-						->subject('Ispravak obavijesti');
-				}
-			);
-			
-		}
+		foreach ($request['to_department_id']  as $department_id) {
+			$department = $departments->where('id', $department_id )->first();
 
+			if($department->level == 0 && $department->name != 'Uprava' ) {
+				foreach ($employees as $employee) {
+					if($employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null) {
+						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+					}
+				}
+			} else if ($department->level == 1) {
+				$departments_level2 = $departments->where('level1', $department->id );
+
+				foreach ($departments_level2 as $department_level2) {
+					$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+
+					foreach ($employees_dep as $employee_dep) {
+						array_push($mail_to_employees, $employee_dep);
+					}
+				}
+				foreach ($mail_to_employees as $employee) {
+					if($employees->where('employee_id', $employee->employee_id)->first() && $employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+					}
+				}
+			} else  {
+				$department_level2 = $department->where('id', $department->id )->first();
+				$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+
+				foreach ($employees_dep as $employee_dep) {
+					array_push($mail_to_employees, $employee_dep);
+				}
+				foreach ($mail_to_employees as $employee) {
+					if($employees->where('employee_id', $employee->employee_id)->first() && $employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+					}
+				}
+			}
+		}
+		$link = 'http://' . $_SERVER['HTTP_HOST'] . '/admin/notices/'. $notice1->id ;
+
+		try {
+			foreach(array_unique($emails) as $email_to_employee) {
+
+				Mail::queue(
+					'email.notice',
+					['poruka' => $notice->subject, 'type' => $notice1->type, 'link' => $link ],
+					function ($message) use ($email_to_employee) {
+						$message->to($email_to_employee)
+							->from('info@duplico.hr', 'Duplico')
+							->subject('Ispravak obavijesti');
+					}
+				);
+			}
+		} catch (\Throwable $th) {
+			$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
+			return redirect()->back()->withFlashMessage($message);
+		}
+		
 		$message = session()->flash('success', 'Obavijest je ispravljena');
 		
 		return redirect()->route('admin.notices.index')->withFlashMessage($message);

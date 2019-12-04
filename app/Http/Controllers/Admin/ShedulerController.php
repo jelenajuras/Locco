@@ -40,14 +40,14 @@ class ShedulerController extends Controller
      */
     public function create(Request $request)
     {
-		$input = $request;
-		
+        $input = $request;
+       
 		$employees = Registration::join('employees','registrations.employee_id','employees.id')->leftJoin('employee_terminations','registrations.employee_id', '=', 'employee_terminations.employee_id')->select('registrations.*','employees.first_name', 'employees.last_name', 'employee_terminations.datum_odjave')->orderBy('employees.last_name','ASC')->get();
  
-		$list = array();
-		$godina = substr( $input['mjesec'],'-4');
-        $mjesec = strstr( $input['mjesec'],"-",true);
-
+        $list = array();
+        $datum = explode('-',$request['mjesec']);
+		$godina = $datum[0];
+        $mjesec = $datum[1];
         if( $mjesec > 1) {
             $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('GOpocetak','>=',$mjesec-1 )->whereYear('GOpocetak', $godina )->orderBy('employees.last_name','ASC')->get();
         } else {
@@ -136,8 +136,9 @@ class ShedulerController extends Controller
 		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 		
 		$list = array();
-		$godina = substr( $input['mjesec'],'-4');
-		$mjesec = strstr( $input['mjesec'],"-",true);
+        $datum = explode('-',$request['mjesec']);
+		$godina = $datum[0];
+        $mjesec = $datum[1];
 
 		for($d=1; $d<=31; $d++)
 		{

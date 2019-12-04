@@ -47,8 +47,6 @@
 										</div>
 									</td>
 								</tr>
-								
-								
 								</table>
 							</div>
 						</div>
@@ -58,9 +56,8 @@
 								<label>Napomena</label>
 								<textarea class="form-control" name="napomena">{{ $employeeEquipments->napomena }}</textarea>
 							</div>
-						{{ csrf_field() }}
 						{{ method_field('PUT') }}
-						<input name="_token" value="{{ csrf_token() }}" type="hidden">
+						{{ csrf_field() }}
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Vrati opremu" id="stil1">
 					
 				</form>

@@ -7,8 +7,11 @@
 <style>
 body { 
 	font-family: DejaVu Sans, sans-serif;
-	font-size: 10px;
-	max-width:500px;
+    font-size: 10px;
+    max-width: 500px;
+    padding: 20px;
+    height: auto;
+    overflow: hidden;
 }
 .odobri{
 	width:150px;

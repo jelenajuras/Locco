@@ -15,10 +15,6 @@ h2{
 	padding:10px;
 }
 
-.oglasna a {
-	background-color:coral;
-}
-
 .dashboard_box1{
 	width:auto;
 	display: flex;
@@ -37,6 +33,7 @@ h2{
 	position: relative;
 	padding:10px;
 	transition: 0.5s;
+	margin: auto;
 }
 
 .dashboard_box2:hover{
@@ -62,22 +59,32 @@ h2{
     padding: 5px;
 }
 
+.oglasna a {
+/*	background-color: #e60000;*/
+	/*color: white; */
+}
+
+.najava a {
+/*	background-color: #33cc33;*/
+	/*color: white; */
+}
+
 .dashboard_box2:hover{
 	text-decoration:none;
 	background-color:#eee;
 }
 
 .dashboard_box {
-	width:98%;
-	float:left;
 	height:auto;
 	padding:10px 15px;
 	border: 1px solid #ccc;
 	border-radius: 6px;
 	box-shadow: 5px 5px 10px #ccc;
-	margin: 15px 1%;
 	position:relative;
 	text-align:center;
+	overflow-x: auto;
+    width: 78%;
+    margin: 20px auto;
 }
 
 .dashboard_box p{
@@ -171,31 +178,41 @@ h2{
 
 }
 
-@media only screen and (max-width: 630px) {
+@media screen and (max-width: 766px) {
+	.Body_section aside.calendar .calender_view {
+		padding: 0;
+	}
+
+	.calender_view .pignose-calendar {
+		width: 100%;
+	}
+	.Body_section {
+		overflow: hidden;
+	}
 	.dashboard_box1 > .BTNbox {
-		/*float: left;
-		width: 50%;*/
+		float: left;
+		width: 50%;
+		left: 50%;
 	}
 	.disp_none {
 		display:none;
+	}
+	.dashboard_box {
+		width: 100%;
 	}
 	.dashboard_box .zahtjevi tr td:not(:first-child), .dashboard_box .zahtjevi2 tr td {
 		width: 24.5%;
 		font-size: 12px;
 	}
+	.dashboard_box2 {
+		height: 100px;
+	}
 	.dashboard_box2 a span{
 		font-size:12px;
 	}
+	
 }
 
-@media only screen and (max-width: 330px) {
-	.dashboard_box1 > .BTNbox {
-		float: left;
-		width: 100%;
-		left: 50%;
-		transform: translateX(25%);
-	}
-}
 .panel {
 	
 }
@@ -236,3 +253,4 @@ h2{
 .hidden {
 	visibility: hidden;
 }
+

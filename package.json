@@ -22,7 +22,8 @@
   "dependencies": {
     "bootstrap": "^4.2.1",
     "jquery-tabs": "^0.5.3",
-    "jquery-ui": "^1.12.1"
+    "jquery-ui": "^1.12.1",
+    "pg-calendar": "^1.4.31"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.7.0"

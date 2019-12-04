@@ -12,16 +12,16 @@
 		<div class="shaduler_box f_left shadow_radius">
 			<form accept-charset="UTF-8" role="form" class="form" method="get" action="{{ route('admin.shedulers.create') }}" autocomplete="off">
 				<p>Odaberi mjesec</p>
-				<span class="calendar"><input class="date date-own form-control" type="text" name="mjesec" id="mjesec"  ><i class="far fa-calendar-alt"></i></span>
-				<input class="btn-submit"  type="submit" value="Izvještaj" id="submit" disabled />
+			<span class="calendar"><input class="date date-own form-control" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}" name="mjesec" id="mjesec"  ><i class="far fa-calendar-alt"></i></span>
+				<input class="btn-submit"  type="submit" value="Izvještaj" id="submit"  />
 			</form>
 		</div>
 		<div class="shaduler_box f_left shadow_radius">
 			<h2>Svi zahtjevi za mjesec</h2>
 			<form accept-charset="UTF-8" role="form" class="form" method="get" action="{{ route('admin.AllVacationRequest') }}" autocomplete="off">
 				<p>Odaberi mjesec</p>
-				<span class="calendar"><input class="date date-own form-control" type="text" name="mjesec" id="mjesec3" ><i class="far fa-calendar-alt"></i></span>
-				<input class="btn-submit"  type="submit" id="submit3" value="Izvještaj" disabled />
+				<span class="calendar"><input class="date date-own form-control"  type="date" name="mjesec" value="{{Carbon\Carbon::now()->format('Y-m-d')}}" id="mjesec3" ><i class="far fa-calendar-alt"></i></span>
+				<input class="btn-submit"  type="submit" id="submit3" value="Izvještaj"  />
 				
 			</form>
 		</div>
@@ -29,20 +29,15 @@
 			<h2>Evidencija </h2>
 			<form accept-charset="UTF-8" role="form" class="form" method="get" action="{{ route('admin.shedule') }}" autocomplete="off">
 				<p>Odaberi mjesec</p>
-				<span class="calendar"><input class="date date-own form-control" type="text" name="mjesec" id="mjesec2" ><i class="far fa-calendar-alt"></i></span>
-				<input class="btn-submit" type="submit" id="submit2" value="Izvještaj" disabled />
+				<span class="calendar"><input class="date date-own form-control" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}" name="mjesec" id="mjesec2" ><i class="far fa-calendar-alt"></i></span>
+				<input class="btn-submit" type="submit" id="submit2" value="Izvještaj"  />
 			</form>
 		</div>
 	</div>
     </div>
 </div>
  <script>
-		$( function() {
-			$( ".date" ).datepicker({
-				dateFormat: "mm-yy"
-			});
-		} );
-		</script>
+</script>
 <script>
 $( "#mjesec" ).change(function() {
 	$("#submit").removeAttr("disabled");

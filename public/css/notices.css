@@ -11,19 +11,19 @@
 	width:100%;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	text-align:justify;
-	font-family
+    justify-content: space-between;
 }
 
 .notice {
-	width: 40%;
+    width: 80%;
 	padding: 20px;
-	margin: 10px;
-	border: 1px solid #ccc;
-	box-shadow: 1px 1px 5px 3px #ccc;
-	min-height: auto !important;
-	color: black;
+	margin: auto;
+    margin-bottom:20px;
+    border: 1px solid #eee;
+    box-shadow: 1px 1px 12px 3px #eee;
+    min-height: auto !important;
+    color: black;
+    border-radius: 5px;
 }
 
 img {

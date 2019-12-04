@@ -1,8 +1,22 @@
 $(document).ready(function() {
 	var rola = document.getElementById('rola').value;
+	var kolona = 0;
+	var sort = 'asc';
+
+	if ($('#table_id').hasClass('sort_5_desc')) {
+		kolona = 4;
+		sort = 'desc';
+	}
+	if ($('#table_id').hasClass('sort_2_desc')) {
+	
+		kolona = 1;
+		sort = 'desc';
+	}
+
 	if(rola != "basic"){
 		var table = $('#table_id').DataTable( {
 		"paging": true,
+		"order": [[ kolona, sort ]],
 		language: {
 			paginate: {
 				previous: 'Prethodna',

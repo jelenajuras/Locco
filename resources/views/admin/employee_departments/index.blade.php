@@ -11,12 +11,12 @@
 </a>
 <div class="">
     <div class="page-header">
-		<div class='btn-toolbar pull-right' >
+		<!--<div class='btn-toolbar pull-right' >
            <a class="btn btn-primary btn-lg" href="{{ route('admin.employee_departments.create') }}" id="stil1">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Ispravi
-            </a>
-        </div>
+			</a>
+        </div>-->
 	    <h1>Zaposlenici po odjelima</h1>
     </div>
 	<input class='pull-right' type="text" id="trazi" onkeyup="TraziIme()" placeholder="Traži ..." title="Type in a name or department">
@@ -39,8 +39,7 @@
 									
 								?>
 									<tr>
-										<td>{{ $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] }}</td>
-										
+										<td><a class="" href="{{ route('admin.employee_departments.create', ['employee_id' => $registration->employee_id] ) }}" >{{ $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] }}</a></td>
 										<td>
 											@if($employee_departments)
 												@foreach ($employee_departments as $employee_department)

@@ -18,7 +18,7 @@
 					</div>
 					
 					
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
 					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši otkaz" id="stil1">
 				</form>
 			</div>

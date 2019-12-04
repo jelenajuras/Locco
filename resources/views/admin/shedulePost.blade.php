@@ -24,14 +24,13 @@
 					<div class="form-group">
 						<input name="datum" type="date" class="datum form-control" />
 					</div>
-					
 					<div class="form-group">
 						<span>od</span>
 						<input name="vrijemeOd" type="time" class="datum" value="08:00" />
 						<span>do</span>
 						<input name="vrijemeDo" type="time" class="datum " value="16:00" />
 					</div>
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    {{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji" id="stil1">
                 </fieldset>
                 </form>

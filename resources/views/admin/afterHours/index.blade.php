@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('title', 'Prekorad')
-<link rel="stylesheet" href="{{ URL::asset('css/vacations.css') }}" type="text/css" >
+
 @section('content')
 <a class="btn btn-md pull-left" href="{{ url()->previous() }}">
 		<i class="fas fa-angle-double-left"></i>
@@ -18,19 +18,20 @@
         <h2>Evidencija prekovremenog rada</h2>
     </div>
 	@if(Sentinel::inRole('administrator'))
+	<!--
 	<div class="filter">
 		<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Traži djelatnika..." title="Upiši ime">
 		<input type="date" id="myInput2" onkeyup="myFunction1()" placeholder="od datuma..." title="Upiši početni datum" class="date" >
 		<input type="date" id="myInput3" onkeyup="myFunction2()" placeholder="do datuma..." title="Upiši završni datum" class="date" >
 		<button onclick="PrintDoc()" >Primjeni Filter</button>
-	</div>
+	</div>-->
 	@endif
     <div class="row" id="printarea">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
            <div class="table-responsive">
 				@if(Sentinel::inRole('administrator'))
 					@if(count($afterHours) > 0)
-						 <table id="table_id" class="display" style="width: 100%;">
+						 <table id="table_id" class="display sort_2_desc" style="width: 100%;">
 							<thead >
 								<tr>
 									<th style="border-bottom: 1px double #ccc;">Djelatnik</th>
@@ -46,9 +47,16 @@
 							<?php $ukupnosati = 0; ?>
 								@foreach ($afterHours as $afterHour)
 									<?php
-									$vrijeme_1 = new DateTime($afterHour->vrijeme_od);  /* vrijeme od */
-									$vrijeme_2 = new DateTime($afterHour->vrijeme_do);  /* vrijeme do */
-									$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+									$vrijeme_1 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_od);  /* vrijeme od */
+									$vrijeme_2 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_do);  /* vrijeme do */
+									
+									if($afterHour->vrijeme_do == '00:00:00' || $afterHour->vrijeme_do == '00:00:00.000000') {
+										$vrijeme_2->modify('+1 day');
+										$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+									} else {
+										$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+									}
+									
 									// konvert vremena u decimalan broj
 									$razlika_vremena = $razlika_vremena->h . ':' . $razlika_vremena->i;
 									$hm = explode(":", $razlika_vremena);

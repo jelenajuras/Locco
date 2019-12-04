@@ -21,6 +21,7 @@
                     <thead>
                         <tr>
                             <th>Naziv</th>
+                            <th>Nadređeni djelatnik</th>
 							<th>email</th>
 							<th>Krovni odjel</th>
 							<th>Razina</th>
@@ -31,10 +32,16 @@
                         @foreach ($departments as $department)
                             <tr>
                                 <td>{{ $department->name }}</td>
+                                <td>{{ $department->employee['first_name'] . ' ' . $department->employee['last_name'] }}</td>
 								<td>{{ $department->email }}</td>
 								<td>{{ $department->where('id', $department->level1)->value('name') }}</td>
 								<td>{{ $department->level }}</td>
-								<td> <a href="{{ route('admin.departments.edit', $department->id) }}">
+								<td>
+                                    <a class="btn btn-primary btn-lg" href="{{ route('admin.employee_departments.edit', $department->id) }}" id="stil1">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Snimi djelatnike na odjel
+                                    </a>
+                                    <a href="{{ route('admin.departments.edit', $department->id) }}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </a>
 									 <a href="{{ route('admin.departments.destroy', $department->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">

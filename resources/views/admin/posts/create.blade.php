@@ -15,37 +15,55 @@
             </div>
             <div class="panel-body">
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.posts.store') }}">
-                <fieldset>
-                    <div class="form-group {{ ($errors->has('to_employee_id')) ? 'has-error' : '' }}">
-						<select class="form-control" name="to_employee_id" id="sel1" value="{{ old('to_employee_id') }}">
-							<option selected="selected" value="">Prima...</option>
-							<option name="uprava" value="uprava">Uprava</option>
-							<option name="pravni" value="pravni">Pravna služba</option>
-							<option name="it" value="it">IT služba</option>
-							<option name="racunovodstvo" value="racunovodstvo">Računovodstvo</option>
-						
-						</select>
-						 {!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
+                    @if(Sentinel::inRole('administrator'))
+                        <div class="form-group">
+                            <label>Tip poruke:</label>
+                            <select class="form-control" name="tip">
+                                <option selected disabled></option>
+                                <option value="prijava">Prijava</option>
+                                <option value="prijava">Odjava</option>
+                            </select>
+                        </div>
+                    @endif
+                    <div class="form-group {{ ($errors->has('to_department_id')) ? 'has-error' : '' }}">
+                        <label>Prima:</label>
+                        @if(Sentinel::inRole('administrator'))
+                            <select class="form-control" name="to_department_id[]" id="sel1" multiple size="10" required >
+                                @foreach($departments->where('level',0) as $department0)
+                                    <option value="{{ $department0->id }}">{{ $department0->name }}</option>
+                                @endforeach
+                                @foreach($departments->where('level',1) as $department1)
+                                    <option value="{{ $department1->id }}">{{ $department1->name }}</option>
+                                    @foreach($departments->where('level',2) as $department2)
+                                        @if($department2->level1 == $department1->id)
+                                        <option value="{{ $department2->id }}">-  {{ $department2->name }}</option>
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                            </select>
+                        @else
+                            <select class="form-control" name="to_department_id[]" id="sel1" value="{{ old('to_employee_id') }}" required>
+                                <option selected value="">Prima...</option>
+                                <option value="{{ $departments->where('email','uprava@duplico.hr')->first()->id }}">{{ $departments->where('email', 'uprava@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email','pravni@duplico.hr')->first()->id }}">{{ $departments->where('email','pravni@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email','itodrzavanje@duplico.hr')->first()->id }}">{{ $departments->where('email', 'itodrzavanje@duplico.hr')->first()->name }}</option>
+                                <option value="{{ $departments->where('email', 'racunovodstvo@duplico.hr')->first()->id }}">{{ $departments->where('email','racunovodstvo@duplico.hr')->first()->name }}</option>
+                            </select>
+                        @endif
+                        {!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
+                    </div>
 					<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
-                        <input class="form-control" name="title" list="post" placeholder="Subjekt">
-							<datalist id="post">
-								<option value="Poruka zaposleniku">
-								<option value="Prijedlog upravi">
-								<option value="Poruka svima">
-							</datalist>
-						<!--<input class="form-control" placeholder="Post title" name="title" type="text" value="{{ old('title') }}" />-->
+						<input class="form-control" placeholder="Post title" maxlength="255" name="title" type="text" value="{{ old('title') }}" />
                         {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <div class="form-group {{ ($errors->has('content')) ? 'has-error' : '' }}">
-                       <textarea class="form-control" name="content" id="post-content"></textarea>
+                       <textarea class="form-control" name="content" id="post-content" maxlength="65535"></textarea>
 						
                         {!! ($errors->has('content') ? $errors->first('content', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    {{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji" id="stil1">
-                </fieldset>
                 </form>
             </div>
         </div>

@@ -24,9 +24,8 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-			'title'  =>'required',
-			'content'=>'required',
-			'to_employee_id'=>'required'
+			'title'  => 'required|max:255',
+			'content'=> 'required|max:65535',
         ];
     }
 	
@@ -38,9 +37,10 @@ class PostRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'title.required' => 'Unos naslova poruke je obavenzan', //max.required
+            'title.required'    => 'Unos naslova poruke je obavenzan',
+            'title.max'         => 'Dozvoljen je unos maximalno 255 znaka',
+            'content.max'       => 'Dozvoljen je unos maximalno 65535 byte',
 			'content.required'  => 'Unos poruke je obavenzan',
-			'to_employee_id.required'  => 'Unos osobe je obavenzan',
 		];
 	}
 }

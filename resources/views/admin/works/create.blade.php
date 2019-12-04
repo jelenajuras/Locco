@@ -12,7 +12,6 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.works.store') }}">
-				 
 					<div class="form-group {{ ($errors->has('odjel'))  ? 'has-error' : '' }}">
                         <label>Odjel</label>
 						<select class="form-control" name="odjel" id="sel1" value="{{ old('odjel') }}">
@@ -77,7 +76,7 @@
 						@endforeach
 						</select>
 					</div>
-					<input name="_token" value="{{ csrf_token() }}" type="hidden">
+					{{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši radno mjesto" id="stil1">
 				</form>
 			</div>

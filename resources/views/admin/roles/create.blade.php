@@ -36,7 +36,7 @@
 						@endforeach
 					</div>
 					
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    {{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create" id="stil1">
                 </fieldset>
                 </form>
