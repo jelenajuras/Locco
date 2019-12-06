@@ -25,7 +25,7 @@ class WorkRequest extends FormRequest
     {
         return [
             'odjel'  =>'required',
-			'naziv'  =>'required'
+			'naziv'  =>'required',
 			'user_id'  =>'required'
         ];
     }
@@ -39,7 +39,7 @@ class WorkRequest extends FormRequest
 	{
 		return [
 			'odjel.required' => 'Unos odjela je obavezan',
-			'naziv.required'  => 'Unos naziva radnog mjesta je obavezan'
+			'naziv.required'  => 'Unos naziva radnog mjesta je obavezan',
 			'user_id.required'  => 'Unos nadređene osobe je obavezan'
 		];
 	}

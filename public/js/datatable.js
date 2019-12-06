@@ -8,7 +8,6 @@ $(document).ready(function() {
 		sort = 'desc';
 	}
 	if ($('#table_id').hasClass('sort_2_desc')) {
-	
 		kolona = 1;
 		sort = 'desc';
 	}

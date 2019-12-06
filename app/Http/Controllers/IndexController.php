@@ -130,7 +130,12 @@ class IndexController extends Controller
 
 				return view('user.home', ['reg_employee' => $reg_employee,'ech' => $ech,'employee' => $employee,'zahtjevi_neodobreni' => $zahtjevi_neodobreni,'zahtjevi_odobreni' => $zahtjevi_odobreni,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires, 'evaluatingGroups' => $evaluatingGroups, 'evaluatingQuestions' => $evaluatingQuestions, 'educations' => $educations, 'evaluationTargets' => $evaluationTargets, 'evaluations' => $evaluations, 'dataArr' => $dataArr, 'ads' => $ads, 'presentations' => $presentations, 'employeeDepartments' => $employeeDepartments ]);
 			} else {
-				return view('user.home');
+				if(Sentinel::inRole('visitor')) {
+					$message = session()->flash('success', 'Dobrodošao goste!');
+					return redirect()->route('admin.visitors.index')->withFlashMessage($message);
+				} else {
+					return view('user.home');
+				}				
 			}			
 		} else {
 			return view('auth.login');

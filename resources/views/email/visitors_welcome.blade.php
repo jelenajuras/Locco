@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Be right back.</title>
-
+<html lang="hr">
+	<head>
+		<meta charset="utf-8">
         <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css">
 
         <style>
             html, body {
                 height: 100%;
-                width: 100%;
             }
 
             body {
                 margin: 0;
                 padding: 0;
                 width: 100%;
-                color: #B0BEC5;
+                color: #000;
                 display: table;
                 font-weight: 300;
                 font-family: 'Lato', sans-serif;
@@ -41,8 +39,8 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Be right back.</div>
+                <div class="title">{{ $text }}</div>
             </div>
         </div>
-    </body>
+    </body>	
 </html>

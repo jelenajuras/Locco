@@ -75,7 +75,6 @@
 						<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
 					@endif
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))
-					<!--<a href="{{ route('admin.gantt') }}" >Kalendar</a>-->
 						@if(Sentinel::inRole('superadmin'))
 							<button class="collapsible poruke {{ !Sentinel::inRole('superadmin') ? 'isDisabled' : '' }}"><span>SUPER ADMIN<i class="fas fa-caret-down"></i></span></button>
 							<div class="collapse">
@@ -122,6 +121,7 @@
 							<a class="" href="{{ route('admin.catalog_categories.index') }}">Katalog opreme</a>
 							<a class="" href="{{ route('admin.benefits.index') }}">Pogodnosti za zaposlenike</a>
 							<a class="" href="{{ route('admin.notices.index') }}">Obavijesti</a>
+							<a class="" href="{{ route('admin.visitors.show',0) }}">Posjetitelji</a>
 							<!--<a class="" href="{{ route('admin.showKalendar') }}">Kalendar sastanaka</a>-->
 							
 							@if(Sentinel::inRole('uprava'))
