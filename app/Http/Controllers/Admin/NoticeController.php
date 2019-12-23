@@ -155,15 +155,24 @@ class NoticeController extends Controller
 					}
 				}
 			} else if ($department->level == 1) {
-				$departments_level2 = $departments->where('level1', $department->id );
-
-				foreach ($departments_level2 as $department_level2) {
-					$employees_dep = $employee_departments->where('department_id', $department_level2->id );
-
-					foreach ($employees_dep as $employee_dep) {
+				$employees_dep1 = $employee_departments->where('department_id', $department->id );
+				if($employees_dep1) {
+					foreach ($employees_dep1 as $employee_dep) {
 						array_push($mail_to_employees, $employee_dep);
 					}
 				}
+				
+				$departments_level2 = $departments->where('level1', $department->id );
+				if($departments_level2) {
+					foreach ($departments_level2 as $department_level2) {
+						$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+	
+						foreach ($employees_dep as $employee_dep) {
+							array_push($mail_to_employees, $employee_dep);
+						}
+					}
+				}
+				
 				foreach ($mail_to_employees as $to_employee) {
 					if($employees->where('employee_id', $to_employee->employee_id)->first() && $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email'] != null ) {
 						array_push($emails, $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email']);
@@ -249,12 +258,26 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $id)
     {
+		$to_department_id = implode(',', $request['to_department_id']);
+		$departments = Department::get();
+		$employees = Registration::where('odjava',null)->get();
+		$employee_departments = Employee_department::get();
+		$mail_to_employees = array();
+		$emails = array();
+				
 		$notice = Notice::find($id);
 		
 		$poruka = $request['notice'];
 
 		$dom = new \DomDocument();
-		$dom->loadHtml(mb_convert_encoding($poruka, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		try {
+			$dom->loadHtml(mb_convert_encoding($poruka, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		} catch (\Throwable $th) {
+			$message = session()->flash('error', 'Nešto je pošlo krivo...');
+		
+			return redirect()->back()->withFlashMessage($message);
+		}
+	
 		$images = $dom->getElementsByTagName('img');
 		
 		foreach($images as $k => $img){
@@ -285,28 +308,46 @@ class NoticeController extends Controller
 		 
 		$notice->updateNotice($data1);
 
+		$title = 'Nova poruka';
+
+		if($notice->type == 'najava') {
+			$title = 'Najava aktivnosti';
+		}
+		if($notice->type == 'uprava') {
+			$title = 'Obavijest uprave';
+		}
+
 		foreach ($request['to_department_id']  as $department_id) {
 			$department = $departments->where('id', $department_id )->first();
 
 			if($department->level == 0 && $department->name != 'Uprava' ) {
 				foreach ($employees as $employee) {
-					if($employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null) {
-						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+					if($employee->employee['email'] != null) {
+						array_push($emails, $employee->employee['email']);
 					}
 				}
 			} else if ($department->level == 1) {
-				$departments_level2 = $departments->where('level1', $department->id );
-
-				foreach ($departments_level2 as $department_level2) {
-					$employees_dep = $employee_departments->where('department_id', $department_level2->id );
-
-					foreach ($employees_dep as $employee_dep) {
+				$employees_dep1 = $employee_departments->where('department_id', $department->id );
+				if($employees_dep1) {
+					foreach ($employees_dep1 as $employee_dep) {
 						array_push($mail_to_employees, $employee_dep);
 					}
 				}
-				foreach ($mail_to_employees as $employee) {
-					if($employees->where('employee_id', $employee->employee_id)->first() && $employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null ) {
-						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+				
+				$departments_level2 = $departments->where('level1', $department->id );
+				if($departments_level2) {
+					foreach ($departments_level2 as $department_level2) {
+						$employees_dep = $employee_departments->where('department_id', $department_level2->id );
+	
+						foreach ($employees_dep as $employee_dep) {
+							array_push($mail_to_employees, $employee_dep);
+						}
+					}
+				}
+				
+				foreach ($mail_to_employees as $to_employee) {
+					if($employees->where('employee_id', $to_employee->employee_id)->first() && $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email']);
 					}
 				}
 			} else  {
@@ -316,25 +357,25 @@ class NoticeController extends Controller
 				foreach ($employees_dep as $employee_dep) {
 					array_push($mail_to_employees, $employee_dep);
 				}
-				foreach ($mail_to_employees as $employee) {
-					if($employees->where('employee_id', $employee->employee_id)->first() && $employees->where('employee_id', $employee->employee_id)->first()->employee['email'] != null ) {
-						array_push($emails, $employees->where('employee_id', $employee->employee_id)->first()->employee['email']);
+				foreach ($mail_to_employees as $to_employee) {
+					if($employees->where('employee_id', $to_employee->employee_id)->first() && $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email'] != null ) {
+						array_push($emails, $employees->where('employee_id', $to_employee->employee_id)->first()->employee['email']);
 					}
 				}
 			}
 		}
-		$link = 'http://' . $_SERVER['HTTP_HOST'] . '/admin/notices/'. $notice1->id ;
+		$link = 'http://' . $_SERVER['HTTP_HOST'] . '/admin/notices/'. $notice->id ;
 
 		try {
 			foreach(array_unique($emails) as $email_to_employee) {
 
 				Mail::queue(
 					'email.notice',
-					['poruka' => $notice->subject, 'type' => $notice1->type, 'link' => $link ],
-					function ($message) use ($email_to_employee) {
+					['poruka' => $notice->subject, 'type' => $notice->type, 'link' => $link ],
+					function ($message) use ($email_to_employee, $title) {
 						$message->to($email_to_employee)
 							->from('info@duplico.hr', 'Duplico')
-							->subject('Ispravak obavijesti');
+							->subject($title);
 					}
 				);
 			}

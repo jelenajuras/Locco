@@ -13,7 +13,7 @@
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.notices.update', $notice->id) }}">
 					<input name="employee_id" type="hidden" class="form-control" value="{{ $user }}" >
 					<div class="form-group {{ ($errors->has('to_department_id')) ? 'has-error' : '' }}">
-						<select class="form-control" name="to_department_id[]" id="sel1" value="{{ old('to_department_id') }}" multiple size="10" required>
+						<select class="form-control" name="to_department_id[]" value="{{ old('to_department_id') }}" multiple size="10" required>
 							@foreach($departments->where('level',0) as $department0)
 								<option value="{{ $department0->id }}" {!!  $notice->to_department_id ==  $department0->id ? 'selected' : '' !!}>{{ $department0->name }}</option>
 							@endforeach
@@ -29,7 +29,7 @@
 					</div>
 					<div class="form-group">
 						<label>Tip obavijesti:</label>
-						<select class="form-control" name="type" id="sel1" value="{{ old('type') }}" required>
+						<select class="form-control" name="type" value="{{ old('type') }}" required>
 							<option value="" disabled selected></option>
 							<option value="uprava" {!!  $notice->type == 'uprava' ? 'selected' : '' !!}>Obavijest uprave</option>
 							<option value="najava"  {!!  $notice->type == 'najava' ? 'selected' : '' !!} >Najava aktivnosti</option>

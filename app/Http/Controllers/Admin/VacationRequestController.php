@@ -135,9 +135,11 @@ class VacationRequestController extends GodisnjiController
 			$GOzavršetak = new DateTime($request->GOzavršetak);
 
 			$preostalo_dana_PG = $this->zahtjevi_novo($user)['preostalo_PG'];   //preostalo dana GO prošla godina
-			$preostalo_dana_OG = $this->razmjeranGO_date($user, $request) - $this->zahtjevi_novo($user)['zahtjevi_Dani_OG']; // dani GO ova godina na datum završetka zahtjeva - dani zahtjevi ova godina
+			$preostalo_dana_OG = $this->zahtjevi_novo($user)['preostalo_OG'];   //preostalo dana GO ova godina
+
+		//	$preostalo_dana_OG = $this->razmjeranGO_date($user, $request) - $this->zahtjevi_novo($user)['zahtjevi_Dani_OG']; // dani GO ova godina na datum završetka zahtjeva - dani zahtjevi ova godina
 			$dani_GO = $preostalo_dana_PG + $preostalo_dana_OG;
-		
+			
 			$zahtjev = array('GOpocetak' =>$input['GOpocetak'], 'GOzavršetak' =>$input['GOzavršetak']);
 			$dani_zahtjev = $this->daniGO($zahtjev); //vraća dane zahtjeva
 			$razlika_dana =  $dani_GO - $dani_zahtjev; // vraća razliku preostalih dana i dana novog zahtjeva
@@ -474,19 +476,21 @@ class VacationRequestController extends GodisnjiController
 		$datum = new DateTime('now');
 		$vacationRequest = VacationRequest::find($request['id']);
 		$nadredjeni_uprava_id = $vacationRequest->employee->work->nadredjeni->id;
-		$nadredjeni_voditelj_id = $vacationRequest->employee->work->prvi_nadredjeni->id;
+		$nadredjeni_voditelj_id = $vacationRequest->employee->work->prvi_nadredjeni ? $vacationRequest->employee->work->prvi_nadredjeni->id : null;
 
 		$user = Sentinel::getUser(); 	// prijavljena osoba - odobrava
 		$odobrio_user = Employee::where('employees.first_name', $user->first_name)->where('employees.last_name', $user->last_name)->first(); // prijavljeni djelatnik - odobrava
 		$odobrio = $odobrio_user->first_name . ' ' . $odobrio_user->last_name ;
-
+		if(Sentinel::inRole('odobrenja_uprave')) {
+			$odobrio = 'po nalogu člana uprave ' . $odobrio;
+		}
 		$data = array(
 			'odobrio_id'    	=>  $odobrio_user->id,			
 			'razlog'  			=> "direktno odobrenje sa portala!",
 			'datum_odobrenja'	=>  date_format($datum,'Y-m-d')
 		);
 
-		if($odobrio_user->id == $nadredjeni_uprava_id ) {
+		if($odobrio_user->id == $nadredjeni_uprava_id || Sentinel::inRole('odobrenja_uprave') ) {
 			$data += ['odobreno' => "DA"];
 		} else if($odobrio_user->id == $nadredjeni_voditelj_id ) {
 			$data += ['odobreno2' => "DA"]; 
@@ -533,7 +537,7 @@ class VacationRequestController extends GodisnjiController
 
 		$mails = array_diff( array_unique(array_merge($uprava, $mail_to)), array( $odobrio_user->email )); // svi mailovi uprava, djelatnik i voditelj - bez duplih, bez onog tko je odobrio
 
-		if($odobrio_user->id == $nadredjeni_uprava_id ) {
+		if($odobrio_user->id == $nadredjeni_uprava_id || Sentinel::inRole('odobrenja_uprave') ) {
 			// konačna potvrda uprave! - šalje se na upravu, voditelja i zaposlenika
 			foreach($mails as $mail) {
 				if($mail != '' && $mail != null) {
@@ -543,7 +547,7 @@ class VacationRequestController extends GodisnjiController
 						function ($message) use ($mail, $employee) {
 							$message->to($mail)
 								->from('info@duplico.hr', 'Duplico')
-								->subject('Odobrenje uprave - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
+								->subject('Odobrenje uprave - ' .  $employee->first_name . ' ' . $employee->last_name);
 						}
 					);
 				}
@@ -557,7 +561,7 @@ class VacationRequestController extends GodisnjiController
 					function ($message) use ($email_work_nadredjeni, $employee) {
 						$message->to($email_work_nadredjeni)
 							->from('info@duplico.hr', 'Duplico')
-							->subject('Odobrenje zahtjeva - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
+							->subject('Odobrenje zahtjeva - ' .  $employee->first_name . ' ' . $employee->last_name);
 					}
 				);
 			}
@@ -568,7 +572,7 @@ class VacationRequestController extends GodisnjiController
 				function ($message) use ($ja, $employee) {
 					$message->to($ja)
 						->from('info@duplico.hr', 'Duplico')
-						->subject('Odobrenje zahtjeva - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
+						->subject('Odobrenje zahtjeva - ' .  $employee->first_name . ' ' . $employee->last_name);
 				}
 			);
 		}

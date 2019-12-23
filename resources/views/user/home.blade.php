@@ -23,7 +23,6 @@
 				@foreach($dataArr as $key => $data)
 					<div class="show_event" >
 						<div class="event">
-							
 							@if($data['name'] == 'birthday')
 								@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($select_day)) )
 									<p>{{ 'Rođendan - ' . $data['employee'] }}</p>
@@ -242,7 +241,7 @@
 								</thead>
 								<tbody>
 									@foreach($zahtjevi_neodobreni as $zahtjev1)
-										@if(date('Y', strtotime( $zahtjev1->GOzavršetak)) == $ova_godina)
+										@if(date('Y', strtotime( $zahtjev1->GOzavršetak)) >= $ova_godina)
 											<tr>
 												<td>
 													<form name="contactform" class="conf_form" method="get" action="{{ route('admin.confDirector') }}">

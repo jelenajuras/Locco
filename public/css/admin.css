@@ -1118,3 +1118,7 @@ input[name="returned"] {
     background: inherit;
     color: #0aa90a;
 }
+.icon_alert {
+	width: auto;
+	height: 25px;
+}

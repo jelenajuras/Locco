@@ -70,9 +70,11 @@ class PostController extends Controller
 		$user = Sentinel::getUser();
 		$input = $request->except(['_token']);
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-
+		
 		$departments = Department::get();
 		$registrations = Registration::where('odjava',null)->get();
+		$registration =  $registrations->where('employee_id', $employee->id)->first();
+
 		$employee_departments = Employee_department::get();
 		$mail_to_employees = array();
 		$emails = array();

@@ -2,16 +2,16 @@
 UPUTE ZA SIGURNOST POSJETITELJA
 
 Posjetitelji su dužni pridržavati se sljedećeg: 
-• svih odredbi Zakona o zaštiti na radu i Općih propisa za rad na siguran način 
-• poštivati znakove obavijesti, upozorenja i opasnosti
-• slijediti sve upute osobe koja je Vaš domaćin
-• otpad odložiti isključivo u za to predviđene posude obraćajući pažnju na odvajanje otpada po 	vrstama, ukoliko je to omogućeno
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> svih odredbi Zakona o zaštiti na radu i Općih propisa za rad na siguran način 
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> poštivati znakove obavijesti, upozorenja i opasnosti
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> slijediti sve upute osobe koja je Vaš domaćin
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> otpad odložiti isključivo u za to predviđene posude obraćajući pažnju na odvajanje otpada po 	vrstama, ukoliko je to omogućeno
 
 Zabranjeno je:
-• pristup mjestima na kojima posjet nije predviđen
-• zadržavanje u blizini opreme i strojeva u radu bez nadzora 
-• pušenje u prostorijama tvrtke, unošenje i konzumiranje alkohola i drugih opojnih sredstava
-• fotografiranje i snimanje bez posebnog odobrenja
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> pristup mjestima na kojima posjet nije predviđen
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> zadržavanje u blizini opreme i strojeva u radu bez nadzora 
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> pušenje u prostorijama tvrtke, unošenje i konzumiranje alkohola i drugih opojnih sredstava
+<img class="icon_alert" src="{{ asset('img/icons/icon_1.png') }}" /> fotografiranje i snimanje bez posebnog odobrenja
 
 Nepridržavanje gore navedenih uputa može dovesti do potencijalnih nezgoda i ozljeda te zabrane ulaska u   tvrtku.
 
