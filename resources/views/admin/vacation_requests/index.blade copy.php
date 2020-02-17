@@ -4,13 +4,14 @@
 <link rel="stylesheet" href="{{ URL::asset('css/vacations.css') }}" type="text/css" >
 <?php 
 	use App\Http\Controllers\GodisnjiController;
+	use App\Models\Employee;
 ?>
 @section('content')
 <a class="btn btn-md pull-left" href="{{ url()->previous() }}">
 	<i class="fas fa-angle-double-left"></i>
 	Natrag
 </a>
-<div class="table_vacation">
+<div class="">
      <div class="page-header">
         <div class='btn-toolbar pull-right' >
             <a class="btn btn-primary btn-lg vacation_new" href="{{ route('admin.vacation_requests.create') }}"  id="stil1" >
@@ -23,32 +24,34 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<?php 
+		$datum = new DateTime('now');    /* današnji dan */
+		$ova_godina = date_format($datum,'Y');
+		$prosla_godina = date_format($datum,'Y')-1;
+		?>
             <div class="table-responsive" id="tblData">
 			@if(count($registrations) > 0)
                 <table id="table_id" class="display" style="width: 100%;">
                     <thead>
                         <tr>
-							<th class="not_align">Ime i prezime</th>
+							<th onclick="sortTable(0)" class="not_align">Ime i prezime</th>
 							<th class="not_align">Odjel</th>
-							<th >Staž Duplico <br>[g-m-d]</th>
-							<th >Staž ukupno <br>[g-m-d]</th>
-							@foreach ($godine as $godina)
-								@if( $godina == $ova_godina || $godina == $prosla_godina)
-									@if ( $godina == $ova_godina) 
-										<th>Ukupno GO <br>{{ $godina }}</th>
-									@endif
-									<th>Razmjerno GO <br>{{ $godina }}</th>
-									<th >Iskorišteni dani <br>{{ $godina }}</th>
-								@endif
-							@endforeach
-							<th >Ukupno neiskorišteno <br>dana  GO</th>
-							<th >Neiskorišteni <br>slobodni <br>dani</th>							
+							<th onclick="sortTable(1)">Staž Duplico <br>[g-m-d]</th>
+							<th onclick="sortTable(2)">Staž ukupno <br>[g-m-d]</th>
+							<th onclick="sortTable(3)">Dani GO {{ $prosla_godina }}</th>
+							<th  onclick="sortTable(4)">Iskorišteni dani {{ $prosla_godina }}</th>
+							<th onclick="sortTable(8)">Neiskorišteno dana  {{ $prosla_godina}}</th>
+							<th onclick="sortTable(5)">Dani GO  {{ $ova_godina}}</th>
+							<th onclick="sortTable(6)">Razmjeran dio GO  {{ $ova_godina}}</th>
+							<th onclick="sortTable(7)">Iskorišteni dani  {{ $ova_godina}}</th>
+                            <th onclick="sortTable(8)">Neiskorišteno dana  {{ $ova_godina}}</th>
+							<th onclick="sortTable(8)">Ukupno neiskorišteno dana  GO</th>
+							<th onclick="sortTable(9)">Neiskorišteni slobodni dani</th>
                         </tr>
                     </thead>
                     <tbody id="myTable">
 						@foreach ($registrations as $registration)
 							<?php 
-								$prijenos_zahtjeva = 0;								
 								/* Staž Duplico */
 								$stazDuplico = GodisnjiController::stazDuplico($registration);
 								$godina = $stazDuplico->format('%y');  
@@ -59,56 +62,49 @@
 								$godinaUk = $stazUkupno[0];  
 								$mjeseciUk = $stazUkupno[1];
 								$danaUk = $stazUkupno[2];
-
-								$razmjeranGO = GodisnjiController::razmjeranGO($registration);  //razmjeran GO ova godina								
-								$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($registration); // zahtjevi dani za godinu
+								
+								$godisnjiUser  = GodisnjiController::godisnjiUser($registration);
+								
+								$daniZahtjevi = GodisnjiController::daniZahtjevi($registration);
 								$slDani = GodisnjiController::prekovremeni_bez_izlazaka($registration);
-								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);		
-								$ukupno_GO = 0;
-								$ukupnoDani = 0;
+								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);
+								
+								$razmjeranGO = GodisnjiController::razmjeranGO($registration);
+								
+								$GO_PG = GodisnjiController::razmjeranGO_PG($registration); // razmjerni dani prošla godina
+								
+								$daniZahtjeviPG = GodisnjiController::daniZahtjeviPG($registration);
+								$neiskPG = 0;
+								$neiskPG = $GO_PG - $daniZahtjeviPG;
+								
+								if($neiskPG > 0){
+									if($daniZahtjevi <= $neiskPG) {
+										$daniZahtjeviPG += $daniZahtjevi;
+										$daniZahtjevi = 0;
+									} 
+									if($daniZahtjevi > $neiskPG){
+										$daniZahtjeviPG += $neiskPG;
+										$daniZahtjevi -= $neiskPG;
+									}
+								}
 							?>
-								<tr {!! DB::table('employee_terminations')->where('employee_id', $registration->employee_id)->first() ? 'class="employee_ex"': '' !!} >
-									<td class="show_go not-align">
+								<tr {!! DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() ? 'class="employee_ex"': '' !!} >
+									<td class="show_go">
 										<a href="{{ route('admin.vacation_requests.show', $registration->employee_id) }}" style="width:100%;height:100%;border:none;background-color:inherit;color:blue">
 											{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}
 										</a>
 									</td>
-									<td class="not-align">{{  $registration->work['odjel'] }}</td>
+									<td>{{  $registration->work['odjel'] }}</td>
 									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> 												<!-- staž Duplico -->
 									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td>										<!-- Ukupan staž -->
-									@foreach ($godine as $godina)
-										@php
-											$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani prošla godina
-											if ($godina == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
-												$ukupno_GO += $razmjeranGO_PG;
-											} elseif ( $godina == $ova_godina ){
-												$ukupno_GO += $razmjeranGO_PG;
-											}
-										
-											$daniZahtjeviGodina = GodisnjiController::daniZahtjeviGodina($registration, $godina); // zahtjevi - svi dani za godinu
-											
-											$daniZahtjeviGodina = $daniZahtjeviGodina + $prijenos_zahtjeva;
-											$prijenos_zahtjeva = 0;
-											if($daniZahtjeviGodina > $razmjeranGO_PG ) {
-												$prijenos_zahtjeva = $daniZahtjeviGodina - $razmjeranGO_PG;
-											} else {
-												$prijenos_zahtjeva = 0;
-											} 
-											if ( $godina == $ova_godina ||$godina == $prosla_godina  ){
-												$ukupnoDani += count ($zahtjeviSveGodine[$godina]);
-											}
-										@endphp
-										@if( $godina == $ova_godina || $godina == $prosla_godina)
-											@if ($godina == $prosla_godina)
-												<td class="1">{{ $razmjeranGO_PG }}</td>
-											@else
-												<td>{{GodisnjiController::godisnjiUser($registration) }}</td>
-												<td class="2">{{ $razmjeranGO  }}</td>												
-											@endif
-											<td class="3">{{ count ($zahtjeviSveGodine[$godina] ) }}</td>	
-										@endif																				
-									@endforeach
-									<td class="width_10">{{ $ukupno_GO - $ukupnoDani }}</td>
+									<td>{{ $GO_PG }}</td> 																				<!-- GO prošla godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_PG']   }}</td>				<!-- iskorišteni dani prošla godina  -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_PG'] }}</td>						<!-- neiskorišteni dani prošla godina  -->
+									<td>{{ $godisnjiUser }}</td>					 													<!-- ukupno GO -->
+									<td>{{ $razmjeranGO }}</td> 																		<!-- Razmjerni dani GO-->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['zahtjevi_Dani_OG'] }}</td> 				<!-- // iskorišteni dani ova godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_OG'] }}</td>  					<!-- // neiskorišteni dani godišnjeg odmora ova godina -->
+									<td>{{ GodisnjiController::zahtjevi_novo($registration)['preostalo_ukupno'] }}</td> 				<!-- // ukupno neiskorišteni dani godišnjeg odmora -->
 									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td>
 								</tr>
 						 @endforeach

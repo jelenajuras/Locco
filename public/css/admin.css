@@ -432,6 +432,9 @@ header ul li a{
 	text-align: center;
 }
 
+.table_vacation #table_id #myTable td:not(.not-align){
+	text-align: center;
+}
 #table_id #myTable tr th:last-child{
 	text-align: center;
 }
@@ -1121,4 +1124,5 @@ input[name="returned"] {
 .icon_alert {
 	width: auto;
 	height: 25px;
+}
 }

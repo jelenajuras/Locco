@@ -5,6 +5,9 @@
 <?php 
 	use App\Http\Controllers\GodisnjiController;
 
+	$datum = new DateTime('now');    /* današnji dan */
+	$ova_godina = date_format($datum,"Y");
+	$prosla_godina = $ova_godina-1;
 ?>
 @section('content')
 <div class="">
@@ -46,14 +49,31 @@
 						<tbody id="myTable">
 							@foreach($employees as $djelatnik)
 							<?php 
-							$time = round((	(int) (substr(GodisnjiController::izlasci_ukupno($djelatnik),0,-2)) / 8), 0 ,PHP_ROUND_HALF_DOWN);
+								$time = round((	(int) (substr(GodisnjiController::izlasci_ukupno($djelatnik),0,-2)) / 8), 0 ,PHP_ROUND_HALF_DOWN);
 
+								$godineZahtjeva = GodisnjiController::godineZahtjeva();
+								$dani_GO = 0;
+
+								foreach ($godineZahtjeva as $g) {
+									if( $g == $ova_godina) {
+										$dani_GO += GodisnjiController::razmjeranGO($djelatnik); // razmjerni dani ova godina
+									
+									} else {
+										$dani_GO += GodisnjiController::razmjeranGO_PG($djelatnik, $g); // razmjerni dani za sve godine
+									}
+								}
+
+								$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($djelatnik); // zahtjevi dani za sve godine
+								$brojDanaZahtjeva = 0;
+								foreach($zahtjeviSveGodine  as $zahtjevi) {
+									$brojDanaZahtjeva += count($zahtjevi); 
+								}					
 							?>
 								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
 									<tr>
 										<td>{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}</td> 
 										<td>@if($djelatnik->slDani == 1) Slobodi dani @elseif($djelatnik->slDani == "0") Isplata @endif </td>
-										<td>{{ GodisnjiController::razmjeranGO_PG($djelatnik) +  GodisnjiController::razmjeranGO($djelatnik) - GodisnjiController::daniZahtjevi($djelatnik) - GodisnjiController::daniZahtjeviPG($djelatnik)}}</td>
+										<td>{{ $dani_GO - $brojDanaZahtjeva }}</td>
 										<td>{{ round(GodisnjiController::prekovremeni_sati($djelatnik),0,1) }}</td>
 										<td>{{ floor(GodisnjiController::izlasci_ukupno($djelatnik))}}</td>
 										<td>@if($djelatnik->slDani == 1){{ GodisnjiController::prekovremeni_bez_izlazaka($djelatnik)}}@endif</td>
@@ -66,24 +86,13 @@
 										<td>{{ round(GodisnjiController::prekovremeni_satiMj($djelatnik, $mjesec, $godina) , 2)}}</td>
 										<td>{{ GodisnjiController::izlasci_Mj($djelatnik, $mjesec, $godina) }}</td>
 										<?php 
-											$iskorišteno_mj = GodisnjiController::daniZahtjevi_mj($djelatnik, 'GO' ,$mjesec, $godina );
-											
-											$daniZahtjevi = GodisnjiController::zahtjevi_novo($djelatnik)['zahtjevi_Dani_OG'];
-											$daniZahtjeviPG = GodisnjiController::zahtjevi_novo($djelatnik)['zahtjevi_Dani_PG'] ;
-											$GO_PG = GodisnjiController::razmjeranGO_PG($djelatnik); // razmjerni dani prošla godina
+											$iskorišteno_mj = GodisnjiController::daniZahtjevi_mj($djelatnik, 'GO', $mjesec, $godina);
+
+											$daniZahtjevi = count($zahtjeviSveGodine[$ova_godina]);  // 0
+											$daniZahtjeviPG = count($zahtjeviSveGodine[$prosla_godina]); //19
+											$GO_PG = GodisnjiController::razmjeranGO_PG($djelatnik, $prosla_godina); // razmjerni dani prošla godina  - 20
 											$neiskPG = 0;
-											$neiskPG = $GO_PG - $daniZahtjeviPG;
-											
-											if($neiskPG > 0){
-												if($daniZahtjevi <= $neiskPG) {
-													$daniZahtjeviPG += $daniZahtjevi;
-													$daniZahtjevi = 0;
-												} 
-												if($daniZahtjevi > $neiskPG){
-													$daniZahtjeviPG += $neiskPG;
-													$daniZahtjevi -= $neiskPG;
-												}
-											}
+										
 											$dani_PG = "";
 											$dani_OG = "";
 											if($iskorišteno_mj > 0) {
@@ -94,9 +103,9 @@
 													$dani_PG = $iskorišteno_mj - $daniZahtjevi;
 													$dani_OG = $daniZahtjevi;
 												} 
-											}
+											}											
 										?>
-										<td>{{ $dani_PG }}</td> <!-- dani GO prošla godina-->
+										<td>{{ $dani_PG  }}</td> <!-- dani GO prošla godina-->
 										<td>{{ $dani_OG}}</td> <!-- dani GO ova godina-->
 									</tr>
 									@endif

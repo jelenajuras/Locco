@@ -53,12 +53,16 @@ class GO extends Command
 		$dan = date_format($datum,'d');
 		$mjesec = date_format($datum,'m');
 		$ova_godina = date_format($datum,'Y');
-
+		$prosla_godina = date_format($datum,'Y')-1;
+		
 		$dan_izostanci = array();
 		
 		$izostanci = VacationRequest::join('employees','vacation_requests.employee_id', '=', 'employees.id')->select('vacation_requests.*', 'employees.first_name','employees.last_name')->orderBy('vacation_requests.zahtjev','ASC')->orderBy('employees.last_name','ASC')->get();
 
 		foreach($izostanci as $izostanak){
+			$ukupno_GO = 0;
+			$ukupnoDani = 0;
+			$prijenos_zahtjeva = 0;
 			if($izostanak->odobreno == 'DA'){
 				$begin1 = new DateTime($izostanak->GOpocetak);
 				$end1 = new DateTime($izostanak->GOzavršetak);
@@ -77,25 +81,45 @@ class GO extends Command
 					$registration = Registration::where('registrations.employee_id', $izostanak->employee_id)->first();
 					
 					/* izračun dana GO */
-					$razmjeranGO = GodisnjiController::razmjeranGO($registration);
-					$daniZahtjevi = GodisnjiController::daniZahtjevi($registration);
-					
-					$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration);
-					$daniZahtjevi_PG = GodisnjiController::daniZahtjeviPG($registration);
-					
-					$dani_GO = $razmjeranGO + $razmjeranGO_PG - $daniZahtjevi - $daniZahtjevi_PG ;
+					$razmjeranGO = GodisnjiController::razmjeranGO($registration);             //razmjeran GO ova godina	
+					$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($registration); // zahtjevi dani za godinu
+					$godine = GodisnjiController::godineZahtjeva();  						  // sve godine zahtjeva
+					foreach ($godine as $godina) {
+						$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani prošla godina
+						if ($godina == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
+							$ukupno_GO += $razmjeranGO_PG;
+						} elseif ( $godina == $ova_godina ){
+							$ukupno_GO += $razmjeranGO_PG;
+						}
+						$daniZahtjeviGodina = GodisnjiController::daniZahtjeviGodina($registration, $godina); // zahtjevi - svi dani za godinu
+
+						$daniZahtjeviGodina = $daniZahtjeviGodina + $prijenos_zahtjeva;
+						$prijenos_zahtjeva = 0;
+						if($daniZahtjeviGodina > $razmjeranGO_PG ) {
+							$prijenos_zahtjeva = $daniZahtjeviGodina - $razmjeranGO_PG;
+						} else {
+							$prijenos_zahtjeva = 0;
+						} 
+						if ( $godina == $ova_godina || $godina == $prosla_godina  ){
+							$ukupnoDani += count ($zahtjeviSveGodine[$godina]);
+						}
+					}
+				
+					$dani_GO = $ukupno_GO - $ukupnoDani;
 		
 					if($begin1 == $end1 && $begin_dan == $dan && $begin_mjesec == $mjesec){
 						array_push($dan_izostanci,array('ime' => $izostanak->first_name . ' ' . $izostanak->last_name, 'zahtjev' =>  $izostanak->zahtjev, 'period' => date('d.m.Y', strtotime( $izostanak->GOpocetak)), 'vrijeme' => $izostanak->vrijeme_od . ' - ' .  $izostanak->vrijeme_do, 'dani_GO' => $dani_GO, 'napomena' =>  $izostanak->napomena ));
 					} else {
-						foreach ($period1 as $dan1) {  //ako je dan  GO !!!
-							$period_day = date_format($dan1,'d');
-							$period_month = date_format($dan1,'m');
-							$period_year = date_format($dan1,'Y');
-							if($period_day == $dan & $period_month == $mjesec & $period_year == $ova_godina || $begin1 == $end1 ){
-								array_push($dan_izostanci,array('ime' => $izostanak->first_name . ' ' . $izostanak->last_name, 'zahtjev' =>  $izostanak->zahtjev, 'period' => date('d.m.Y', strtotime( $izostanak->GOpocetak)) . ' - ' .  date('d.m.Y', strtotime($izostanak->GOzavršetak)), 'vrijeme' => $izostanak->vrijeme_od . ' - ' .  $izostanak->vrijeme_do, 'napomena' =>  $izostanak->napomena, 'dani_GO' => $dani_GO));
+						if($izostanak->first_name . ' ' . $izostanak->last_name != 'Nikolina Gunčić') {          /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							foreach ($period1 as $dan1) {  //ako je dan  GO !!!
+								$period_day = date_format($dan1,'d');
+								$period_month = date_format($dan1,'m');
+								$period_year = date_format($dan1,'Y');
+								if($period_day == $dan && $period_month == $mjesec && $period_year == $ova_godina || $begin1 == $end1 ){
+									array_push($dan_izostanci,array('ime' => $izostanak->first_name . ' ' . $izostanak->last_name, 'zahtjev' =>  $izostanak->zahtjev, 'period' => date('d.m.Y', strtotime( $izostanak->GOpocetak)) . ' - ' .  date('d.m.Y', strtotime($izostanak->GOzavršetak)), 'vrijeme' => $izostanak->vrijeme_od . ' - ' .  $izostanak->vrijeme_do, 'napomena' =>  $izostanak->napomena, 'dani_GO' => $dani_GO));
+								}
 							}
-						}
+						}						
 					}
 				}
 			}
@@ -120,6 +144,9 @@ class GO extends Command
 		foreach ($diff as $add_mail) {
 			array_push($send_to, $add_mail);
 		}
+
+		//$send_to =  array('jelena.juras@duplico.hr');
+
 		foreach (array_unique($send_to) as $send_to_mail) {
 			Mail::queue('email.GO', ['dan_izostanci' => $dan_izostanci, 'datum' =>  date_format($datum,'d.m.Y') ], function ($mail) use ($send_to_mail , $datum) {
 				$mail->to( $send_to_mail )
@@ -127,7 +154,6 @@ class GO extends Command
 					->subject('Izostanci ' . ' djelatnika -' . date_format($datum,'d.m.Y'));
 			});
 		}
-		
 		$this->info('GO messages sent successfully!');
 	}	
 }

@@ -16,7 +16,7 @@ use DatePeriod;
 class GodisnjiController extends Controller
 {
    // Računa broj neiskorištenih dana godišnjeg ova godina
-   public static function godisnji($user)   				 /* staro, ne koristi se */
+   public static function godisnji($user)   	
 	{
 		$registration = Registration::where('registrations.employee_id', $user->id)->first();
 		
@@ -32,7 +32,7 @@ class GodisnjiController extends Controller
 			$stazD = $staz[2];
 		}
 		
-/* staz Duplico */	
+		/* staz Duplico */	
 		$stazDuplico = 0;
 		$datum = new DateTime('now');    /* današnji dan */
 		$datum_1 = new DateTime($registration->datum_prijave);  /* datum prijave */
@@ -42,7 +42,7 @@ class GodisnjiController extends Controller
 		$mjeseci = $stazDuplico->format('%m');
 		$dana = $stazDuplico->format('%d');
 		
-/* staz ukupan */
+		/* staz ukupan */
 		$danaUk=0;
 		$mjeseciUk=0;
 		$godinaUk=0;
@@ -63,7 +63,7 @@ class GodisnjiController extends Controller
 		$godinaUk += ($godina + $stazY);
 
 	
-/* Godišnji odmor - dani*/
+		/* Godišnji odmor - dani*/
 		$ova_godina = date_format($datum,'Y');
 		$prosla_godina = date_format($datum,'Y')-1;
 		
@@ -76,7 +76,7 @@ class GodisnjiController extends Controller
 			$GO = $GO;
 		}
 		
-/* staz prošle godine */
+		/* staz prošle godine */
 		$datumPG = new DateTime($prosla_godina .'-12-31');    /* zadnji dan prošle godine */
 		$godina_prijave = date_format($datum_1,'Y');  /* godina prijave */
 		
@@ -94,7 +94,7 @@ class GodisnjiController extends Controller
 			$danaPG = $stazDuplicoPG->format('%d');
 		}
 		
-/* staz ukupan do 31.12.*/
+		/* staz ukupan do 31.12.*/
 			if(($danaPG+$stazD) > 30){
 				$danaUk_PG = ($danaPG+$stazD) -30;
 				$mjeseciUk_PG = 1;
@@ -118,7 +118,7 @@ class GodisnjiController extends Controller
 				$GO_PG = $GO_PG;
 			}
 
-/* Zahtjevi ova godina */		
+		/* Zahtjevi ova godina */		
 		$zahtjevi = VacationRequest::where('employee_id',$user->id)->get();
 		
 		/* ukupno iskorišteno godišnji zaposlenika*/
@@ -170,7 +170,7 @@ class GodisnjiController extends Controller
 		return $dani_GO = $GO - $ukupnoGO;
 	}
 
-	// Računa broj dana godišnjeg ova godina              /************ RADI!!!!!!! ***************/
+	// Računa broj dana godišnjeg ova godina          
 	public static function godisnjiUser($user)
 	{
 		$stazUkupno = GodisnjiController::stazUkupno($user);
@@ -189,10 +189,10 @@ class GodisnjiController extends Controller
 	}
 
 		/* dani GO PROŠLA godina */
-	public static function godisnjiPG($user)      /************ RADI!!!!!!! ***************/
+	public static function godisnjiPG($user, $godina)    
 	{
 		/* Računa ukupan staz za prošlu godinu - do 31.12.*/
-		$stazPG =  GodisnjiController::stazUkupnoPG($user);
+		$stazPG =  GodisnjiController::stazUkupnoPG($user, $godina);
 
 		$dana = $stazPG[2];
 		$mjeseci = $stazPG[1];
@@ -208,7 +208,7 @@ class GodisnjiController extends Controller
 			$godina += 1;
 		}
 			
-/* Godišnji odmor - dani*/
+		/* Godišnji odmor - dani*/
 
 		$GO = 20;
 		$GO += (int)($godina/ 4) ;
@@ -221,7 +221,7 @@ class GodisnjiController extends Controller
 		
 	}
 	
-	//računa iskorištene dane godišnjeg odmora ova godina  /************ RADI!!!!!!! ***************/
+	//računa iskorištene dane godišnjeg odmora ova godina 
 	public static function daniZahtjevi($user)
 	{
 		/* Zahtjevi ova godina */	
@@ -269,7 +269,7 @@ class GodisnjiController extends Controller
 		return $ukupnoGO;
 	}
 
-	//računa iskorištene dane godišnjeg PROŠLA ova godina  /************ RADI!!!!!!! ***************/
+	//računa iskorištene dane godišnjeg PROŠLA ova godina
 	public static function daniZahtjeviPG($user)
 	{
 		/* Zahtjevi ova godina */	
@@ -318,12 +318,61 @@ class GodisnjiController extends Controller
 		return $ukupnoGO_PG;
 	}
 	
+	//računa iskorištene dane godišnjeg u zadanoj godini  
+	public static function daniZahtjeviGodina($user, $godina)
+	{
+		/* Zahtjevi ova godina */	
+		$zahtjevi = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','GO')->where('odobreno','DA')->get();
+		
+		$datum = new DateTime('now');    /* današnji dan */
+		//$prosla_godina = date_format($datum,'Y')-1;
+
+		/* ukupno iskorišteno godišnji zaposlenika*/
+		$ukupnoGO_PG = 0;
+		
+		foreach($zahtjevi as $zahtjev){
+			$begin = new DateTime($zahtjev->GOpocetak);
+			$end = new DateTime($zahtjev->GOzavršetak);
+			$end->setTime(0,0,1);
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+			foreach ($period as $dan) {
+				if(date_format($dan,'Y') == $godina ){
+					if(date_format($dan,'N') < 6 ){
+						if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+							date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+							date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
+							date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+							date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
+								//
+						} else {
+							$ukupnoGO_PG += 1;
+						}
+					}
+				}
+			}			
+		}
+		return $ukupnoGO_PG;
+	}
+
 	//računa iskorištene dane godišnjeg odmora za traženi mjesec
 	public static function daniZahtjevi_mj($user, $zahtjev, $mjesec, $godina)
 	{
-
+	
 		/* Zahtjevi ova godina */	
-		$zahtjevi = VacationRequest::where('employee_id',$user->employee_id)->where('zahtjev',$zahtjev)->where('odobreno','DA')->get();
+		$zahtjevi = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev', $zahtjev)->where('odobreno','DA')->get();
 		/* ukupno iskorišteno godišnji zaposlenika*/
 		$ukupnoGO = 0;
 		
@@ -707,26 +756,24 @@ class GodisnjiController extends Controller
 	}
 	
 	/* Računa staz u Duplicu za prošlu godinu - do 31.12. */
-	public static function stazDuplicoPG($user)      /************ RADI!!!!!!! ***************/
+	public static function stazDuplicoPG($user, $godina)      /************ RADI!!!!!!! ***************/
 	{
-		$datum = new DateTime('now');    /* današnji dan */
-		$prosla_godina = date_format($datum,'Y')-1;
-		
-		$datumPG = new DateTime($prosla_godina . '-12-31');
+	
+		$datumPG = new DateTime($godina . '-12-31');
 		
 		$stazDuplicoPG = 0;
 		$datum_prijave = new DateTime($user->datum_prijave);  /* datum prijave - registracija */
-		if( date_format($datum_prijave,'Y') <= $prosla_godina) {
+		if( date_format($datum_prijave,'Y') <= $godina) {
 			$stazDuplicoPG = $datum_prijave->diff($datumPG);  /* staz u Duplicu PG*/
 		}
 
 		return $stazDuplicoPG;
 	}
 	
-	/* Računa ukupan staž za prošlu godinu */	
-	public static function stazUkupnoPG($user)   /************ RADI!!!!!!! ***************/
+	/* Računa ukupan staž za prošlu godinu */		
+	public static function stazUkupnoPG($user, $godina)  			 /************ OK  ***************/
 	{
-		$stazDuplicoPG = GodisnjiController::stazDuplicoPG($user);
+		$stazDuplicoPG = GodisnjiController::stazDuplicoPG($user, $godina);
 		
 		if(!$stazDuplicoPG){
 			$godina = 0;
@@ -741,6 +788,7 @@ class GodisnjiController extends Controller
 		$stazY = 0;
 		$stazM = 0;
 		$stazD = 0;
+
 		if($user->staz) {
 			$stazPrijasnji = $user->staz;
 			$stazPrijasnji = explode('-',$user->staz);
@@ -774,7 +822,6 @@ class GodisnjiController extends Controller
 		return $stazPG;
 	}
 
-
 	/*  računa razmjeran GO na traženi datum */
 	public static function razmjeranGO_date($user, $request)    /************ RADI!!!!!!! ***************/
 	{	
@@ -789,7 +836,9 @@ class GodisnjiController extends Controller
 
 		$date = new DateTime($request['GOzavršetak']);
 
-		if($ovaj_dan < 15){
+		$dan_pola_mjeseca = round(cal_days_in_month(CAL_GREGORIAN, $ovaj_mjesec, $ova_godina )/2,0,PHP_ROUND_HALF_UP);   // 15 dana ili 14 ili 16
+
+		if($ovaj_dan < $dan_pola_mjeseca){
 			$ovaj_mjesec -=1;
 		} 
 		
@@ -804,7 +853,7 @@ class GodisnjiController extends Controller
 			$staz = $prijava->diff($date);   /* staz u Duplicu*/
 			$mjesec = $staz->format('%m');
 			$dan = $staz->format('%d');
-			if($dan >= 15) {
+			if($dan >= $dan_pola_mjeseca) {
 				$mjesec +=1;
 			}
 			
@@ -854,15 +903,31 @@ class GodisnjiController extends Controller
 		return $razmjeranGO;
 	}
 
-	/*  računa razmjeran GO */
-	public static function razmjeranGO($user)    /************ RADI!!!!!!! ***************/
+	/*  računa razmjeran GO za tekuću godinu */
+	public static function razmjeranGO($user)    
 	{
 		$datum = new DateTime('now');    /* današnji dan */
 		$ova_godina = date_format($datum,'Y');
 		$ovaj_mjesec = date_format($datum,'m');
 		$ovaj_dan = date_format($datum,'d');
 		
-		if($ovaj_dan < 15){
+		if( $ovaj_mjesec == 1 ||
+			$ovaj_mjesec == 3 ||
+			$ovaj_mjesec == 5 ||
+			$ovaj_mjesec == 7 ||
+			$ovaj_mjesec == 8 ||
+			$ovaj_mjesec == 10 ||
+			$ovaj_mjesec == 12 ) {
+				$dan_pola_mjeseca = 16;
+			} else if($ovaj_mjesec == 2) {
+				$dan_pola_mjeseca = 14;
+			} else {
+				$dan_pola_mjeseca = 15;
+			}
+		// $dan_pola_mjeseca = round( cal_days_in_month(CAL_GREGORIAN, intval($ovaj_mjesec), intval($ova_godina) )/2,0,PHP_ROUND_HALF_UP);   // 15 dana ili 14 ili 16  NE RADI NA SERVERU!!!!!
+
+		
+		if($ovaj_dan < $dan_pola_mjeseca){
 			$ovaj_mjesec -=1;
 		} 
 		
@@ -877,7 +942,7 @@ class GodisnjiController extends Controller
 			$staz = $prijava->diff($datum);   /* staz u Duplicu*/
 			$mjesec = $staz->format('%m');
 			$dan = $staz->format('%d');
-			if($dan >= 15){
+			if($dan >= $dan_pola_mjeseca){
 				$mjesec +=1;
 			}
 			if($prijavaGodina < $ova_godina){
@@ -909,49 +974,57 @@ class GodisnjiController extends Controller
 	}
 	
 	/*  razmjeran GO PROŠLA godina*/
-	public static function razmjeranGO_PG($user)    /************ RADI!!!!!!! ***************/
-	{
+	public static function razmjeranGO_PG($user, $godina)     /***************** OK  *****************/
+	{		
 		$datum = new DateTime('now');    /* današnji dan */
 		$ova_godina = date_format($datum,'Y');
-		$prosla_godina = date_format($datum,'Y')-1;
-		$datumPG = new DateTime($prosla_godina . '-12-31');
-		
-		$GO  = GodisnjiController::godisnjiPG($user); /*dani GO prošla godina */
-		$razmjeranGO_PG = 0;
-		if($user->datum_prijave) {
-			$datum_prijave = $user->datum_prijave;
-			$datum_prijave = explode('-', $user->datum_prijave);
-			$prijavaGodina = $datum_prijave[0];
-			$prijava = new DateTime($user->datum_prijave);
-			$staz = $prijava->diff($datumPG);   /* staz u Duplicu do 31.12. prošla godina*/
-			$mjesec = $staz->format('%m');
-			$dan = $staz->format('%d');
-			
+		$dan_pola_mjeseca = 15;
 
-			if($prijavaGodina < $prosla_godina){
-				$razmjeranGO_PG = $GO; 
-			}  elseif ($prijavaGodina == $prosla_godina) {
-				if($dan >= 15){
-					$mjesec +=1;
-				}
-				if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
-					if($mjesec >= 6){
-						$razmjeranGO_PG = $GO;
+		if ($godina == $ova_godina) {
+			$razmjeranGO_PG = GodisnjiController::razmjeranGO($user); 		/* dani GO ova godina */
+		} else {
+			$datumPG = new DateTime($godina . '-12-31');
+		
+			$GO  = GodisnjiController::godisnjiPG($user, $godina); 		/* dani GO zadana godina */
+			$razmjeranGO_PG = 0;
+			if($user->datum_prijave) {
+				$datum_prijave = $user->datum_prijave;
+				$datum_prijave = explode('-', $user->datum_prijave);
+				$prijavaGodina = $datum_prijave[0];
+				$prijava = new DateTime($user->datum_prijave);
+				$staz = $prijava->diff($datumPG);   					/* staz u Duplicu do 31.12. prošla godina*/
+				$mjesec = $staz->format('%m');
+				$dan = $staz->format('%d');
+				$godinaU = $staz->format('Y');
+				if($mjesec >0 && $godinaU >0)
+					$dan_pola_mjeseca = round(cal_days_in_month(CAL_GREGORIAN, intval($mjesec), intval($godinaU) )/2,0,PHP_ROUND_HALF_UP);
+	
+				if($prijavaGodina < $godina){
+					$razmjeranGO_PG = $GO; 
+				}  elseif ($prijavaGodina == $godina) {
+					if($dan >= $dan_pola_mjeseca){
+						$mjesec +=1;
+					}
+					if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
+						if($mjesec >= 6){
+							$razmjeranGO_PG = $GO;
+						} else {
+							$razmjeranGO_PG = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+						}
 					} else {
 						$razmjeranGO_PG = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
 					}
-				} else {
-					$razmjeranGO_PG = round($GO/12 * $mjesec, 0, PHP_ROUND_HALF_UP);
+				
+				} elseif ($prijavaGodina ==  $ova_godina) {
+					$razmjeranGO_PG = 0;
 				}
-			
-			} elseif ($prijavaGodina ==  $ova_godina) {
-				$razmjeranGO_PG = 0;
 			}
-		}
+		}		
+		
 		return $razmjeranGO_PG;
 	}
 	
-	public static function zahtjevi_novo ($registration) 
+	public static function zahtjevi_novo ($registration)   // nije dobro!!!!!!!
 	{
 		$datum = new DateTime('now');    /* današnji dan */
 		$ova_godina = date_format($datum,'Y');
@@ -959,14 +1032,14 @@ class GodisnjiController extends Controller
 		$mjesec_danas = date_format($datum,'m');
 		
 		$GO_razmjeran = GodisnjiController::razmjeranGO($registration); // razmjerni dani ova godina
-		$GO_PG = GodisnjiController::razmjeranGO_PG($registration); // razmjerni dani prošla godina
+		$GO_PG = GodisnjiController::razmjeranGO_PG($registration, $prosla_godina); // razmjerni dani prošla godina
 		$zahtjevi = VacationRequest::where('employee_id',$registration->employee_id)->where('zahtjev','GO')->where('odobreno','DA')->get();
 		
 		$preostalo_PG = $GO_PG;
 		$preostalo_OG = $GO_razmjeran;
 		$zahtjevi_Dani_OG = 0;
 		$zahtjevi_Dani_PG = 0;
-	
+			
 		foreach($zahtjevi as $zahtjev){
 			$begin = new DateTime($zahtjev->GOpocetak);
 			$end = new DateTime($zahtjev->GOzavršetak);
@@ -995,7 +1068,7 @@ class GodisnjiController extends Controller
 							//
 					} else {
 							if($preostalo_PG > 0) {
-								if(date_format($dan,'Y') == $prosla_godina) {
+								if(date_format($dan,'Y') < $ova_godina) { // sve prijašnje godine
 									$preostalo_PG -= 1;
 									$zahtjevi_Dani_PG += 1;
 								} elseif(date_format($dan,'m') < '07' && date_format($dan,'Y') == $ova_godina) {
@@ -1017,6 +1090,103 @@ class GodisnjiController extends Controller
 			$preostalo_PG = 0;
 		}
 
+
 		return ['preostalo_PG' => $preostalo_PG, 'preostalo_OG' => $preostalo_OG, 'preostalo_ukupno' => $preostalo_OG + $preostalo_PG, 'zahtjevi_Dani_PG' => $zahtjevi_Dani_PG, 'zahtjevi_Dani_OG' => $zahtjevi_Dani_OG];
+	}
+
+	public static function godineZahtjeva () 
+	{
+		$datum = new DateTime('now');    /* današnji dan */
+		$ova_godina = date_format($datum,'Y');
+		$zahtjevi = VacationRequest::where('zahtjev','GO')->where('odobreno','DA')->get();
+		$godine = array();
+		if($zahtjevi->first()) {
+			$prva_godina = date('Y',strtotime($zahtjevi->first()->GOpocetak));
+		}
+
+		while ($prva_godina <= $ova_godina) {
+			array_push($godine, strval($prva_godina));
+			$prva_godina++;
+		}
+
+		return $godine;
+	}
+
+	public static function zahtjeviSveGodine ($registration) 
+	{
+		$zahtjeviArray = array();
+		$zahtjevi_godina_SG = array();
+		$zahtjevi_godina_PG = array();
+
+		$godine = GodisnjiController::godineZahtjeva(); // sve godine zahtjeva
+		$zahtjevi = VacationRequest::where('employee_id',$registration->employee_id)->where('zahtjev','GO')->where('odobreno','DA')->orderBy('GOpocetak','ASC')->get(); // svi zahtjevi djelatnika
+
+		foreach ($godine as $godina) {
+			$GO_dani = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani za godinu
+
+			$zahtjevi_godina_PG = array_unique(array_merge($zahtjevi_godina_PG, $zahtjevi_godina_SG));  // zahtjevi_PG - zahtjevi iz slijedeće godine do 30.6. ako ima razmjernih dana slobodnih + prebačeni zahtjevi iz prošle godine ako nije bilo dana - maknuti dupli datumi
+			$zahtjevi_godina = array();
+			
+			foreach($zahtjevi as $zahtjev){
+				$begin = new DateTime($zahtjev->GOpocetak);
+				$end = new DateTime($zahtjev->GOzavršetak);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+
+				foreach ($period as $dan) {
+					if(date_format($dan,'N') < 6 ){
+						if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+							date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+							date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
+							date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
+							date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
+								//
+						} else {
+							if($GO_dani > 0 || $godina == date('Y')) {
+								if(date_format($dan,'Y') == $godina) {
+									if(isset( $zahtjeviArray[$godina-1] )) {
+										if( ! in_array( date_format($dan,'Y-m-d'), $zahtjeviArray[$godina-1])) {
+											array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+											$GO_dani--;	
+										}
+									} else {
+										array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+										$GO_dani--;	
+									}
+																
+								} elseif(date_format($dan,'m') < '07' && date_format($dan,'Y') == $godina+1 ) {
+									array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+									array_push($zahtjevi_godina_PG, date_format($dan,'Y-m-d'));
+									$GO_dani--;
+								}	
+							} else {   // ako nema slobodnih dana u godini prijenos zahtjeva u drugu godinu
+								if(date_format($dan,'Y') == $godina) {
+									array_push($zahtjevi_godina_SG, date_format($dan,'Y-m-d'));
+								}
+							} 	
+						}
+					}
+				}	
+			}
+		
+
+			$zahtjeviArray[$godina] = array_unique(array_merge( $zahtjevi_godina));	
+				
+		}
+
+		return $zahtjeviArray;
 	}
 }

@@ -23,3 +23,17 @@ input[type="radio"]{
 	float:right;
 	margin-left: 15px;
 }
+@media (max-width: 450px) {
+	.select1 {
+		margin: 5px 10px;
+	}
+	#articles {
+			clear: both;
+	}
+	.article .panel-body {
+		padding: 5px;
+	}
+	img  {
+		max-width: 100%;
+	}
+}

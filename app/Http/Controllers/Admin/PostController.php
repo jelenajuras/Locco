@@ -134,7 +134,7 @@ class PostController extends Controller
 			}
 			
 			$message = session()->flash('success', 'Poruka je poslana');
-			return redirect()->route('home')->withFlashMessage($message);
+			return redirect()->back()->withFlashMessage($message);
 			
 		} else {
 			foreach ( $request['to_department_id'] as $department_id) {

@@ -130,25 +130,13 @@ class ShedulerController extends Controller
 	
 	public function shedule (Request $request)
 	{
-		$input = $request;
 		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
 
-		$requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
-		
-		$list = array();
-        $datum = explode('-',$request['mjesec']);
+        $datum = explode('-', $request['mjesec']);
 		$godina = $datum[0];
         $mjesec = $datum[1];
 
-		for($d=1; $d<=31; $d++)
-		{
-			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
-			if (date('m', $time)==$mjesec){   
-					$list[]=date('Y/m/d/D', $time);
-			}
-		}
-	
-		return view('admin.shedule')->with('employees',$employees)->with('mjesec', $mjesec)->with('godina', $godina)->with('list', $list)->with('requests', $requests);
+		return view('admin.shedule')->with('employees',$employees)->with('mjesec', $mjesec)->with('godina', $godina);
 		
 	}
 }

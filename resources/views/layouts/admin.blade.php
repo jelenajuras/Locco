@@ -174,7 +174,7 @@
 				@endif
 			</nav>
 			@if(Sentinel::check() && !Sentinel::inRole('otkaz'))
-				<section class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+				<section class="col-xs-12 col-sm-9 col-md-9 col-lg-10 body_section">
 						@include('notifications')
 						@yield('content')
 				</section>

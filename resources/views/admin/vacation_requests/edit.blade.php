@@ -19,26 +19,25 @@
 					</select> 
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 					<input name="montaza" type="hidden"  value="{{ $registration->work['job_description']}}" />
-					@if($registration->work['job_description'] != 'montaža')
-						<p class="editOption4 iskorišteno" style="display:none;">
-						<input type="hidden" value="{{$razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }}" name="Dani" />
-						@if($razmjeranGO - $daniZahtjevi > 0)
-							Neiskorišteno {{ $razmjeranGO_PG - $daniZahtjevi_PG + $razmjeranGO - $daniZahtjevi }} dana razmjernog godišnjeg odmora 
-						@else
-							Svi dani godišnjeg odmora su iskorišteni! <br>
-							Nemoguće je poslati zahtjev za godišnji odmor.
+						@if($registration->work['job_description'] != 'montaža')
+							<p class="editOption4 iskorišteno" style="display:none;">
+								<input type="hidden" value="{{ $preostali_dani }}" name="Dani" />
+								@if($preostali_dani > 0)
+										Neiskorišteno {{ $preostali_dani }} dana razmjernog godišnjeg odmora 
+								@else
+										Svi dani godišnjeg odmora su iskorišteni! <br>
+										Nemoguće je poslati zahtjev za godišnji odmor.
+								@endif
+							</p>
+							<p class="editOption5 iskorišteno" style="display:none;">
+								@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
+									Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
+								@else
+									Svi slobodni dani su iskorišteni! <br>
+									Nemoguće je poslati zahtjev za slobodni dan.									
+								@endif
+							</p>
 						@endif
-						</p>
-						<p class="editOption5 iskorišteno" style="display:none;">
-							@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
-								Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
-							@else
-								Svi slobodni dani su iskorišteni! <br>
-								Nemoguće je poslati zahtjev za slobodni dan.
-								
-							@endif
-						</p>
-					@endif
 					<div class="datum form-group editOption1" >
 						<input name="GOpocetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOpocetak)) }}" required><i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
@@ -59,9 +58,8 @@
 					@if (Sentinel::inRole('administrator'))
 						<div class="form-group">
 							<label for="email">Slanje emaila:</label>
-							<input type="radio" name="email" value="DA" checked> Poslati e-mail<br>
-							<input type="radio" name="email" value="NE"> Ne slati mail
-							
+							<input type="radio" name="email" value="DA" > Poslati e-mail<br>
+							<input type="radio" name="email" value="NE" checked> Ne slati mail
 						</div>
 					@endif
 					{{ method_field('PUT') }}
@@ -70,26 +68,6 @@
 				</form>
 			</div>
 		</div>
-		<!--<div class="uputa">
-			<p>*** Napomena:</p>
-			<p>Sukladno radnopravnim propisima RH:<br>
-				- radnik ima za svaku kalendarsku godinu pravo na godišnji odmor od najmanje 20 radnih dana,<br>
-				- radnik ima pravo na dodatne dane godišnjeg odmora (po 1 radni dan za svakih navršenih četiri godina <br>radnog staža; po 2 radna dana radniku roditelju s dvoje ili više djece do 7 godina života),<br>
-				- ukupno trajanje godišnjeg odmora radnika ne može iznositi više od 25 radnih dana.<br>
-				- razmjerni dio godišnjeg odmora za tekuću godinu utvrđuje se u trajanju od 1/12 godišnjeg odmora za <br>svaki mjesec trajanja radnog odnosa u Duplicu u tekućoj godini.<br>
-
-			Za eventualna pitanja, molimo kontaktirati pravni odjel na pravni@duplico.hr.<br>
-			</p>
-		</div>-->
-
-		<script type="text/javascript">
-			$('.date').datepicker({  
-			   format: 'yyyy-mm-dd',
-			   startDate:'-60y',
-			   endDate:'+1y',
-			}); 
-		</script> 
-		<!-- izračun dana GO u zahtjevu -->
 		<script>
 			function GO_dani(){
 				if(document.getElementById("prikaz").value == "GO" ){

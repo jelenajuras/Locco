@@ -241,7 +241,7 @@
 								</thead>
 								<tbody>
 									@foreach($zahtjevi_neodobreni as $zahtjev1)
-										@if(date('Y', strtotime( $zahtjev1->GOzavršetak)) >= $ova_godina)
+									
 											<tr>
 												<td>
 													<form name="contactform" class="conf_form" method="get" action="{{ route('admin.confDirector') }}">
@@ -293,7 +293,7 @@
 												</td>
 												<td>{{ $zahtjev1->napomena }}</td>
 											</tr>
-											@endif
+										
 									@endforeach
 								</tbody>
 							</table>

@@ -37,8 +37,8 @@ body {
 		@if($vacationRequest->zahtjev == "VIK")
 			<h4>Primljeni zahtjev </h4>
 		@else
-			<h4>Zahtjev za {{ $zahtjev2 }} za
-			@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "Bolovanje" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD")
+			<h4>Zahtjev djelatnika {{ $employee->employee['first_name'] . ' ' . $employee->employee['last_name'] }} za {{ $zahtjev2 }} za
+			@if($vacationRequest->zahtjev != "Izlazak")
 				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->GOzavršetak)) }} 
 			@elseif($vacationRequest->zahtjev == "Izlazak")
 				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vacationRequest->vrijeme_od . ' do ' . $vacationRequest->vrijeme_do }}</h4>
@@ -48,6 +48,6 @@ body {
 		<br/> 
 		<div><b>{{ $odobrenje }}</b></div>
 		<div class="marg_20"><b>{{ $razlog }}</b></div>
-		<div><b class="marg_20">{{ 'Odobrio: ' . $odobrio }}</b></div>
+		<div><b class="marg_20">{{ 'Odluku donio: ' . $odobrio }}</b></div>
 	</body>
 </html>
