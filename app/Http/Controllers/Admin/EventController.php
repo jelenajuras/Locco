@@ -69,8 +69,7 @@ class EventController extends Controller
 		
 		session()->flash('success', "Događaj je spremljen");
 		
-        return redirect()->route('home');
-        
+        return redirect()->route('home');        
     }
 
     /**

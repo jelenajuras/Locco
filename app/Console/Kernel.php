@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Anketa::class,
 		\App\Console\Commands\Osposobljavanje::class,
 		\App\Console\Commands\Stranci::class,
+		\App\Console\Commands\TaskNotificationEmails::class,
     ];
 
     /**
@@ -40,7 +41,7 @@ class Kernel extends ConsoleKernel
     */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('email:Rodjendan')
+		$schedule->command('email:Rodjendan')
 				  ->dailyAt('8:00')
 				  ->evenInMaintenanceMode();
 		$schedule->command('email:Godisnjica')
@@ -78,6 +79,10 @@ class Kernel extends ConsoleKernel
 				  ->evenInMaintenanceMode();
 		$schedule->command('email:Stranci')
 				  ->dailyAt('08:00')
+				  ->evenInMaintenanceMode(); 
+		$schedule->command('email:task')
+				/* 	->everyMinute() */
+				  ->dailyAt('06:00')
 				  ->evenInMaintenanceMode();
     }
 

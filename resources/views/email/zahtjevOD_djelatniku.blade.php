@@ -34,11 +34,15 @@ body {
 }
 </style>
 	<body>
-		<h4>Zahtjev djelatnika {{ $employee->employee['first_name'] . ' ' . $employee->employee['last_name'] }} za {{ $zahtjev2 }} za
-		@if($vacationRequest->zahtjev != "Izlazak")
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->GOzavršetak)) }} 
-		@elseif($vacationRequest->zahtjev == "Izlazak")
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vacationRequest->vrijeme_od . ' do ' . $vacationRequest->vrijeme_do }}</h4>
+		@if($vacationRequest->zahtjev == "VIK")
+			<h4>Primljeni zahtjev djelatnika  {{ $employee->employee['first_name'] . ' ' . $employee->employee['last_name'] }} </h4>
+		@else
+			<h4>Zahtjev djelatnika {{ $employee->employee['first_name'] . ' ' . $employee->employee['last_name'] }} za {{ $zahtjev2 }} za
+			@if($vacationRequest->zahtjev != "Izlazak")
+				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->GOzavršetak)) }} 
+			@elseif($vacationRequest->zahtjev == "Izlazak")
+				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vacationRequest->vrijeme_od . ' do ' . $vacationRequest->vrijeme_do }}</h4>
+			@endif
 		@endif
 		
 		<br/> 

@@ -27,6 +27,10 @@ body {
 	pointer-events: none;
 }
 
+textarea.form-control {
+	max-width: 100%;
+}
+
 a:hover {
 	cursor:pointer;
 }
@@ -45,9 +49,10 @@ a.btn.btn-md.pull-left {
 }
 
 .Body_section section.calendar {
-	padding: 10px 0;
+	padding: 10px 0 30px;
     position: relative;
     margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 .lang_choose {
@@ -730,6 +735,7 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
 
 section.calendar .all_events {
 	margin-top: 30px;
+	border: none;
 }
 .all_events h4 {
 	text-decoration: underline;
@@ -773,22 +779,24 @@ div.input_date input {
 }
 
 a.add_event {
-	display: inline-block;
-	padding: 10px 20px;
-	border: 1px solid #ccc;
-	text-align: center;
-	position: absolute;
-	left: 0;
-	border-radius: 5px;
-	box-shadow: 0px 0px 7px 2px;
-	z-index: 1;
-	margin-top: 20px;
-    margin-left: 20px;
+	/*display: inline-block;*/
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    text-align: center;
+    position: relative;
+    left: 0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px 2px;
+    z-index: 1;
+    margin-top: 0;
+    margin-left: 0;
+	float: right;
+	margin-left: 20px;
 }
 
 .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container .pignose-calendar-button-schedule-pin{
-	width: 4px;
-    height: 4px;
+	width: 6px;
+    height: 6px;
  }
 
 #checkAll {
@@ -1125,4 +1133,44 @@ input[name="returned"] {
 	width: auto;
 	height: 25px;
 }
+.task_status1 {
+	color: green;
+	border: 1px solid #aaa;
+}
+.task_status1:hover {
+	text-decoration: none;
+	color: green;
+	background-color:  #ddd;
+	border: 1px solid #aaa;
+	transform: scale(1.2,1.2);
+}
+.task_status0 {
+	color: red;
+	border: 1px solid #aaa;
+	padding: 1px 5px;
+	display: inline-block;
+}
+.task_status0:hover {
+	text-decoration: none;
+	color: red;
+	background-color: #ddd;
+	transform: scale(1.2,1.2);
+}
+
+@media (max-width: 1000px) {
+	.calender_view  {
+		float: none;
+	}
+	section.calendar .all_events {
+		padding-bottom: 20px;
+		
+	}
+}
+
+.mySearch {
+	padding: 5px 10px;
+    border-radius: 5px;
+    width: 30%;
+    float: right;
+    margin-top: 20px;
 }

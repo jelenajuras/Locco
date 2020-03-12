@@ -39,7 +39,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->createModel()->with('roles')->orderBy('last_name','ASC')->paginate(30);
+        $users = $this->userRepository->createModel()->with('roles')->orderBy('last_name','ASC')->get();
 
         return view('admin.users.index', ['users' => $users]);
     }

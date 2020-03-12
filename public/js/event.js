@@ -13,6 +13,7 @@ $(function() {
                 IZL: '#00cc00',
                 BOL: '#00cc00',
                 LP: '#ff0000',
+                task: '#e600e6',
             }
         },
         schedules: data1,

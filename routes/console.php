@@ -66,5 +66,9 @@ Artisan::command('email:Osposobljavanje', function () {
 })->describe('Display an Osposobljavanje quote');
 
 Artisan::command('email:Stranci', function () {
-    $this->comment(Osposobljavanje::quote());
+    $this->comment(Stranci::quote());
+})->describe('Display an Stranci quote');
+
+Artisan::command('email:task', function () {
+    $this->comment(task::quote());
 })->describe('Display an Stranci quote');

@@ -13,16 +13,14 @@ use App\Models\VacationRequest;
 use App\Models\EffectiveHour;
 use App\Models\AfterHour;
 use App\Models\Questionnaire;
-use App\Models\Evaluation;
-use App\Models\EvaluatingGroup;
-use App\Models\EvaluatingQuestion;
 use App\Models\Education;
 use App\Models\Event;
-use App\Models\EvaluationTarget;
 use App\Models\Presentation;
 use App\Models\Ad;
 use App\Models\CatalogManufacturer;
 use App\Models\CatalogCategory;
+use App\Models\EmployeeTask;
+use App\Models\TemporaryEmployee;
 use Sentinel;
 use DateTime;
 use DatePeriod;
@@ -39,27 +37,29 @@ class HomeController extends GodisnjiController
     {
 		if(Sentinel::check()) {
 			$user = Sentinel::getUser();
-
-			$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
+			$employee = Employee::where('last_name',$user->last_name)->where('first_name',$user->first_name)->first();			
+			$temporary = TemporaryEmployee::where('last_name', $user->last_name)->where('first_name', $user->first_name)->first();
 			
-			if($employee) {
-				$employeeDepartments = Employee_department::where('employee_id', $employee->id)->get();
-				
-				$zahtjevi_neodobreni = VacationRequest::where('odobreno',null)->orderBy('GOpocetak','DESC')->get();
-				$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->orderBy('GOpocetak','DESC')->get()->take(30);
-				$afterHours = AfterHour::where('odobreno', null)->get();
-	
-				$reg_employee = Registration::where('registrations.employee_id', $employee->id)->first();
-				$ech = EffectiveHour::where('employee_id', $employee->id)->first();
+			if($employee ) {
+				$reg_employee = Registration::where('employee_id', $employee->id)->first();
+				//$employeeDepartments = Employee_department::where('employee_id', $employee->id)->get();
 				$datum = new DateTime('now');    /* današnji dan */
 				$ova_godina = date_format($datum,'Y');
+
+				if(Sentinel::inRole('administrator')) {
+					$zahtjevi_neodobreni = VacationRequest::where('odobreno',null)->orderBy('GOpocetak','DESC')->get();
+					$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->whereYear('GOzavršetak',$ova_godina )->orderBy('GOpocetak','DESC')->get()->take(30);
+					$afterHours = AfterHour::where('odobreno', null)->get();
+				} else {
+					$zahtjevi_neodobreni = null;
+					$zahtjevi_odobreni = null;
+					$afterHours = null;
+				}
+
+				$ech = EffectiveHour::where('employee_id', $employee->id)->first();
 				
 				// ANKETE
 				$questionnaires = Questionnaire::where('status','aktivna')->get();
-				$evaluatingGroups = EvaluatingGroup::get();
-				$evaluatingQuestions = EvaluatingQuestion::get();
-				$evaluationTargets = EvaluationTarget::where('employee_id',$employee->id)->orderBy('created_at','DESC')->get();
-				$evaluations = Evaluation::where('employee_id',$employee->id)->get();
 				
 				// Edukacija
 				$educations = Education::where('status','aktivna')->get();
@@ -70,6 +70,10 @@ class HomeController extends GodisnjiController
 				$catalog_manufacturers = CatalogManufacturer::get()->count();
 				//$catalog_categories = CatalogCategory::get()->count();
 			
+				// Zadaci
+			//	$employee_tasks = EmployeeTask::where('employee_id', $employee->id)->get();
+				$employee_tasks = EmployeeTask::get();
+				
 				$dataArr = array();
 				// Kalendar
 				$today = date('Y-m-d');
@@ -85,7 +89,14 @@ class HomeController extends GodisnjiController
 					array_push($dataArr, ['name' => 'birthday', 'date' => $dan, 'employee' => $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] ]);
 					array_push($dataArr, ['name' => 'LP', 'date' => $dan_lp, 'employee' => $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] ]);
 				}
-	
+				if(count($employee_tasks)>0) {
+					foreach ($employee_tasks as $task) {
+						if($task->task->active == 1) {
+							array_push($dataArr, ['name' => 'task', 'date' => date('Y-m-d',strtotime($task->created_at)) , 'employee' => $task->employee['first_name'] . ' ' .  $task->employee['last_name'] , 'task' => $task->task->task] );
+						}					
+					}
+				}			
+
 				$absences = VacationRequest::where('odobreno','DA')->whereYear('GOpocetak', $god_select)->get();
 				$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('GOzavršetak', $god_select)->get());
 				foreach($absences as $absence) {
@@ -120,7 +131,10 @@ class HomeController extends GodisnjiController
 					}
 				}
 	
-				return view('user.home', ['reg_employee' => $reg_employee,'ech' => $ech,'employee' => $employee,'zahtjevi_neodobreni' => $zahtjevi_neodobreni,'zahtjevi_odobreni' => $zahtjevi_odobreni,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires, 'evaluatingGroups' => $evaluatingGroups, 'evaluatingQuestions' => $evaluatingQuestions, 'educations' => $educations, 'evaluationTargets' => $evaluationTargets, 'evaluations' => $evaluations, 'dataArr' => $dataArr, 'ads' => $ads, 'presentations' => $presentations, 'employeeDepartments' => $employeeDepartments, 'catalog_manufacturers' => $catalog_manufacturers ]);
+				return view('user.home', ['reg_employee' => $reg_employee,'ech' => $ech,'employee' => $employee,'zahtjevi_neodobreni' => $zahtjevi_neodobreni,'zahtjevi_odobreni' => $zahtjevi_odobreni,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires,'educations' => $educations, 'dataArr' => $dataArr, 'ads' => $ads, 'employee_tasks' => $employee_tasks, 'presentations' => $presentations,'catalog_manufacturers' => $catalog_manufacturers ]);
+			} else if ( $temporary ) {
+				return view('user.home', ['temporary' => $temporary]);
+
 			} else {
 				if(Sentinel::inRole('visitor')) {
 					$message = session()->flash('success', 'Dobrodošao goste!');

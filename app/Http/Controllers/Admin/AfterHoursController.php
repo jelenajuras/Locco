@@ -83,22 +83,39 @@ class AfterHoursController extends GodisnjiController
 		$employee = Employee::where('employees.id',$input['employee_id'])->first();
 		$registration = Registration::join('works','registrations.radnoMjesto_id','works.id')->where('registrations.employee_id', $input['employee_id'])->select('registrations.*','works.*')->first();
 		
-		$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email');
-		
+		$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email'); // nadređeni iz uprave
+		$nadredjeni1 = $registration->user_id; // id nadređene osobe
+		$drugi_user_id = $registration->drugi_userId;   //postavljeno za prekovremene za IT 
+
 		$uprava = 'uprava@duplico.hr';
 	//	$uprava = 'jelena.juras@duplico.hr';
-		
-		$nadredjeni1 = $registration->user_id; // id nadređene osobe
-		
+	
 		$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
 		
-		//if($nadredjeni){
+	
+		try {
+			Mail::queue(
+				'email.zahtjevAfterHour',
+				['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
+				function ($message) use ($uprava, $employee) {
+					$message->to($uprava)
+						->from('info@duplico.hr', 'Duplico')
+						->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
+				}
+			);
+		} catch (Exception $e) {
+			$message = session()->flash('error', 'Mail nije poslan, došlo je do problema.');
+		
+			return redirect()->back()->withFlashMessage($message);
+		}
+		if($drugi_user_id){
+			$nadređeni_mail = Employee::where('id', $drugi_user_id)->first()->email;
 			try {
 				Mail::queue(
 					'email.zahtjevAfterHour',
 					['employee' => $employee,'datum' => $input['datum'],'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'napomena' => $input['napomena'],'vrijeme' => $vrijeme ],
-					function ($message) use ($uprava, $employee) {
-						$message->to($uprava)
+					function ($message) use ($nadređeni_mail, $employee) {
+						$message->to($nadređeni_mail)
 							->from('info@duplico.hr', 'Duplico')
 							->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
 					}
@@ -108,8 +125,7 @@ class AfterHoursController extends GodisnjiController
 			
 				return redirect()->back()->withFlashMessage($message);
 			}
-			
-		//}
+		}
 			
 		$message = session()->flash('success', 'Zahtjev je poslan');
 			

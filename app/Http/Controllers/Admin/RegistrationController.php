@@ -6,6 +6,7 @@ use App\Models\Registration;
 use App\Models\Employee;
 use App\Models\Work;
 use App\Models\Users;
+use App\Models\TemporaryEmployee;
 use App\Models\EffectiveHour;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegistrationRequest;
@@ -135,10 +136,10 @@ class RegistrationController extends Controller
 			Mail::queue(
 			'email.prijava3',
 			['djelatnik' => $djelatnik,'napomena' => $input['napomena'], 'radno_mj' => $radno_mj, 'ime' => $ime, 'prezime' => $prezime ],
-			function ($message) use ($zaduzena_osoba) {
-				$message->to($zaduzena_osoba)
-					->subject('Novi djelatnik - obavijest o' . ' početku ' . ' rada');
-			}
+				function ($message) use ($zaduzena_osoba) {
+					$message->to($zaduzena_osoba)
+						->subject('Novi djelatnik - obavijest o' . ' početku ' . ' rada');
+				}
 			);
 		}	
 		
@@ -182,7 +183,9 @@ class RegistrationController extends Controller
     public function show($id)
     {
 		$registration = Registration::find($id);
+
 		$effectiveHour = EffectiveHour::where('employee_id',$registration->employee_id )->first();
+		
 		return view('admin.registrations.show', ['registration' => $registration,'effectiveHour' => $effectiveHour]);
     }
 
@@ -286,5 +289,14 @@ class RegistrationController extends Controller
 		$registration = Registration::find($id);
 		$pdf = PDF::loadView('admin.registrations.show', compact('registration'));
 		return $pdf->download('djelatnik_'. $registration->id .'.pdf');
+	}
+
+	public function contacts()  
+	{
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name','employees.mobitel','employees.priv_mobitel', 'employees.email' )->orderBy('employees.last_name','ASC')->where('odjava',null)->get();
+
+		$temporary_Employees = TemporaryEmployee::where('odjava',null)->orderBy('last_name','ASC')->get();
+
+		return view('admin.contacts',['registrations' => $registrations, 'temporary_Employees' => $temporary_Employees]);
 	}
 }

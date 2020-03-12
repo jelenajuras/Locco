@@ -7,10 +7,10 @@
     padding-left: 30px;
 }
 th {
-    font-size: 12px;
+    font-size: 11px;
 } 
 td {
-    font-size: 14px;
+    font-size: 12px;
 } 
 input {
 	border: 1px solid;
@@ -31,14 +31,17 @@ input {
                     <thead>
                         <tr>
 							<th width="100" onclick="sortTable(0)">Ime i prezime</th>
-							<th width="80" onclick="sortTable(1)">Datum prijave</th>
-                            <th width="80" onclick="sortTable(2)">Datum rođenja</th>
-							<th width="150" onclick="sortTable(3)">Radno mjesto</th>
-							<th width="150" onclick="sortTable(4)">Nadređeni djelatnik</th>
-							<th width="150" onclick="sortTable(5)">
+							<th width="100" onclick="sortTable(1)">Telefon</th>
+							<th width="100" onclick="sortTable(1)">Privatan telefon</th>
+							<th width="100" onclick="sortTable(2)">E-mail</th>
+							<th width="80" onclick="sortTable(3)">Datum prijave</th>
+                            <th width="80" onclick="sortTable(4)">Datum rođenja</th>
+							<th width="150" onclick="sortTable(5)">Radno mjesto</th>
+						{{-- 	<th width="150" onclick="sortTable(6)">Nadređeni djelatnik</th> --}}
+							{{-- <th width="150" onclick="sortTable(7)">
 								Obračun<br>prokovremenih
 							</th>
-							<th>Stranac</th>
+							<th>Stranac</th> --}}
                             <th width="150" class="not-export-column">Opcije</th>
                         </tr>
                     </thead>
@@ -55,14 +58,17 @@ input {
 										{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}
 									</a>
 								</td>
+                                <td>{{ $registration->employee->mobitel }}</td>
+                                <td>{{ $registration->employee->priv_mobitel }}</td>
+                                <td>{{ $registration->employee->email }}</td>
                                 <td>{{ date('d.m.Y.', strtotime($registration->datum_prijave)) }}</td>
 								<td>{{ date('d.m.Y.', strtotime($registration->employee['datum_rodjenja'])) }}</td>
 								<td>{{ $registration->work['odjel'] . ' - ' . $registration->work['naziv'] }}</td>
-								<td>{{ $registration->superior['last_name'] . ' ' . $registration->superior['first_name'] }}</td>
-								<td>{!! $registration->slDani === 1 ? 'Slobodan dan' : 'Isplata' !!}
+							{{-- 	<td>{{ $registration->superior['last_name'] . ' ' . $registration->superior['first_name'] }}</td> --}}
+								{{-- <td>{!! $registration->slDani === 1 ? 'Slobodan dan' : 'Isplata' !!}
 								</td>
 								<td>{!! $registration->stranac === 1 ? 'Stranac' : '' !!} 
-								</td>
+								</td> --}}
 								<td>
 									@if(Sentinel::inRole('administrator'))
 										<a class="btn btn-block" role="button" data-toggle="collapse" href="#collapseExample{{$i}}" aria-expanded="false" aria-controls="collapseExample{{$i}}" id="stil1">

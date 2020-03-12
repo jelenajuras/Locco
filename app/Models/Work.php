@@ -47,7 +47,7 @@ class Work extends Model
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/
-	public function prvi_nadredjeni()
+	public function prvi_nadredjeni() //voditelj
 	{
 		return $this->belongsTo(static::$employeesModel,'prvi_userId');
 	}

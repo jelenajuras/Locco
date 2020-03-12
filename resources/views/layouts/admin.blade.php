@@ -64,13 +64,14 @@
 				@if(Sentinel::check() && !Sentinel::inRole('otkaz'))
 					<a href="{{ route('home') }}" class="naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
-					<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
-					
+					@if (! Sentinel::inRole('temporary'))
+						<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
+					@endif
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') )
 						@if(isset($reg_employee) && $reg_employee)
-						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
+							<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
 						@endif
-					@endif
+					@endif				
 					@if(Sentinel::getUser()->email == 'marina.sindik@duplico.hr')
 						<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
 					@endif
@@ -97,6 +98,7 @@
 							<a class="" href="{{ route('admin.job_interviews.index') }}">Razgovori za posao</a>
 							<a class="" href="{{ route('admin.employees.index') }}">Kandidati za posao</a>
 							<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>
+							<a class="" href="{{ route('admin.temporary_employees.index') }}">Privremeni radnici</a>
 							<a class="" href="{{ route('admin.employee_trainings.index') }}">Osposobljavanja radnika</a>
 							<a class="" href="{{ route('admin.employee_departments.index') }}">Zaposenici po odjelima</a>
 							<a class="" href="{{ route('admin.employee_equipments.index') }}">Zadužena oprema</a>
@@ -110,6 +112,11 @@
 							<a class="" href="{{ route('admin.job_records.index') }}">Evidencija rada</a>
 							<a class="" href="{{ route('admin.shedulers.index') }}">Raspored izostanaka</a>	
 						</div>
+						<button class="collapsible poruke"><span>Zadaci<i class="fas fa-caret-down"></i></span></button>
+						<div class="collapse">
+							<a class="" href="{{ route('admin.tasks.index') }}">Zadaci</a>
+						</div>
+
 						<button class="collapsible poruke"><span>Projekti<i class="fas fa-caret-down"></i></span></button>
 						<div class="collapse">
 							<a class="" href="{{ route('admin.customers.index') }}">Klijenti</a>

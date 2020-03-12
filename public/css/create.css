@@ -34,7 +34,7 @@
 .datum {
 	width:40%;
 	float:left;
-	padding: 10px;
+	padding: 0 10px;
 	position:relative;
 	margin:0 10px;
 }
@@ -42,14 +42,14 @@
 .do {
 	float:left;
 	padding: 10px 0px;
+	margin: 10px 0;
     width: 10%;
 	text-align:center;
 }
 
 .datum input {
-	position:absolute;
-	top:0;
-	right:0;
+	position: static;;
+
 	text-align:center;
 	padding-right:15px;
 }
@@ -65,10 +65,16 @@
 	margin-top:15px;
 }
 
+.form-group label.status {
+	font-weight: normal;
+	width: auto;
+    margin-right: 20px;
+}
+
 .iskorišteno {
 	border: 1px solid red;
 	padding: 5px;
-	margin:15px;
+	margin: 0 15px;
 	border-radius:5px;
 }
 
@@ -83,9 +89,9 @@
 
 .datum i {
 	left: 10px;
-	top:10px;
+    bottom: 10px;
     position: absolute;
-	padding-left:15px;
+    padding-left: 15px;
 }
 
 .napomena { 
@@ -248,4 +254,6 @@ p {
 .display-none {
 	display:none;
 }
-
+.employee_info p {
+	padding-left: 30px;
+}

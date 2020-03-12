@@ -508,6 +508,33 @@ Route::group(['prefix' => 'admin'], function () {
 		'update'		=> 'admin.visitors.update', 
 		'destroy'		=> 'admin.visitors.destroy'
 	]]);
+	Route::resource('tasks', 'Admin\TaskController', ['names' => [
+		'index' 		=> 'admin.tasks.index', 
+		'create' 		=> 'admin.tasks.create', 
+		'store' 		=> 'admin.tasks.store', 
+		'show' 			=> 'admin.tasks.show', 
+		'edit' 			=> 'admin.tasks.edit',  
+		'update'		=> 'admin.tasks.update', 
+		'destroy'		=> 'admin.tasks.destroy'
+	]]);
+	Route::resource('employee_tasks', 'Admin\EmployeeTaskController', ['names' => [
+		'index' 		=> 'admin.employee_tasks.index', 
+		'create' 		=> 'admin.employee_tasks.create', 
+		'store' 		=> 'admin.employee_tasks.store', 
+		'show' 			=> 'admin.employee_tasks.show', 
+		'edit' 			=> 'admin.employee_tasks.edit',  
+		'update'		=> 'admin.employee_tasks.update', 
+		'destroy'		=> 'admin.employee_tasks.destroy'
+	]]);
+	Route::resource('temporary_employees', 'Admin\TemporaryEmployeeController', ['names' => [
+		'index' 		=> 'admin.temporary_employees.index', 
+		'create' 		=> 'admin.temporary_employees.create', 
+		'store' 		=> 'admin.temporary_employees.store', 
+		'show' 			=> 'admin.temporary_employees.show', 
+		'edit' 			=> 'admin.temporary_employees.edit',  
+		'update'		=> 'admin.temporary_employees.update', 
+		'destroy'		=> 'admin.temporary_employees.destroy'
+	]]);
 });
 
 Route::get('visitors/{id}', ['as' => 'visitors', 'uses' => 'Admin\VisitorController@visitors_show']);
@@ -558,3 +585,7 @@ Route::get('admin/oglasnik', ['as' => 'admin.oglasnik', 'uses' => 'Admin\AdContr
 Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\PostController@shedulePost']);
 
 Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
+Route::post('confirmTask', ['as' => 'confirmTask', 'uses' => 'Admin\EmployeeTaskController@confirmTask']);
+
+
+Route::get('admin/contacts', ['as' => 'contacts', 'uses' => 'Admin\RegistrationController@contacts']);

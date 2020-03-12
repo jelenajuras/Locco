@@ -64,11 +64,13 @@
 					@endif
 				</p>
 				<div class="datum form-group editOption1 display-none {{ ($errors->has('GOpocetak')) ? 'has-error' : '' }}" >
+					<label class="padd_10">Od datuma</label>
 					<input name="GOpocetak" class="date form-control" type="date" value = "{{ old('GOpocetak')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
 					{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-				<span class="editOption2 do display-none" >do</span>
-				<div class="datum form-group editOption2 display-none">
+			
+				<div class="datum form-group editOption2 display-none">					
+					<label class="padd_10">Zaključno sa datumom</label>
 					<input name="GOzavršetak" class="date form-control" type="date" value ="{{ old('GOzavršetak')}}" id="date2"><i class="far fa-calendar-alt" ></i>
 					{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
 				</div>

@@ -2,6 +2,11 @@
 
 @section('title', 'Naslovnica')
 @php
+	use App\Models\EvaluatingGroup;
+	use App\Models\EvaluatingQuestion;
+	use App\Models\EvaluationTarget;
+	use App\Models\Evaluation;
+
 	if(isset($_GET['dan'])) {
 		$select_day = $_GET['dan'];
 	} else {
@@ -13,11 +18,14 @@
 @if(Sentinel::check())
 	@if(isset($dataArr))
 	<section class="calendar col-sm-12 col-md-12 col-lg-12">
-		<div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
-		
+		<div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>		
 		<div class="calender_view col-sm-12 col-md-12 col-lg-6"></div>
 		
-		<div class="all_events col-md-6">
+		<div class="all_events col-sm-12 col-md-12 col-lg-6">
+			@if (Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))
+				<a class="add_event" href="{{ route('admin.events.create') }}" ><span>Dodaj događaj</span></a>
+				<a class="add_event" href="{{ route('admin.tasks.create') }}" ><span>Dodaj zadatak</span></a>
+			@endif
 			@if(isset($select_day))
 				<h4>Događaji na dan {{ date("d.m.Y",strtotime($select_day)) }}</h4>
 				@foreach($dataArr as $key => $data)
@@ -47,11 +55,16 @@
 									<p>{{   $data['type'] . ' - ' . $data['title'] . ' - ' . $data['time']  }}</p>
 								@endif
 							@endif
+							@if($data['name'] == 'task')
+								@if(date("m-d-Y",strtotime($data['date'])) == date("m-d-Y",strtotime($select_day)) )
+									<p>{{ isset($data['task']) ? 'Zadatak' . ' - ' . $data['employee'] . ' - ' . $data['task'] : '' }}</p>
+								@endif
+							@endif
 						</div>
 					</div>
 				@endforeach
 			@endif
-			@if (Sentinel::inRole('administrator') || Sentinel::inRole('uprava'))<a class="add_event" href="{{ route('admin.events.create') }}" ><span>Dodaj događaj</span></a>@endif
+			
 		</div>
 	</section>
 	@endif
@@ -60,10 +73,10 @@
 			@if(isset($employee))
 				<div class="ech">
 					<p>{{ $employee->first_name . ' ' . $employee->last_name }} ukupan trošak Tvoje godišnje plaće iznosi 
-					<span class="efc"><b>{{  number_format($ech['brutto'],2,",",".") . ' kn' }}</b>.</span>
+					<span class="efc"><b>{!! $ech ? number_format($ech['brutto'],2,",",".") . ' kn' : '' !!}</b>.</span>
 					<span class="efc_show">prikaži</span>
 					<span class="efc_hide">sakrij</span></p>
-					<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{{  number_format($ech['effective_cost'],2,",",".") . ' kn' }}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
+					<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{!! $ech ?  number_format($ech['effective_cost'],2,",",".") . ' kn' : '' !!}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
 				</div>
 			@endif
 			<div class="dashboard_box1">
@@ -72,11 +85,14 @@
 						<a class="" href="{{ route('admin.noticeBoard') }}" ><span>Oglasna ploča</span></a>
 					</div>
 				</div>
-				<div class="BTNbox">
-					<div class="dashboard_box2 najava">
-						<a class="" href="{{ route('admin.announcement') }}" ><span>Najava aktivnosti</span></a>
+				@if (! Sentinel::inRole('temporary'))
+					<div class="BTNbox">
+						<div class="dashboard_box2 najava">
+							<a class="" href="{{ route('admin.announcement') }}" ><span>Najava aktivnosti</span></a>
+						</div>
 					</div>
-				</div>
+				@endif
+				
 				@if(isset($employee))
 					<div class="BTNbox">
 						<div class="dashboard_box2 benefits">
@@ -89,12 +105,29 @@
 						<a class="" href="{{ route('admin.show_instructions') }}"  ><span>Radne upute</span></a>
 					</div>
 				</div>
-				<div class="BTNbox">
-					<div class="dashboard_box2 oglasnik">
-						<a href="{{ route('admin.oglasnik') }}">
-							<span>Naše Njuškalo</span></a>
+				@if (! Sentinel::inRole('temporary'))
+					<div class="BTNbox">
+						<div class="dashboard_box2 oglasnik">
+							<a href="{{ route('admin.oglasnik') }}">
+								<span>Naš oglasnik</span></a>
+						</div>
 					</div>
-				</div>
+				@endif
+				@if(isset($temporary))
+					<div class="BTNbox">
+						<div class="dashboard_box2">
+							<a href="{{ route('admin.temporary_employees.show', $temporary->id) }}">
+								<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
+						</div>
+					</div>				
+				@endif
+				@if (isset($employee_tasks) && count($employee_tasks)>0)
+					<div class="BTNbox">
+						<div class="dashboard_box2 oglasnik">
+							<a class="" href="{{ route('admin.employee_tasks.index') }}"><span>Zadaci</span></a>
+						</div>
+					</div>
+				@endif				
 			</div>
 			@if(isset($reg_employee))
 				<div class="dashboard_box1">
@@ -113,21 +146,27 @@
 							<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
 						</div>
 					</div>
-					@if(isset($afterHours))
-						<div class="BTNbox">
-							<div class="dashboard_box2">
-								@if (Sentinel::inRole('administrator'))
-								<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
-								@else
-								<a class="" href="{{ route('admin.afterHours.create') }}"><span>Prekovremeni rad</span></a>
-								@endif
-							</div>
+				
+					<div class="BTNbox">
+						<div class="dashboard_box2">
+							@if (Sentinel::inRole('administrator'))
+							<a class="" href="{{ route('admin.afterHours.index') }}"><span>Prekovremeni rad</span></a>
+							@else
+							<a class="" href="{{ route('admin.afterHours.create') }}"><span>Prekovremeni rad</span></a>
+							@endif
 						</div>
-					@endif
+					</div>
+				
 					<div class="BTNbox">
 						<div class="dashboard_box2">
 							<a href="{{ route('admin.registrations.show', $reg_employee) }}">
 								<span>Opći podaci<br>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</span></a>
+						</div>
+					</div>
+					<div class="BTNbox">
+						<div class="dashboard_box2">
+							<a href="{{ route('contacts') }}">
+								<span>Kontakti<br>zaposlenika<span></a>
 						</div>
 					</div>
 					@if (Sentinel::inRole('uprava') || Sentinel::getUser()->last_name == 'Barberić')
@@ -144,7 +183,7 @@
 						<div class="BTNbox">
 							<div class="dashboard_box2">
 								<a href="{{ route('admin.catalog_categories.show',1) }}">
-									<span>Važne informacije za montere</span></a>
+									<span>Važne informacije<br>za montere</span></a>
 							</div>
 						</div>
 					@endif
@@ -179,7 +218,7 @@
 						</div>
 					</div>
 				</div>
-			@endif
+			@endif			
 		</div>		
 		@if(Sentinel::inRole('administrator'))
 			<div class="row">
@@ -316,7 +355,6 @@
 							</thead>
 							@foreach($zahtjevi_odobreni as $zahtjev)
 								<tbody>
-									@if(date('Y', strtotime( $zahtjev->GOzavršetak)) == $ova_godina)
 									<tr><td>{{ $zahtjev->employee['first_name'] . ' ' . $zahtjev->employee['last_name'] }}</td>
 										<td>{{ date('d.m.Y.', strtotime( $zahtjev->GOpocetak)) }}<br>
 										@if($zahtjev->GOzavršetak != $zahtjev->GOpocetak ){{ date('d.m.Y.', strtotime( $zahtjev->GOzavršetak)) }}
@@ -344,7 +382,6 @@
 										<td>{{ $zahtjev->napomena }}</td>
 										<td>{{ $zahtjev->odobreno }} {{ $zahtjev->razlog  }}</td>
 									</tr>
-									@endif
 								</tbody>
 							@endforeach
 						</table>
@@ -352,9 +389,15 @@
 				</div>
 			</div>
 		@endif
-		@if(isset($employee))
+		@if(isset($employee) && count($questionnaires) > 0)
 		<footer>
 			@foreach($questionnaires as $questionnaire)
+				@php
+					$evaluatingGroups = EvaluatingGroup::get();
+					$evaluatingQuestions = EvaluatingQuestion::get();
+					$evaluationTargets = EvaluationTarget::where('employee_id',$employee->id)->orderBy('created_at','DESC')->get();
+					$evaluations = Evaluation::where('employee_id',$employee->id)->get();
+				@endphp
 				@if(count($evaluations->where('questionnaire_id', $questionnaire->id)) > 0)
 					<div class="ech">
 						<div class="jumbotron">

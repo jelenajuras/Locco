@@ -254,3 +254,27 @@ h2{
 	visibility: hidden;
 }
 
+.form-control.input_interval {
+	width: 100px;
+    float: left;
+	margin-right: 15px;
+	text-align: center;
+}
+.form-control.select_period {
+	width: auto;
+    float: left;
+}
+
+.form-group#interval {
+	display: none;
+	overflow: hidden;
+}
+
+.label_period {
+	cursor: pointer;
+}
+
+.form_confirmeTask {
+	float: left;
+	margin-right: 15px;
+}

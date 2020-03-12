@@ -1189,4 +1189,77 @@ class GodisnjiController extends Controller
 
 		return $zahtjeviArray;
 	}
+
+	public static function go_na_dan ($employee_id, $date)
+	{
+		$zahtjevi = VacationRequest::where('employee_id',$employee_id)->where('odobreno','<>','NE')->get(); // svi zahtjevi djelatnika
+
+		foreach($zahtjevi as $zahtjev){
+			$begin = new DateTime($zahtjev->GOpocetak);
+			$end = new DateTime($zahtjev->GOzavršetak);
+			$end->setTime(0,0,1);
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+
+			foreach ($period as $dan) {
+				if(date_format($dan,'Y-m-d') == $date ){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	} 
+
+	public static function go_for_request ($employee_id, $date_start, $date_end)
+	{
+		$zahtjevi = VacationRequest::where('employee_id',$employee_id)->where('odobreno','<>','NE')->get(); // svi zahtjevi djelatnika
+		$response =  true;
+		if($date_start == $date_end) {
+			$response = GodisnjiController::go_na_dan($employee_id, $date_start);
+		} else {
+			foreach($zahtjevi as $zahtjev){		
+				$begin = new DateTime($zahtjev->GOpocetak);
+				$end = new DateTime($zahtjev->GOzavršetak);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+	
+				$begin_request = new DateTime($date_start);
+				$end_request = new DateTime($date_end);
+				$period_request = new DatePeriod($begin_request, $interval, $end_request);
+	
+				foreach ($period as $dan) {					
+					foreach ($period_request as $dan_zahtjev) {
+						if(date_format($dan,'Y-m-d') == date_format($dan_zahtjev,'Y-m-d') ){
+							$response =  false;
+						}
+					}				
+				}
+			}
+		}
+			
+		return $response;
+	} 
+
+	public static function go_na_dan_odobreni ($employee_id, $date)
+	{
+		$zahtjevi = VacationRequest::where('employee_id',$employee_id)->where('zahtjev', '<>', 'Izlazak')->where('odobreno', 'DA')->get(); // svi zahtjevi djelatnika
+
+		foreach($zahtjevi as $zahtjev){
+			$begin = new DateTime($zahtjev->GOpocetak);
+			$end = new DateTime($zahtjev->GOzavršetak);
+			$end->setTime(0,0,1);
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+
+			foreach ($period as $dan) {
+				if(date_format($dan,'Y-m-d') == $date){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	} 
 }
