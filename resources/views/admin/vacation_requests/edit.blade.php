@@ -10,6 +10,7 @@
 					<p>Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se odobri </p>
 					<select name="zahtjev" id="prikaz" oninput="this.className = ''" >
 						<option class="editable1" value="GO" {!! ($vacationRequest->zahtjev == 'GO' ? 'selected ': '') !!}>korištenje godišnjeg odmora za period od</option >
+						<option class="editable8" value="CEK"  {!! ($vacationRequest->zahtjev == 'CEK' ? 'selected ': '') !!} >čekanje</option>
 						<option class="editable2" value="Bolovanje" {!! ($vacationRequest->zahtjev == 'Bolovanje' ? 'selected ': '') !!}>bolovanje</option >
 						<option class="editable3"  value="Izlazak" {!! ($vacationRequest->zahtjev == 'Izlazak' ? 'selected ': '') !!}>Prijevremeni izlaz dana</option >
 						<option class="editable4" value="NPL" {!! ($vacationRequest->zahtjev == 'NPL' ? 'selected ': '') !!}>korištenje neplaćenog dopusta za period od</option>
@@ -53,7 +54,7 @@
 					</div>
 					<div class="form-group padd_10 { ($errors->has('sprema')) ? 'has-error' : '' }}" style="clear:left">
 						<label>Napomena:</label>
-						<textarea rows="4" name="napomena" type="text" class="form-control">{{ $vacationRequest->napomena }}</textarea>
+						<textarea rows="4" name="napomena" maxlength="500" type="text" class="form-control">{{ $vacationRequest->napomena }}</textarea>
 					</div>
 					@if (Sentinel::inRole('administrator'))
 						<div class="form-group">

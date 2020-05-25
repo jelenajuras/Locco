@@ -31,7 +31,7 @@
 				<p><label>Mjesto rodjenja: </label> {{ $temporaryEmployee->mjesto_rodjenja }}</p>
 				<p><label>Bračno stanje: </label> {{ $temporaryEmployee->bracno_stanje }}</p>
 				<p><label>Mobitel: </label> {{ $temporaryEmployee->mobitel }}</p>
-				<p><label>Privatan mobitel: </label> {{ $temporaryEmployee->priv_email }}</p>
+				<p><label>Privatan mobitel: </label> {{ $temporaryEmployee->priv_mobitel }}</p>
 				<p><label>E-mail: </label> {{ $temporaryEmployee->email }}</p>
 				<p><label>Privatan e-mail: </label> {{ $temporaryEmployee->priv_email }}</p>
 				<p><label>Prebivalište: </label> {{ $temporaryEmployee->prebivaliste_adresa . ', ' . $temporaryEmployee->prebivaliste_grad  }}</p>
@@ -41,8 +41,7 @@
 				<p><label>Datum prijave: </label> {{ date('d.m.Y', strtotime($temporaryEmployee->datum_prijave)) }}</p>
 				<p><label>Odjel: </label> {{ $temporaryEmployee->work['odjel'] }}</p>
 				<p><label>Radno mjesto: </label> {{ $temporaryEmployee->work['naziv']  }}</p>
-				<p><label>Nadređena osoba odjela: </label> {{ $temporaryEmployee->work->department->employee['first_name'] . ' ' . $temporaryEmployee->work->department->employee['last_name']  }}</p>
-				<br>
+				<p><label>Nadređena osoba odjela: </label> {{ $temporaryEmployee->work->nadredjeni['first_name'] . ' ' . $temporaryEmployee->work->nadredjeni['last_name']  }}</p>
 				<p><label>Voditelj radnog mjesta: </label> {{ $temporaryEmployee->work->prvi_nadredjeni['first_name'] . ' ' . $temporaryEmployee->work->prvi_nadredjeni['last_name']  }}</p>
 				<p><label>Nadređena osoba radnog mjesta: </label> {{ $temporaryEmployee->work->nadredjeni['first_name'] . ' ' . $temporaryEmployee->work->nadredjeni['last_name']  }}</p>
 				@if ($temporaryEmployee->superior_id)

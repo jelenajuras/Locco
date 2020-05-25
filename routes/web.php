@@ -152,8 +152,8 @@ Route::group(['prefix' => 'admin'], function () {
 		'index' 		=> 'admin.afterHours.index', 
 		'create' 		=> 'admin.afterHours.create', 
 		'store' 		=> 'admin.afterHours.store', 
-		'show' 		=> 'admin.afterHours.show', 
-		'edit' 		=> 'admin.afterHours.edit', 
+		'show' 			=> 'admin.afterHours.show', 
+		'edit' 			=> 'admin.afterHours.edit', 
 		'update'		=> 'admin.afterHours.update', 
 		'destroy'		=> 'admin.afterHours.destroy'
 	]]);
@@ -535,6 +535,15 @@ Route::group(['prefix' => 'admin'], function () {
 		'update'		=> 'admin.temporary_employees.update', 
 		'destroy'		=> 'admin.temporary_employees.destroy'
 	]]);
+	Route::resource('temporary_employee_requests', 'Admin\TemporaryEmployeeRequestController', ['names' => [
+		'index' 		=> 'admin.temporary_employee_requests.index', 
+		'create' 		=> 'admin.temporary_employee_requests.create', 
+		'store' 		=> 'admin.temporary_employee_requests.store', 
+		'show' 			=> 'admin.temporary_employee_requests.show', 
+		'edit' 			=> 'admin.temporary_employee_requests.edit',  
+		'update'		=> 'admin.temporary_employee_requests.update', 
+		'destroy'		=> 'admin.temporary_employee_requests.destroy'
+	]]);
 });
 
 Route::get('visitors/{id}', ['as' => 'visitors', 'uses' => 'Admin\VisitorController@visitors_show']);
@@ -561,13 +570,14 @@ Route::get('/prijava_pdf/{employee_id}','Admin\EmployeeController@prijava_pdf');
 Route::get('/{id}','DocumentController@generate_pdf');
 
 Route::get('admin/confirmation', ['as' => 'admin.confirmation', 'uses' => 'Admin\VacationRequestController@storeConf']);
-Route::get('admin/confDirector', ['as' => 'admin.confDirector', 'uses' => 'Admin\VacationRequestController@confDirector']);
+Route::get('admin/confirmationTemp', ['as' => 'admin.confirmationTemp', 'uses' => 'Admin\TemporaryEmployeeRequestController@storeConf']);
+Route::post('admin/confDirector', ['as' => 'admin.confDirector', 'uses' => 'Admin\VacationRequestController@confDirector']);
 Route::get('admin/confirmation_show', ['as' => 'admin.confirmation_show', 'uses' => 'Admin\VacationRequestController@confirmation_show']);
 Route::get('admin/VacationRequest', ['as' => 'admin.VacationRequest', 'uses' => 'Admin\VacationRequestController@VacationRequest']);
 Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'uses' => 'Admin\VacationRequestController@AllVacationRequest']);
 
 Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses' => 'Admin\AfterHoursController@storeConf']);
-Route::get('admin/confDirectorAfter', ['as' => 'admin.confDirectorAfter', 'uses' => 'Admin\AfterHoursController@confDirectorAfter']);
+Route::post('admin/confDirectorAfter', ['as' => 'admin.confDirectorAfter', 'uses' => 'Admin\AfterHoursController@confDirectorAfter']);
 Route::get('admin/confirmationAfter_show', ['as' => 'admin.confirmationAfter_show', 'uses' => 'Admin\AfterHoursController@confirmationAfter_show']);
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
@@ -587,5 +597,9 @@ Route::get('admin/shedulePost', ['as' => 'admin.shedulePost', 'uses' => 'Admin\P
 Route::get('admin/shedule', ['as' => 'admin.shedule', 'uses' => 'Admin\ShedulerController@shedule']);
 Route::post('confirmTask', ['as' => 'confirmTask', 'uses' => 'Admin\EmployeeTaskController@confirmTask']);
 
-
 Route::get('admin/contacts', ['as' => 'contacts', 'uses' => 'Admin\RegistrationController@contacts']);
+Route::get('admin/deleteDoc', ['as' => 'deleteDoc', 'uses' => 'DocumentController@deleteDoc']);
+
+Route::get('importExport', 'Admin\JobRecordController@importExport');
+Route::get('downloadExcel/{type}', 'Admin\JobRecordController@downloadExcel');
+Route::post('importExcel', 'Admin\JobRecordController@importExcel');

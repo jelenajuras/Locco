@@ -122,9 +122,30 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 	display:inline-block;
 	width:100%;
 	height:100%;
+}
+
+.yellow {
 	background-color:yellow;
 }
 
+.green {
+	background-color:lightgreen;
+}
+.blue {
+	background-color:cornflowerblue;
+}
+.purple {
+	background-color:mediumpurple;
+}
+.pink {
+	background-color:pink;
+}
+.d_pink {
+	background-color:hotpink;
+}
+.l_blue {
+	background-color:deepskyblue;
+}
 button[type="submit"] {
 	padding:5px 20px;
 	border-radius: 5px;

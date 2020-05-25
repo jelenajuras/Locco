@@ -228,7 +228,13 @@ class NoticeController extends Controller
     {
         $notice = Notice::find($id);
 
-		return view('admin.notices.show', ['notice' => $notice]);
+		if($notice) {
+			return view('admin.notices.show', ['notice' => $notice]);
+		} else {
+			$message = session()->flash('error', 'Obavijest više ne postoji');
+			return redirect()->route('home')->withFlashMessage($message);
+		}
+		
     }
 
     /**

@@ -42,11 +42,18 @@
 								@endif
 							@endforeach
 							<th >Ukupno neiskorišteno <br>dana  GO</th>
+							@if(Sentinel::inRole('administrator'))
+								<th >Ukupno prekovremenih sati <br></th>
+								<th >Ukupno izlazaka <br>sati [dana]</th>
+								<th >Ukupno slobodnih <br>dana</th>
+								<th >Korišteno slobodnih <br>dana</th>
+							@endif
 							<th >Neiskorišteni <br>slobodni <br>dani</th>							
                         </tr>
                     </thead>
                     <tbody id="myTable">
 						@foreach ($registrations as $registration)
+
 							<?php 
 								$prijenos_zahtjeva = 0;								
 								/* Staž Duplico */
@@ -64,6 +71,8 @@
 								$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($registration); // zahtjevi dani za godinu
 								$slDani = GodisnjiController::prekovremeni_bez_izlazaka($registration);
 								$koristeni_slDani = GodisnjiController::koristeni_slobodni_dani($registration);		
+								$izlasci_ukupno = GodisnjiController::izlasci_ukupno($registration);	
+								$prekovremeni_sati = round(GodisnjiController::prekovremeni_sati( $registration ),0,1);
 								$ukupno_GO = 0;
 								$ukupnoDani = 0;
 							?>
@@ -78,7 +87,7 @@
 									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td>										<!-- Ukupan staž -->
 									@foreach ($godine as $godina)
 										@php
-											$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani prošla godina
+											$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani zadana godina
 											if ($godina == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
 												$ukupno_GO += $razmjeranGO_PG;
 											} elseif ( $godina == $ova_godina ){
@@ -108,8 +117,14 @@
 											<td class="3">{{ count ($zahtjeviSveGodine[$godina] ) }}</td>	
 										@endif																				
 									@endforeach
-									<td class="width_10">{{ $ukupno_GO - $ukupnoDani }}</td>
-									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td>
+									<td class="width_10">{{ $ukupno_GO - $ukupnoDani }}</td> <!-- Neiskorišteni dani GO -->
+									@if(Sentinel::inRole('administrator'))
+										<td >{{ $prekovremeni_sati }}</td> <!-- Prekovremeni sati  -->
+										<td class="width_10">{{ $izlasci_ukupno }} <br> [ {{ round(strstr($izlasci_ukupno, ':', true) /8, 0, PHP_ROUND_HALF_DOWN) }} ]</td> <!-- Izlasci -->
+										<td >{{ $slDani }} </td> <!--Ukupno slobodnih dana -->
+										<td >{{ $koristeni_slDani }} </td> <!-- korištenih slobodnih dana -->
+									@endif
+									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td><!-- Neiskorišteni slobodni dani -->
 								</tr>
 						 @endforeach
                     </tbody>

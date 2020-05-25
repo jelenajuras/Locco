@@ -27,9 +27,9 @@
 					$dani = GodisnjiController::daniGO(['GOpocetak' => $vacationRequest->GOpocetak, 'GOzavršetak' => $vacationRequest->GOzavršetak] );
 				?>
 				<tr>
-					<td>{{ $vacationRequest->employee['first_name'] . ' ' . $vacationRequest->employee['last_name']}}</td>
-					<td>{{ date('d.m.Y.', strtotime( $vacationRequest->GOpocetak)) }}</td>
-					<td>{{ date('d.m.Y.', strtotime( $vacationRequest->GOzavršetak)) }}</td>
+					<td>{{  $vacationRequest->employee['last_name']  . ' ' . $vacationRequest->employee['first_name']}}</td>
+					<td>{{ date('d.m.Y', strtotime( $vacationRequest->GOpocetak)) }}</td>
+					<td>{{ date('d.m.Y', strtotime( $vacationRequest->GOzavršetak)) }}</td>
 					<td>{{ $dani }}</td>
 					<td>{{ $vacationRequest->zahtjev }}</td>
 					<td class="align-left">{{ $vacationRequest->napomena }}</td>

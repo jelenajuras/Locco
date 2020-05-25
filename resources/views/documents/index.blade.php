@@ -19,7 +19,8 @@
 					<label class="padd_10">Za djelatnika </label>
 					<select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required>
 						<option selected="selected" value=""></option>
-						<option name="svi" value="svi">Svi zaposlenici</option>
+						<option name="svi" value="svi_djelatnici">Svi zaposlenici</option>
+						<option name="svi" value="svi_korisnici">Svi korisnici</option>
 						@foreach($registrations as $djelatnik)
 							@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
 								<option name="employee_id" value="{{ $djelatnik->employee_id }}">{{ $djelatnik->last_name  . ' ' . $djelatnik->first_name }}</option>
@@ -38,7 +39,7 @@
 		</div>
 	@endif
 	<div class="documents"> <!-- -->
-		@if($docs)
+		@if( $docs)
 			<h3>Dokumenti djelatnika</h3>
 			@foreach($docs as $doc)
 				<?php  $myfile = fopen('storage/' . $user_name . '/' . $doc, 'r') or die("Unable to open file!");
@@ -49,22 +50,53 @@
 				<div class="document">
 					<p><a href="{{action('DocumentController@generate_pdf', $open ) }}" target="_blank" >
 						{{ $doc }}
+						@if(Sentinel::inRole('administrator'))
+							<a href="{{action('DocumentController@deleteDoc', ['path' => 'storage/' . $user_name . '/' . $doc ]) }}" class="action_confirm deleteDoc" >
+								<i class="far fa-trash-alt"></i>
+							</a>
+						@endif
+					</a></p>
+				</div>
+				<?php fclose($myfile);?>
+			@endforeach
+		@endif
+		@if($employee && $docs2)
+			<h3>Dokumenti - djelatnici</h3>
+			@foreach($docs2 as $doc2)
+				<?php  $myfile = fopen('storage/svi_djelatnici/' . $doc2, 'r') or die("Unable to open file!");
+				  $path = storage_path($myfile);
+				  
+					$open2 = 'storage/svi_djelatnici/' . $doc2 . '#toolbar=0&scrollbar=0&navpanes=1';
+				?>
+				<div class="document">
+					<p><a href="{{action('DocumentController@generate_pdf', $open2 ) }}" target="_blank" >
+						{{ $doc2 }}
+						@if(Sentinel::inRole('administrator'))
+							<a href="{{action('DocumentController@deleteDoc', ['path' => 'storage/svi_djelatnici/' . $doc2 ]) }}" class="action_confirm deleteDoc" >
+								<i class="far fa-trash-alt"></i>
+							</a>
+						@endif
 				</a></p>
 				</div>
 				<?php fclose($myfile);?>
 			@endforeach
 		@endif
-		@if($docs2)
-			<h3>Dokumenti opće</h3>
-			@foreach($docs2 as $doc2)
-				<?php  $myfile = fopen('storage/svi/' . $doc2, 'r') or die("Unable to open file!");
+		@if($docs3)
+			<h3>Dokumenti - korisnici</h3>
+			@foreach($docs3 as $doc3)
+				<?php  $myfile = fopen('storage/svi_korisnici/' . $doc3, 'r') or die("Unable to open file!");
 				  $path = storage_path($myfile);
 				  
-					$open2 = 'storage/svi/' . $doc2 . '#toolbar=0&scrollbar=0&navpanes=1';
+					$open3 = 'storage/svi_korisnici/' . $doc3 . '#toolbar=0&scrollbar=0&navpanes=1';
 				?>
 				<div class="document">
-					<p><a href="{{action('DocumentController@generate_pdf', $open2 ) }}" target="_blank" >
-						{{ $doc2 }}
+					<p><a href="{{action('DocumentController@generate_pdf', $open3 ) }}" target="_blank" >
+						{{ $doc3 }}
+						@if(Sentinel::inRole('administrator'))
+							<a href="{{action('DocumentController@deleteDoc', ['path' => 'storage/svi_korisnici/' . $doc3 ]) }}" class="action_confirm deleteDoc" >
+								<i class="far fa-trash-alt"></i>
+							</a>
+						@endif
 				</a></p>
 				</div>
 				<?php fclose($myfile);?>
@@ -72,4 +104,36 @@
 		@endif
 	</div>
 </div>
+<script>
+
+	var url;
+	
+	$('.deleteDoc').click(function(event){
+		event.preventDefault();
+		var txt;
+		var r = confirm("Želiš li sigurno obrisati dokumenat?");
+		if (r == true) {
+			
+			url = $( this ).attr('href');
+			console.log(url);
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			$.ajax({
+				url: url,
+				type: "get",
+				success: function( response ) {
+					location.reload();
+				},
+				error: function(xhr,textStatus,thrownError) {
+					console.log(xhr + "\n" + textStatus + "\n" + thrownError);
+				}
+			});
+		}
+	});
+	
+
+</script>
 @stop

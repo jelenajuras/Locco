@@ -49,7 +49,7 @@ class HomeController extends GodisnjiController
 				if(Sentinel::inRole('administrator')) {
 					$zahtjevi_neodobreni = VacationRequest::where('odobreno',null)->orderBy('GOpocetak','DESC')->get();
 					$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->whereYear('GOzavršetak',$ova_godina )->orderBy('GOpocetak','DESC')->get()->take(30);
-					$afterHours = AfterHour::where('odobreno', null)->get();
+					$afterHours = AfterHour::where('odobreno', null)->orderBy('datum','DESC')->get();
 				} else {
 					$zahtjevi_neodobreni = null;
 					$zahtjevi_odobreni = null;

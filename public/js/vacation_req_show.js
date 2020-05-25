@@ -85,4 +85,15 @@ $('#prikaz').change(function(){
 	  $('.text1').hide();
 	  $('.text2').show();
 	}
+	if(selected == "editable8"){
+		$('.editOption1').show();
+		$('.editOption2').show();
+		$('.editOption3').hide();
+		$('.editOption4').hide();
+		$('.uputa_RGO').hide();
+		$('.uputa_NPL').hide();
+		$('.uputa_PL').hide();
+		$('.text1').show();
+		$('.text2').hide();
+	  }
 	});

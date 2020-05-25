@@ -130,12 +130,12 @@ class ShedulerController extends Controller
 	
 	public function shedule (Request $request)
 	{
-		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->get();
+		$employees = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->where('odjava',null)->get();
 
         $datum = explode('-', $request['mjesec']);
 		$godina = $datum[0];
         $mjesec = $datum[1];
-
+       
 		return view('admin.shedule')->with('employees',$employees)->with('mjesec', $mjesec)->with('godina', $godina);
 		
 	}

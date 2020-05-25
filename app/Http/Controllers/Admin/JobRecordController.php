@@ -8,6 +8,7 @@ use App\Models\JobRecord;
 use App\Http\Requests\JobRecordRequest;
 use App\Models\EmployeeTermination;
 use App\Models\Registration;
+use Excel;
 
 class JobRecordController extends Controller
 {
@@ -144,5 +145,31 @@ class JobRecordController extends Controller
 		
 		return redirect()->back()->withFlashMessage($message);
     }
-	
+
+    /**
+     * Import file into database Code
+     *
+     * @var array
+     */
+	public function importExcel(Request $request)
+	{
+		if($request->hasFile('import_file')){
+			$path = $request->file('import_file')->getRealPath();
+
+			$data = Excel::load($path, function($reader) {})->get();
+           
+			if(!empty($data) && $data->count()){
+				foreach ($data->toArray() as $key => $v) {
+                        
+                        $insert = array('employee_id' => intval($v['employee_id']), 'date' => $v['date'], 'task' => $v['task'], 'odjel' => $v['odjel'], 'time' => $v['time'], 'task_manager' => intval($v['task_manager']));
+                            $jobRecord = new JobRecord();
+                            $jobRecord->saveJobRecord($insert);
+				}
+
+            }
+            return back()->with('success','Insert Record successfully.');
+		}
+        return back()->with('error','Please Check your file, Something is wrong there.');
+        
+    }
 }

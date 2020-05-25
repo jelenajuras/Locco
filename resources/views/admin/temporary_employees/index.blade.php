@@ -59,11 +59,14 @@ input {
 								<td>{{ $temporaryeEmployee->employee['last_name'] . ' ' . $temporaryeEmployee->employee['first_name'] }}</td>							
 								<td>
 									@if(Sentinel::inRole('administrator'))
-										<a href="{{ route('admin.temporary_employees.edit', $temporaryeEmployee->id) }}" class="btn">
+										<a href="{{ route('admin.temporary_employees.edit', $temporaryeEmployee->id) }}" >
 											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 										</a>
 										<a href="{{ route('admin.temporary_employees.destroy', $temporaryeEmployee->id) }}" class="action_confirm {{ ! Sentinel::inRole('administrator') ? 'disabled' : '' }}" data-method="delete" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
+										</a>
+										<a href="{{ route('admin.temporary_employee_requests.index', ['id' => $temporaryeEmployee->id ]) }}" title="Zahtjevi djelatnika" >
+											<i class="fas fa-list"></i>
 										</a>
 									@endif
 								</td>	

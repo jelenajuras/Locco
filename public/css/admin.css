@@ -837,7 +837,12 @@ input.odobri {
 
 }
 
-.conf_form {
+input.neodobri {
+	background: inherit;
+    color: red;
+
+}
+.conf_form, .after_form {
 	display: inline-flex;
 }
 

@@ -26,7 +26,7 @@ class WorkController extends Controller
      */
     public function index()
     {
-        $works = Work::orderBy('odjel','ASC')->orderBy('naziv','ASC')->paginate(100);
+        $works = Work::orderBy('odjel','ASC')->orderBy('naziv','ASC')->get();
 				
 		    return view('admin.works.index',['works'=>$works]);
     }

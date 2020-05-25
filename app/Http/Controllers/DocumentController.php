@@ -43,20 +43,26 @@ class DocumentController extends Controller
 		$employee = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->where('employees.first_name',$user->first_name)->where('employees.last_name',$user->last_name)->first();
 		
 		$path = 'storage/' . $user_name;
-		if($path){
+		if(file_exists($path)){
 			$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
 		}else {
 			$docs = '';
 		}
 		
-		$path2 = 'storage/svi/';
-		if($path2){
+		$path2 = 'storage/svi_djelatnici/';
+		if(file_exists($path2)){
 			$docs2 = array_diff(scandir($path2), array('..', '.', '.gitignore'));
 		}else {
 			$docs2 = '';
 		}
+		$path3= 'storage/svi_korisnici/';
+		if(file_exists($path3)){
+			$docs3 = array_diff(scandir($path3), array('..', '.', '.gitignore'));
+		}else {
+			$docs3 = '';
+		}
 		
-		return view('documents.index',['docs' => $docs,'docs2' => $docs2, 'user_name' => $user_name, 'registrations'=>$registrations,'registrations'=>$registrations,'employee'=>$employee]);
+		return view('documents.index',['docs' => $docs,'docs2' => $docs2,'docs3' => $docs3, 'user_name' => $user_name, 'registrations'=>$registrations,'employee'=>$employee]);
     }
 
     /**
@@ -79,15 +85,24 @@ class DocumentController extends Controller
     {
 		$employee = Employee::where('id',$request->employee_id)->first();
 
-		if($request['employee_id'] == 'svi'){
-			$user_name = 'svi';
+		if($request['employee_id'] == 'svi_djelatnici'){
+			$user_name = 'svi_djelatnici';
+		} else if($request['employee_id'] == 'svi_korisnici'){
+			$user_name = 'svi_korisnici';
 		} else {
 			$user_name = explode('.',strstr($employee->email,'@',true));
 			$user_name = $user_name[1] . '_' . $user_name[0];
 		}
 		
+		if(! file_exists('storage/')){
+			mkdir('storage/');			
+		}
+
 		$target_dir = 'storage/' . $user_name . "/";  //specifies the directory where the file is going to be placed
 		
+		if(! file_exists($target_dir)){
+			mkdir($target_dir);			
+		}
 		// Create directory
 		
 		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
@@ -182,5 +197,14 @@ class DocumentController extends Controller
 	public function generate_pdf($id) 
 	{
 		return $pdf->inline($id);
+	}
+
+	public function deleteDoc(Request $request) 
+	{
+	 	if(file_exists($request['path'])) {
+			unlink($request['path']); // delete file
+		}
+		
+		return redirect()->back()->with('success', 'Dokumenat je obrisan');
 	}
 }

@@ -16,6 +16,7 @@ class CreateInstructionsTable extends Migration
         Schema::create('instructions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('department_id');
+            $table->integer('active')->nullable();
             $table->string('title',255);
             $table->text('description');
             $table->timestamps();

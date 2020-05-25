@@ -70,7 +70,8 @@ class InstructionController extends Controller
             $data = array(
                 'department_id' => $department_id,
                 'title'         => $request['title'],
-                'description'   => $request['description']
+                'description'   => $request['description'],
+                'active'   => $request['active']
             );
             
             $instruction = new Instruction();
@@ -170,31 +171,37 @@ class InstructionController extends Controller
     public function show_instructions()
      {
         $employee = Employee::where('first_name', Sentinel::getUser()->first_name)->where('last_name', Sentinel::getUser()->last_name)->first();
-        $reg_employee = Registration::where('employee_id', $employee->id)->first();
-        $instructions = Instruction::orderBy('title', 'ASC')->get();
-        $employee_departments = array();
-        $employee_instructions = collect();
-
-        if ($reg_employee) {
-            $departments = Employee_department::where('employee_id',$employee->id )->get();
-                foreach( $departments as $department) {
-                    array_push($employee_departments,$department->department_id);
-                    array_push($employee_departments, 10); // odjel "svi"
-                    if ($department->level == 2 ) {
-                        array_push($employee_departments,$department->level1);
-                    } 
-                }
-                $employee_departments =  array_unique($employee_departments);
-               
-                foreach ($employee_departments as $department_id) {
-                    $employee_instructions = $employee_instructions->merge($instructions->where('department_id', $department_id));
-
-                }   
-                $employee_instructions =  $employee_instructions->unique('title');
-		} else {
-            $employee_instructions =  $instructions->where('department_id',10);
+        $instructions = Instruction::where('active','<>',null)->orderBy('title', 'ASC')->get();
+        
+        if ($employee ) {
+            $reg_employee = Registration::where('employee_id', $employee->id)->first();
+            
+            $employee_departments = array();
+            $employee_instructions = collect();
+    
+            if ($reg_employee) {
+                $departments = Employee_department::where('employee_id',$employee->id )->get();
+                    foreach( $departments as $department) {
+                        array_push($employee_departments,$department->department_id);
+                        array_push($employee_departments, 10); // odjel "svi"
+                        if ($department->level == 2 ) {
+                            array_push($employee_departments,$department->level1);
+                        } 
+                    }
+                    $employee_departments =  array_unique($employee_departments);
+                   
+                    foreach ($employee_departments as $department_id) {
+                        $employee_instructions = $employee_instructions->merge($instructions->where('department_id', $department_id));
+    
+                    }   
+                    $employee_instructions =  $employee_instructions->unique('title');
+            } else {
+                $employee_instructions =  $instructions->where('department_id' ,10);
+            }
+        } else {
+            $employee_instructions =  $instructions->where('department_id' ,10);
         }
-
+        
         return view('admin.show_instructions', ['employee_instructions'=>$employee_instructions]);
     }
     
@@ -227,6 +234,7 @@ class InstructionController extends Controller
         $data = array(
             'department_id' => $request['department_id'],
             'title'         => $request['title'],
+            'active'   => $request['active'],
             'description'   => $request['description']
         );
         

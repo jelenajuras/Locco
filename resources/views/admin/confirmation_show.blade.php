@@ -30,7 +30,7 @@
 	<div class="odobrenje" >
 @endif
 	<h3>Odobrenje zahtjeva</h3>
-		<form name="contactform" method="get" action="{{ route('admin.confDirector') }}">
+		<form name="contactform" method="post" action="{{ route('admin.confDirector') }}">
 			<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="razlog" value=""><br>
 			<input type="hidden" name="id" value="{{ $vacationRequest_id}}"><br>
 			<input type="radio" name="{!! isset($vacationRequest) && $vacationRequest->employee->work->nadredjeni->id == $employee->id ? 'odobreno' : 'odobreno2' !!}" value="DA" checked> Odobreno
@@ -45,6 +45,7 @@
 				<input type="radio" name="email" value="DA" checked> Poslati e-mail<br>
 				<input type="radio" name="email" value="NE"> Ne slati mail
 			</div>
+			{{ csrf_field() }}
 			<input class="odobri" type="submit" value="Pošalji">
 		</form>
 </div>

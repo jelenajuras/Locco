@@ -91,7 +91,6 @@ class VacationRequestController extends GodisnjiController
 			} else {
 				$GO_dani += GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani za sve godine
 			}
-			
 		}
 	
 		$sviZahtjeviZaGodine = $this->zahtjeviSveGodine($registration);
@@ -124,7 +123,7 @@ class VacationRequestController extends GodisnjiController
 			$input['GOzavršetak'] = $input['GOpocetak'];
 		}
 
-		if($input['employee_id'] == 'svi'){   	
+		if($input['employee_id'] == 'svi'){
 			$registrations = Registration::where('odjava', null)->get();    /* svi prijavljeni djelatnici */										/* AKO JE ZAHTJEV NA SVE DJELATNIKE */
 			foreach($registrations as $registration){
 					$data = array(
@@ -141,7 +140,7 @@ class VacationRequestController extends GodisnjiController
 					$vacationRequest = new VacationRequest();
 					$vacationRequest->saveVacationRequest($data);
 			}
-		} elseif(is_array($input['employee_id']) && count($input['employee_id'])>1) {   /* ZAHTJEV NA VIŠE DJELATNIKA */
+		} elseif(is_array($input['employee_id']) && count($input['employee_id'])>0) {   /* ZAHTJEV NA VIŠE DJELATNIKA */
 			foreach($input['employee_id'] as $employee_id){
 				$data = array(
 				'zahtjev'  			=> $input['zahtjev'],
@@ -151,7 +150,7 @@ class VacationRequestController extends GodisnjiController
 				'vrijeme_od'  		=> $input['vrijeme_od'],
 				'vrijeme_do'  		=> $input['vrijeme_do'],
 				'napomena'  		=> $input['napomena'],
-				'odobreno' 			=> '',   // ODOBRENO ILI NE????
+				'odobreno' 			=> null,   // ODOBRENO ILI NE????
 				'odobrio_id' 		=> '58'
 				);
 				
@@ -162,11 +161,11 @@ class VacationRequestController extends GodisnjiController
 			$user = Registration::where('employee_id', $input['employee_id'] )->first(); 	/* djelatnik */
 			$employee_mail = $user->employee['email'];										/* mail djelatnika */
 
-			$begin = new DateTime($input['GOpocetak']);
+			/* $begin = new DateTime($input['GOpocetak']);
 			$end = new DateTime($input['GOzavršetak']);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
-			$period = new DatePeriod($begin, $interval, $end);
+			$period = new DatePeriod($begin, $interval, $end); */
 		
 			$request_exist = GodisnjiController::go_for_request($input['employee_id'], $input['GOpocetak'], $input['GOzavršetak'] );
 		
@@ -175,7 +174,7 @@ class VacationRequestController extends GodisnjiController
 				return redirect()->back()->withFlashMessage($message);
 			} else {
 				
-				$GOzavršetak = new DateTime($request->GOzavršetak);
+			/* 	$GOzavršetak = new DateTime($request->GOzavršetak); */
 			
 				$zahtjev = array('GOpocetak' =>$input['GOpocetak'], 'GOzavršetak' =>$input['GOzavršetak']);  // array zatjev početak - kraj
 				$dani_zahtjev = $this->daniGO($zahtjev); 										//vraća broj dana zahtjeva
@@ -251,6 +250,9 @@ class VacationRequestController extends GodisnjiController
 						$vrijeme="";
 					} elseif($input['zahtjev'] == 'VIK'){
 						$zahtjev2 = 'slobodan vikend';
+						$vrijeme="";
+					} elseif($input['zahtjev'] == 'CEK'){
+						$zahtjev2 = 'čekanje';
 						$vrijeme="";
 					}
 					
@@ -516,12 +518,15 @@ class VacationRequestController extends GodisnjiController
 			}elseif($input['zahtjev'] == 'VIK'){
 				$zahtjev2 = 'slobodan vikend';
 				$vrijeme="";
+			} elseif($input['zahtjev'] == 'CEK'){
+				$zahtjev2 = 'čekanje';
+				$vrijeme="";
 			}
 			
 			if($input['email'] == 'DA' ){
 				$work = Work::where('id', $user->radnoMjesto_id)->first();   //radno mjesto zaposlenika
-				$department = $work->department; 							// odjel kojem pripada radno mjesto
-				$department_nadredjeni = $department->employee; 			 // nadređeni odjela
+				/* $department = $work->department; 							// odjel kojem pripada radno mjesto
+				$department_nadredjeni = $department->employee; 			 // nadređeni odjela */
 				$work_nadredjeni = $work->nadredjeni;    					// glavni nadređeni radnog mjesta
 				$work_voditelj = $work->prvi_nadredjeni;    				// voditelj radnog mjesta
 				$registration_superior = $user->superior;   				// nadređeni djelatnik - Registration
@@ -634,7 +639,12 @@ class VacationRequestController extends GodisnjiController
 			$zahtjev2 = 'neplaćeni dopust';
 		} elseif ($vacationRequest->zahtjev == 'VIK'){
 			$zahtjev2 = 'slobodan vikend';
+		} elseif ($vacationRequest->zahtjev == 'CEK'){
+			$zahtjev2 = 'čekanje';
+		} else {
+			$zahtjev2 = '';
 		}
+
 		if($vacationRequest->napomena) {
 			$zahtjev2 .= ' (' . $vacationRequest->napomena . ')';
 		}
@@ -642,8 +652,8 @@ class VacationRequestController extends GodisnjiController
 		$employee = $vacationRequest->employee;
 		$ime = $employee->first_name . ' ' . $employee->last_name;
 		$work = $vacationRequest->employee->work;   					//radno mjesto zaposlenika
-		$department = $vacationRequest->employee->work->department; 	// odjel kojem pripada radno mjesto
-		$department_nadredjeni = $department->employee; 			 	// nadređeni odjela
+		/* $department = $vacationRequest->employee->work->department; 	// odjel kojem pripada radno mjesto
+		$department_nadredjeni = $department->employee; 			 	// nadređeni odjela */
 		$work_nadredjeni = $work->nadredjeni;    						// glavni nadređeni radnog mjesta - član uprave
 		$work_voditelj = $work->prvi_nadredjeni;    					// voditelj radnog mjesta
 		$email_work_nadredjeni = $work_nadredjeni->email;				// email glavnog nadređenog
@@ -656,7 +666,7 @@ class VacationRequestController extends GodisnjiController
 		$mails = array_diff( array_unique(array_merge($uprava, $mail_to)), array( $odobrio_user->email )); // svi mailovi uprava, djelatnik i voditelj - bez duplih, bez onog tko je odobrio
 		//$mails = array('jelena.juras@duplico.hr');
 
-		try {
+    	try {
 			foreach($mails as $mail) {
 				if($mail != '' && $mail != null) {
 					Mail::queue(
@@ -674,7 +684,7 @@ class VacationRequestController extends GodisnjiController
 			$message = session()->flash('error', 'Nešto je pošlo krivo, javite se administratoru portala');
 			
 			return redirect()->route('home')->withFlashMessage($message);
-		}	
+		}
 
 
 		$message = session()->flash('success', 'Zahtjev je odobren i poslan je mail');
@@ -746,6 +756,10 @@ class VacationRequestController extends GodisnjiController
 				$zahtjev2 = 'neplaćeni dopust';
 			} elseif ($vacationRequest->zahtjev == 'VIK'){
 				$zahtjev2 = 'slobodan vikend';
+			} elseif ($vacationRequest->zahtjev == 'CEK'){
+				$zahtjev2 = 'čekanje';
+			} else {
+				$zahtjev2 = '';
 			}
 
 			if($vacationRequest->napomena) {
@@ -753,8 +767,8 @@ class VacationRequestController extends GodisnjiController
 			}
 			
 			$work = Work::where('id', $employee->radnoMjesto_id)->first();   //radno mjesto zaposlenika
-			$department = $work->department; 							// odjel kojem pripada radno mjesto
-			$department_nadredjeni = $department->employee; 			 // nadređeni odjela
+			/* $department = $work->department; 							// odjel kojem pripada radno mjesto
+			$department_nadredjeni =  $work->nadredjeni;   			 // nadređeni odjela */
 			$work_nadredjeni = $work->nadredjeni;    					// glavni nadređeni radnog mjesta - član uprave
 			$work_voditelj = $work->prvi_nadredjeni;    				// voditelj radnog mjesta
 			$email_work_nadredjeni = $work_nadredjeni->email;				// email glavnog nadređenog
@@ -794,49 +808,7 @@ class VacationRequestController extends GodisnjiController
 				
 				return redirect()->route('home')->withFlashMessage($message);
 			}	
-				
-				/*staro slanje 
-					if(isset($input['uprava'])) {
-						// konačna potvrda uprave! - šalje se na upravu, voditelja i zaposlenika
-
-						foreach($mails as $mail) {
-							if($mail != '' && $mail != null) {
-								Mail::queue(
-									'email.zahtjevOD_uprave',
-									['employee' => $employee,'vacationRequest' => $vacationRequest,'employee_mail' => $employee_mail, 'odobrenje' => $odobrenje, 'zahtjev2' => $zahtjev2, 'razlog'=> $request['razlog'], 'odobrio' => $odobrio, 'ime' => $ime],
-									function ($message) use ($mail, $employee) {
-										$message->to($mail)
-											->from('info@duplico.hr', 'Duplico')
-											->subject('Odobrenje uprave - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
-									}
-								);
-							}
-						}
-					} else {
-						// odobrio voditelj, šalje se na nadređenog iz uprave
-						if($email_work_nadredjeni) {
-							Mail::queue(
-								'email.zahtjevOD',
-								['employee' => $employee,'vacationRequest' => $vacationRequest,'employee_mail' => $employee_mail, 'odobrenje' => $odobrenje, 'zahtjev2' => $zahtjev2, 'razlog'=> $request['razlog'], 'odobrio' => $odobrio, 'ime' => $ime],
-								function ($message) use ($email_work_nadredjeni, $employee) {
-									$message->to($email_work_nadredjeni)
-										->from('info@duplico.hr', 'Duplico')
-										->subject('Odobrenje zahtjeva - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
-								}
-							);
-						}
-						$ja = 'jelena.juras@duplico.hr';
-							Mail::queue(
-								'email.zahtjevOD',
-								['employee' => $employee,'vacationRequest' => $vacationRequest,'employee_mail' => $employee_mail, 'odobrenje' => $odobrenje, 'zahtjev2' => $zahtjev2, 'razlog'=> $request['razlog'], 'odobrio' => $odobrio, 'ime' => $ime],
-								function ($message) use ($ja, $employee) {
-									$message->to($ja)
-										->from('info@duplico.hr', 'Duplico')
-										->subject('Odobrenje zahtjeva - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
-								}
-							);
-					}
-				*/
+			
 			}
 			if( ( $vacationRequest->odobreno == 'DA' ) ) {
 				$message = session()->flash('success', 'Poruka je poslana, zahtjev je odobren');
@@ -883,6 +855,10 @@ class VacationRequestController extends GodisnjiController
 			$zahtjev = 'neplaćeni dopust';
 		}elseif($vacationRequest->zahtjev == 'VIK'){
 			$zahtjev = 'slobodan vikend';
+		}elseif ($vacationRequest->zahtjev == 'CEK'){
+			$zahtjev2 = 'čekanje';
+		} else {
+			$zahtjev2 = '';
 		}
 		
 		$dani = array('GOpocetak' =>$vacationRequest->GOpocetak, 'GOzavršetak' =>$vacationRequest->GOzavršetak);
@@ -898,8 +874,9 @@ class VacationRequestController extends GodisnjiController
 		$godina = $datum[0];
         $mjesec = $datum[1];
 
-		$vacationRequests = VacationRequest::where('odobreno','DA')->whereMonth('GOpocetak',$mjesec)->whereYear('GOpocetak',$godina)->get();
-		
+		$vacationRequests = VacationRequest::where('odobreno','DA')->whereMonth('GOpocetak',$mjesec)->whereYear('GOpocetak', $godina)->get();
+		$vacationRequests = $vacationRequests->merge(VacationRequest::where('odobreno','DA')->whereMonth('GOzavršetak',$mjesec)->whereYear('GOpocetak',$godina)->get());
+
 		return view('admin.AllVacationRequest', ['vacationRequests' => $vacationRequests,'mjesec' => $mjesec,'godina' => $godina]);
 	}
 }

@@ -73,10 +73,10 @@
 			@if(isset($employee))
 				<div class="ech">
 					<p>{{ $employee->first_name . ' ' . $employee->last_name }} ukupan trošak Tvoje godišnje plaće iznosi 
-					<span class="efc"><b>{!! $ech ? number_format($ech['brutto'],2,",",".") . ' kn' : '' !!}</b>.</span>
+					<span class="efc"><b>{!! isset($ech) && $ech ? number_format($ech['brutto'],2,",",".") . ' kn' : '' !!}</b>.</span>
 					<span class="efc_show">prikaži</span>
 					<span class="efc_hide">sakrij</span></p>
-					<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{!! $ech ?  number_format($ech['effective_cost'],2,",",".") . ' kn' : '' !!}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
+					<p>Efektivna cijena Tvog sata rada u Duplicu iznosi po satu: <span class="efc"><b>{!! isset($ech)  && $ech ?  number_format($ech['effective_cost'],2,",",".") . ' kn' : '' !!}</b></span> <span class="efc_show">prikaži</span><span class="efc_hide">sakrij</span>, a obračunata je kao stvarno provedeno vrijeme na radu kroz bruto troškove godišnje plaće, a sve za redovan rad.</p>
 				</div>
 			@endif
 			<div class="dashboard_box1">
@@ -129,6 +129,13 @@
 					</div>
 				@endif				
 			</div>
+			@if ( Sentinel::inRole('temporary') || Sentinel::inRole('administrator'))
+					<div class="BTNbox">
+						<div class="dashboard_box2 najava">
+							<a class="" href="{{ route('admin.temporary_employee_requests.create') }}" ><span>Zahtjev za izostanak<br>privremeni djelatnici</span></a>
+						</div>
+					</div>
+				@endif
 			@if(isset($reg_employee))
 				<div class="dashboard_box1">
 					<div class="BTNbox">
@@ -146,7 +153,6 @@
 							<a class="" href="{{ route('admin.posts.index') }}" ><span>Poruke</span></a>
 						</div>
 					</div>
-				
 					<div class="BTNbox">
 						<div class="dashboard_box2">
 							@if (Sentinel::inRole('administrator'))
@@ -156,7 +162,6 @@
 							@endif
 						</div>
 					</div>
-				
 					<div class="BTNbox">
 						<div class="dashboard_box2">
 							<a href="{{ route('admin.registrations.show', $reg_employee) }}">
@@ -226,8 +231,8 @@
 					@if(count($afterHours->where('odobreno', '')) > 0)
 						<div class="dashboard_box" style="overflow-x:auto;">
 							<button class="collapsible">Neodobreni prekovremeni rad</button>
-							<div class="content">
-								<table class="zahtjevi2">
+							<div class="content afterHours">
+								<table class="zahtjevi2 table_afterHours">
 									<thead>
 										<tr>
 											<th>Odobri</th>
@@ -236,15 +241,22 @@
 											<th>Napomena</th>
 										</tr>
 									</thead>
-									@foreach($afterHours as $afterHour)
-										@if($afterHour->odobreno == '')
-											<tbody>
-												<tr>
+									<tbody>
+										@foreach($afterHours as $afterHour)
+											@if($afterHour->odobreno == '')
+												<tr id="aft_{{ $afterHour->id }}">
 													<td>
-														<form name="contactform" class="conf_form" method="get" action="{{ route('admin.confDirectorAfter') }}">
-															<input type="hidden" name="id" value="{{ $afterHour->id}}"><br>
+														<form name="contactform" class="after_form" method="post" action="{{ route('admin.confDirectorAfter') }}" title="Odobreno!">
+															<input type="hidden" name="id" class="id" value="{{ $afterHour->id}}"><br>
 															<input type="radio" hidden name="odobreno" value="DA" checked>
 															<input class="odobri" type="submit" value="&#10004;">
+															{{ csrf_field() }}
+														</form>
+														<form name="contactform" class="after_form" method="post" action="{{ route('admin.confDirectorAfter') }}" title="Nije odobreno!">
+															<input type="hidden" name="id" class="id" value="{{ $afterHour->id}}"><br>
+															<input type="radio" hidden name="odobreno" value="NE" checked>
+															<input class="neodobri" type="submit" value="&#9746;">
+															{{ csrf_field() }}
 														</form>
 													</td>
 													<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
@@ -253,10 +265,9 @@
 													</td>
 													<td>{{ $afterHour->napomena }}</td>
 												</tr>
-												
-											</tbody>
-										@endif
-									@endforeach
+											@endif
+										@endforeach
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -280,59 +291,64 @@
 								</thead>
 								<tbody>
 									@foreach($zahtjevi_neodobreni as $zahtjev1)
-									
-											<tr>
-												<td>
-													<form name="contactform" class="conf_form" method="get" action="{{ route('admin.confDirector') }}">
-														<input type="hidden" name="id" value="{{ $zahtjev1->id}}"><br>
-														<input type="radio" hidden name="odobreno" value="DA" checked>
-														<input class="odobri" type="submit" value="&#10004;">
-													</form>
-												<!--	<a class="" href="{{ route('admin.confirmation_show',[ 'id' => $zahtjev1->id] ) }}"><i class="far fa-check-square"></i></a>-->
-												</td>
-												<td>{{ $zahtjev1->employee['first_name'] . ' ' . $zahtjev1->employee['last_name'] }}</td>
-												<td>{{ date('d.m.Y.', strtotime( $zahtjev1->GOpocetak)) }}<br>
-												@if($zahtjev1->GOzavršetak != $zahtjev1->GOpocetak ){{ date('d.m.Y.', strtotime( $zahtjev1->GOzavršetak)) }}
-												@elseif( $zahtjev1->zahtjev != 'GO')
-												{{ date('H:i', strtotime( $zahtjev1->GOpocetak. ' '. $zahtjev1->vrijeme_od))  }} - {{  date('H:i', strtotime( $zahtjev1->GOpocetak. ' '. $zahtjev1->vrijeme_do)) }}
-												@endif
-												</td>
-												<?php 
-													$brojDana =1;
-													$begin = new DateTime($zahtjev1->GOpocetak);
-													$end = new DateTime($zahtjev1->GOzavršetak);
-													$interval = DateInterval::createFromDateString('1 day');
-													$period = new DatePeriod($begin, $interval, $end);
-													foreach ($period as $dan) {
-														if(date_format($dan,'N') < 6){
-															$brojDana += 1;
-														}
+										<tr id="abs_{{ $zahtjev1->id }}">
+											<td>
+												<form name="contactform" class="conf_form" method="post" action="{{ route('admin.confDirector') }}" title="Odobreno!">
+													<input type="hidden" name="id" class="id" value="{{ $zahtjev1->id}}"><br>
+													<input type="radio" hidden name="odobreno" value="DA" checked>
+													<input class="odobri" type="submit" value="&#10004;">
+													{{ csrf_field() }}
+												</form>
+												<form name="contactform" class="conf_form" method="post" action="{{ route('admin.confDirector') }}" title="Nije odobreno!">
+													<input type="hidden" name="id" class="id" value="{{ $zahtjev1->id}}"><br>
+													<input type="radio" hidden name="odobreno" value="NE" checked>
+													<input class="neodobri" type="submit" value="&#9746;">
+													{{ csrf_field() }}
+												</form>
+											<!--	<a class="" href="{{ route('admin.confirmation_show',[ 'id' => $zahtjev1->id] ) }}"><i class="far fa-check-square"></i></a>-->
+											</td>
+											<td>{{ $zahtjev1->employee['first_name'] . ' ' . $zahtjev1->employee['last_name'] }}</td>
+											<td>{{ date('d.m.Y.', strtotime( $zahtjev1->GOpocetak)) }}<br>
+											@if($zahtjev1->GOzavršetak != $zahtjev1->GOpocetak ){{ date('d.m.Y.', strtotime( $zahtjev1->GOzavršetak)) }}
+											@elseif( $zahtjev1->zahtjev != 'GO')
+											{{ date('H:i', strtotime( $zahtjev1->GOpocetak. ' '. $zahtjev1->vrijeme_od))  }} - {{  date('H:i', strtotime( $zahtjev1->GOpocetak. ' '. $zahtjev1->vrijeme_do)) }}
+											@endif
+											</td>
+											<?php 
+												$brojDana =1;
+												$begin = new DateTime($zahtjev1->GOpocetak);
+												$end = new DateTime($zahtjev1->GOzavršetak);
+												$interval = DateInterval::createFromDateString('1 day');
+												$period = new DatePeriod($begin, $interval, $end);
+												foreach ($period as $dan) {
+													if(date_format($dan,'N') < 6){
+														$brojDana += 1;
 													}
-												?>
-												<td>{{ $zahtjev1->zahtjev }}
-													@if($zahtjev1->zahtjev == 'GO') 
-														{{ $brojDana . ' dana ' }}
-													@endif
-												</td>
-												<td>
-													@if ($zahtjev1->odobreno2 != null && $zahtjev1->odobreno2 != '' )
-													{{ $zahtjev1->odobreno2 }}
-													@endif
-												</td>
-												<td>
-													@if (isset($zahtjev1->employee->superior) && $zahtjev1->employee->superior != null && $zahtjev1->employee->superior != '')
-														{{ $zahtjev1->employee->superior['first_name'] . ' ' . $zahtjev1->employee->superior['last_name'] }}<br>
-													@endif
-													@if (isset($zahtjev1->employee->work->prvi_nadredjeni) && $zahtjev1->employee->work->prvi_nadredjeni != null && $zahtjev1->employee->work->prvi_nadredjeni != '')
-														{{ $zahtjev1->employee->work->prvi_nadredjeni['first_name'] . ' ' . $zahtjev1->employee->work->prvi_nadredjeni['last_name'] }}<br>
-													@endif
-													@if (isset($zahtjev1->employee->work->nadredjeni) && $zahtjev1->employee->work->nadredjeni != null && $zahtjev1->employee->work->nadredjeni != '')
-														{{ $zahtjev1->employee->work->nadredjeni['first_name'] . ' ' . $zahtjev1->employee->work->nadredjeni['last_name'] }}
-													@endif
-												</td>
-												<td>{{ $zahtjev1->napomena }}</td>
-											</tr>
-										
+												}
+											?>
+											<td>{{ $zahtjev1->zahtjev }}
+												@if($zahtjev1->zahtjev == 'GO') 
+													{{ $brojDana . ' dana ' }}
+												@endif
+											</td>
+											<td>
+												@if ($zahtjev1->odobreno2 != null && $zahtjev1->odobreno2 != '' )
+												{{ $zahtjev1->odobreno2 }}
+												@endif
+											</td>
+											<td>
+												@if (isset($zahtjev1->employee->superior) && $zahtjev1->employee->superior != null && $zahtjev1->employee->superior != '')
+													{{ $zahtjev1->employee->superior['first_name'] . ' ' . $zahtjev1->employee->superior['last_name'] }}<br>
+												@endif
+												@if (isset($zahtjev1->employee->work->prvi_nadredjeni) && $zahtjev1->employee->work->prvi_nadredjeni != null && $zahtjev1->employee->work->prvi_nadredjeni != '')
+													{{ $zahtjev1->employee->work->prvi_nadredjeni['first_name'] . ' ' . $zahtjev1->employee->work->prvi_nadredjeni['last_name'] }}<br>
+												@endif
+												@if (isset($zahtjev1->employee->work->nadredjeni) && $zahtjev1->employee->work->nadredjeni != null && $zahtjev1->employee->work->nadredjeni != '')
+													{{ $zahtjev1->employee->work->nadredjeni['first_name'] . ' ' . $zahtjev1->employee->work->nadredjeni['last_name'] }}
+												@endif
+											</td>
+											<td>{{ $zahtjev1->napomena }}</td>
+										</tr>
 									@endforeach
 								</tbody>
 							</table>
@@ -461,12 +477,55 @@
 @endif
 <script src="{{ asset('js/efc_toggle.js') }}"></script>
 <script>
-	$('.conf_form').submit(function(){
-		if (!confirm("Are you sure about this change?")) {
+	$('.conf_form').submit(function(e){
+		if (!confirm("Sigurno želiš poslati odobrenje?")) {
 			return false;
+		} else {
+			e.preventDefault();
+			var url = $(this).attr('action');
+			var form_data = $(this).serialize(); 
+			var id = $(this).find('.id').val();
+			console.log(url);
+			console.log(form_data);
+			console.log(id);
+			$.ajax({
+				url: url,
+				type: "post",
+				data: form_data,
+				success: function( response ) {
+					$( 'tr#abs_'+ id ).remove();
+					//$('.afterHours').load(location.origin + ' .afterHours .table_afterHours');
+				}, 
+				error: function(xhr,textStatus,thrownError) {
+					console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+				}
+			});
+
 		}
 	});
-
+	$('.after_form').submit(function(e){
+		if (!confirm("Sigurno želiš poslati odobrenje?")) {
+			return false;
+		} else {
+			e.preventDefault();
+			var url = $(this).attr('action');
+			var form_data = $(this).serialize(); 
+			var id = $(this).find('.id').val();
+		
+			$.ajax({
+				url: url,
+				type: "post",
+				data: form_data,
+				success: function( response ) {
+					$( 'tr#aft_'+ id ).remove();
+					//$('.afterHours').load(location.origin + ' .afterHours .table_afterHours');
+				}, 
+				error: function(xhr,textStatus,thrownError) {
+					console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+				}
+			});
+		}
+	});
 	$(function() {
 		$('.ech .jumbotron h4').click(function(){
 			$('.ech .jumbotron table').toggle();

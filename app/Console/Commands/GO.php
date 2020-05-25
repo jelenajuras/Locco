@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Models\Registration;
 use App\Models\VacationRequest;
+use App\Models\TemporaryEmployeeRequest;
 use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Work;
@@ -58,7 +59,8 @@ class GO extends Command
 		$dan_izostanci = array();
 		
 		$izostanci = VacationRequest::join('employees','vacation_requests.employee_id', '=', 'employees.id')->select('vacation_requests.*', 'employees.first_name','employees.last_name')->orderBy('vacation_requests.zahtjev','ASC')->orderBy('employees.last_name','ASC')->get();
-
+		$izostanci = $izostanci->merge(TemporaryEmployeeRequest::join('employees','temporary_employee_requests.employee_id', '=', 'employees.id')->select('temporary_employee_requests.*', 'employees.first_name','employees.last_name')->orderBy('temporary_employee_requests.zahtjev','ASC')->orderBy('employees.last_name','ASC')->get());
+		
 		foreach($izostanci as $izostanak){
 			$ukupno_GO = 0;
 			$ukupnoDani = 0;

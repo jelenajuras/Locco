@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<title>@yield('title')</title>
 
 		<!-- Bootstrap - Latest compiled and minified CSS -->
@@ -67,10 +67,9 @@
 					@if (! Sentinel::inRole('temporary'))
 						<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
 					@endif
-					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') )
-						@if(isset($reg_employee) && $reg_employee)
-							<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
-						@endif
+						<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
+					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') || Sentinel::inRole('temporary') )
+						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
 					@endif				
 					@if(Sentinel::getUser()->email == 'marina.sindik@duplico.hr')
 						<a class="" href="{{ route('admin.registrations.index') }}">Prijavljeni radnici</a>

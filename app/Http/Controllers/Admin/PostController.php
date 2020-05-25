@@ -76,8 +76,7 @@ class PostController extends Controller
 		$registration =  $registrations->where('employee_id', $employee->id)->first();
 
 		$employee_departments = Employee_department::get();
-		$mail_to_employees = array();
-		$emails = array();
+		
 		
 		// zahtjev za raspored
 		if(isset($input['tip']) && $input['tip'] == 'raspored'){
@@ -138,6 +137,8 @@ class PostController extends Controller
 			
 		} else {
 			foreach ( $request['to_department_id'] as $department_id) {
+				$emails = array();
+				$mail_to_employees = array();
 				$department = Department::where('id', $department_id)->first();
 
 				$data = array(
@@ -194,47 +195,49 @@ class PostController extends Controller
 
 			//	$email = $department['email'];
 				$name = $department['name'];  //poruka za odjel
-			}
 
-			if(isset($emails) && count($emails) > 0) {
-				if(isset($input['tip']) && $input['tip'] == 'prijava' ||  $input['tip'] == 'odjava'){
-					$empl_department = $employee->work->department['name'];   //odjel koji je poslao poruku
-					
-					try {
-						foreach(array_unique($emails) as $email) {
-							Mail::queue(
-								'email.post_tip',
-								['poruka' => $poruka, 'post' => $post, 'empl_department' => $empl_department],
-								function ($message) use ( $email, $input, $name) {
-									$message->to($email)
-										->from('info@duplico.hr', 'Duplico')
-										->subject('Nova poruka za odjel - ' . $name );
-								}
-							);
+				if(isset($emails) && count($emails) > 0) {
+					if(isset($input['tip'])) {
+						$empl_department = $employee->work->department['name'];   //odjel koji je poslao poruku
+						
+						try {
+							foreach(array_unique($emails) as $email) {
+								Mail::queue(
+									'email.post_tip',
+									['poruka' => $poruka, 'post' => $post, 'empl_department' => $empl_department],
+									function ($message) use ( $email, $input, $name) {
+										$message->to($email)
+											->from('info@duplico.hr', 'Duplico')
+											->subject('Nova poruka za odjel - ' . $name );
+									}
+								);
+							}
+						} catch (\Throwable $th) {
+							$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
+							return redirect()->back()->withFlashMessage($message);
 						}
-					} catch (\Throwable $th) {
-						$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
-						return redirect()->back()->withFlashMessage($message);
-					}
-				} else {
-					try {
-						foreach(array_unique($emails) as $email) {
-							Mail::queue(
-								'email.post',
-								['poruka' => $poruka, 'employee' => $employee],
-								function ($message) use ( $email, $input, $name) {
-									$message->to($email)
-										->from('info@duplico.hr', 'Duplico')
-										->subject('Nova poruka za odjel - ' . $name );
-								}
-							);
+					} else {
+						try {
+							foreach(array_unique($emails) as $email) {
+								Mail::queue(
+									'email.post',
+									['poruka' => $poruka, 'employee' => $employee],
+									function ($message) use ( $email, $input, $name) {
+										$message->to($email)
+											->from('info@duplico.hr', 'Duplico')
+											->subject('Nova poruka za odjel - ' . $name );
+									}
+								);
+							}
+						} catch (\Throwable $th) {
+							$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
+							return redirect()->back()->withFlashMessage($message);
 						}
-					} catch (\Throwable $th) {
-						$message = session()->flash('error', 'Mail nije poslan, problem sa spajanjem na mail server');
-						return redirect()->back()->withFlashMessage($message);
 					}
 				}
 			}
+
+			
 			$message = session()->flash('success', 'Poruka je poslana');
 			return redirect()->route('admin.posts.index')->withFlashMessage($message);
 		}

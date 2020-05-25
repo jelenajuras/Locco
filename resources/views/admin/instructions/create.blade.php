@@ -39,6 +39,12 @@
 
 						{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
+					<div class="form-group {{ ($errors->has('active')) ? 'has-error' : '' }}">
+						<p><label>Status:</label></p>
+						<label class="status" for="active_1">Aktivna <input name="active" type="radio" value="1" id="active_1" checked /></label>
+						<label class="status" for="active_0">Neaktivna <input name="active" type="radio" value="0" id="active_0" /></label>
+						{!! ($errors->has('active') ? $errors->first('active', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
 					{{ csrf_field() }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Snimi" id="stil1">
 				</form>

@@ -7,7 +7,7 @@
 	<div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
 		<h2 id="zahtjev">Zahtjev - Obavijest</h2>
 		<div class="panel-body">
-			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}"  onsubmit="return validateForm()">
+			 <form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.vacation_requests.store') }}" onsubmit="return validateForm()">
 				@if (Sentinel::inRole('administrator'))
 				<input 	name="role" hidden value="{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}"/>
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
@@ -37,8 +37,9 @@
 					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()" required>
 						<option disabled selected value></option>
 						<option class="editable1" value="GO">korištenje godišnjeg odmora za period od</option>
+						<option class="editable8" value="CEK">čekanje</option>
 						<option class="editable2" value="Bolovanje">bolovanje</option>
-						<option class="editable3"  value="Izlazak">izlazak</option>
+						<option class="editable3" value="Izlazak">izlazak</option>
 						<option class="editable4" value="NPL">korištenje neplaćenog dopusta za period od</option>
 						<option class="editable7" value="PL">korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK">oslobođenje od planiranog radnog vikenda</option>
@@ -80,7 +81,7 @@
 				</div>
 				<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 					<label>Napomena:</label>
-					<textarea rows="4" id="napomena" name="napomena" type="text" class="form-control" value="{{ old('napomena') }} " required></textarea>
+					<textarea rows="4" id="napomena" name="napomena" type="text" maxlength="500" class="form-control" value="{{ old('napomena') }}" required></textarea>
 					{!! ($errors->has('napomena') ? $errors->first('napomena', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				@if (Sentinel::inRole('administrator'))
@@ -93,7 +94,7 @@
 					<input type="hidden" name="email" value="DA">
 				@endif
 				{{ csrf_field() }}
-				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" id="stil1" >
+				<input class="btn btn-lg btn-block" type="submit" value="Pošalji zahtjev" disabled="true" id="stil1" >
 			</form>
 		</div>
 		<div class="uputa_RGO display-none">
@@ -124,7 +125,12 @@
 			</p>
 		</div>
 	</div>
-		
+		<script>
+			$('#prikaz').change(function(){
+				$('input[type=submit]').attr('disabled',false);
+			});
+			
+		</script>
 		<!-- izračun dana GO u zahtjevu -->
 		<script>
 			function GO_dani(){
@@ -146,6 +152,7 @@
 		<!-- validator  -->
 		<script>
 			function validateForm() {
+				
 				var x = document.forms["myForm"]["zahtjev"].value;
 				var y = document.forms["myForm"]["Dani"].value;
 				var z = document.forms["myForm"]["GOpocetak"].value;
@@ -154,20 +161,19 @@
 				if (z == "") {
 					alert("Nemoguće poslati zahtjev. Nije upisan početan datum");
 					return false;
+				} else {
+					$('input[type=submit]').attr('disabled',false);
 				}
 				if(role !='admin'){
 					if (x == "GO" & y <= 0) {
 						alert("Nemoguće poslati zahtjev. Svi dani godišnjeg odmora su iskorišteni");
 					//	return false;
+					} else {
+						$('input[type=submit]').attr('disabled',false);
 					}
 				}
-				
-				
 			}
 		</script>
-		
-
 		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
 		<script src="{{ asset('js/go_value.js') }}"></script>
-		
 @stop

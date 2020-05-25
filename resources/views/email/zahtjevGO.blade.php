@@ -34,7 +34,7 @@
 	</style>
 	<body>
 		<h4>Ja, {{ $employee->first_name . ' ' . $employee->last_name }}</h4>
-		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "PL" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD" || $vacationRequest->zahtjev == "VIK" )
+		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "PL" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD" || $vacationRequest->zahtjev == "VIK" || $vacationRequest->zahtjev == "CEK" )
 			<h4>molim da mi se odobri {{ $zahtjev2 }} za
 			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $vacationRequest->GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
 		@elseif($vacationRequest->zahtjev == "Bolovanje")

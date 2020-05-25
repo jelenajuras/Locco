@@ -23,6 +23,7 @@
                             <th>Naslov</th>
 							<th>Odjel</th>
 							<th>Opis</th>
+							<th>Status</th>
                             <th class="not-export-column">Opcije</th>
                         </tr>
                     </thead>
@@ -32,7 +33,8 @@
                                 <td><a href="{{ route('admin.instructions.show', $instruction->id) }}">{{ $instruction->title }}</a></td>
 								<td>{{ $instruction->department['name'] }}</td>
                                 <td>{{ str_limit($instruction->description,100) }}</td>
-                                 <td>
+                                <td>{!! $instruction->active == 1 ? 'Aktivna' : 'Neaktivna' !!}</td>
+                                <td>
                                     <a href="{{ route('admin.instructions.edit', $instruction->id) }}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </a>

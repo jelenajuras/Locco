@@ -103,20 +103,37 @@
 																			
 																		}else{
 																			$zahtjev = $request->zahtjev;
+																			$class = '';
 																				switch ($zahtjev) {
 																				 case 'Izlazak':
 																					$zahtjev = 'IZL';
+																					$class = 'green';
 																					break;
 																				case 'Bolovanje':
 																					$zahtjev = 'BOL';
+																					$class = 'blue';
 																					break;
 																				case 'GO':
 																					$zahtjev = 'GO';
+																					$class = 'yellow';
 																					break;
 																				case 'SLD':
 																					$zahtjev = 'SLD';
+																					$class = 'purple';
 																					break;
-																			 }
+																				case 'PL':
+																					$zahtjev = 'PL';
+																					$class = 'pink';
+																					break;
+																				case 'NPL':
+																					$zahtjev = 'NPL';
+																					$class = 'd_pink';
+																					break;
+																				case 'CEK':
+																					$zahtjev = 'ČEK';
+																					$class = 'l_blue';
+																					break;
+																			}
 																		}
 																}
 															}
@@ -124,7 +141,7 @@
 													@endif
 												@endforeach
 												@if($zahtjev)
-													<span class="izostanak1">{{ $zahtjev }}<br>{{ ' 8:00' }}</span>
+													<span class="izostanak1 {{ $class }}">{{ $zahtjev }}<br>{{ ' 8:00' }}</span>
 												@else
 													@if(strtotime($value2) >= strtotime($djelatnik->datum_prijave))
 														@if($djelatnik->datum_odjave == null || strtotime($value2) <= strtotime($djelatnik->datum_odjave))

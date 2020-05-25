@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Instruction extends Model
 {
-    protected $fillable = ['department_id','title','description'];
+    protected $fillable = ['department_id','title','description','active'];
     
     /*
 	* The Eloquent department model name

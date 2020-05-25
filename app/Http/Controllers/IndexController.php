@@ -57,7 +57,7 @@ class IndexController extends Controller
 
 				$zahtjevi_neodobreni = VacationRequest::orderBy('GOpocetak','DESC')->where('odobreno',null)->get();
 				$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->orderBy('GOpocetak','DESC')->get()->take(30);
-				$afterHours = AfterHour::where('odobreno', null)->get();			
+				$afterHours = AfterHour::where('odobreno', null)->orderBy('datum','DESC')->get();			
 
 				$reg_employee = Registration::where('registrations.employee_id', $employee->id)->first();
 				$ech = EffectiveHour::where('employee_id', $employee->id)->first();

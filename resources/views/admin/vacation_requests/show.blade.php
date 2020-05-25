@@ -118,30 +118,51 @@
 								<th style="border-bottom: 1px double #ccc;">Datum</th>
 								<th style="border-bottom: 1px double #ccc;">Vrijeme</th>
 								<th style="border-bottom: 1px double #ccc;">Napomena</th>
-								<th style="border-bottom: 1px double #ccc;">Odobrila uprava</th>
+								<th style="border-bottom: 1px double #ccc;">Odobrio</th>
+								<th style="border-bottom: 1px double #ccc;">Odobreno sati</th>
 								<th  style="border-bottom: 1px double #ccc;" class="not-export-column">Opcije</th>
 							</tr>
 						</thead>
-						<tbody id="myTable">
+						<tbody id="myTable1">
+						<?php $ukupnosati = 0; ?>
 							@foreach ($afterHours as $afterHour)
 								<?php
-								$vrijeme_1 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_od);  /* vrijeme od */
-								$vrijeme_2 = new DateTime($afterHour->datum . ' ' . $afterHour->vrijeme_do);  /* vrijeme do */
-								
-								if($afterHour->vrijeme_do == '00:00:00' || $afterHour->vrijeme_do == '00:00:00.000000') {
-									$vrijeme_2->modify('+1 day');
-									$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
-								} else {
-									$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
-								}
-								
-								$ukupna_razlika += $razlika_vremena->h;
+									if($afterHour->odobreno_h ) {
+										$razlika_vremena = $afterHour->odobreno_h;
+									} else {
+										$vrijeme_1 = new DateTime($afterHour->vrijeme_od );
+										if($afterHour->vrijeme_do == '00:00:00') {
+											$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
+										} else {
+											$vrijeme_2 = new DateTime($afterHour->vrijeme_do);  /* vrijeme do */
+										}
+										
+										$razlika_vremena = $vrijeme_2->diff($vrijeme_1);
+										$razlika_vremena = $razlika_vremena->format('%H:%I');
+									}
+
+									// konvert vremena u decimalan broj
+									$hm = explode(":", $razlika_vremena);
+									$razlika_vremena = $hm[0] + ($hm[1]/60);
+									
+									$dan_prekovremeni = new DateTime($afterHour->datum);
+									if(date_format($dan_prekovremeni,'N') == 6) {
+										$razlika_vremena = $razlika_vremena * 1.3;
+									} elseif (date_format($dan_prekovremeni,'N') == 7) {
+										$razlika_vremena = $razlika_vremena * 1.4;
+									} else {
+										$razlika_vremena = $razlika_vremena;
+									}
+									if( $afterHour->odobreno == "DA") {
+										$ukupnosati += round($razlika_vremena, 1, PHP_ROUND_HALF_DOWN);
+									}
 								?>
 								<tr>
 									<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
 									<td>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
-									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do . '(' .   $razlika_vremena->h  . ':' . $razlika_vremena->i  . ' h)'   }}</td>
+									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do}}</td>
 									<td>{{ $afterHour->napomena }}</td>
+									<td>{!! $afterHour->odobreno == "DA" ? round($razlika_vremena, 1, PHP_ROUND_HALF_DOWN) : '' !!}</td>
 									<td>{{ $afterHour->odobreno }}</td>
 									<td>
 										<a href="{{ route('admin.confirmationAfter_show', ['id' => $afterHour->id]) }}" class="btn" title="Odobri">

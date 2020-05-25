@@ -20,5 +20,7 @@ function GO_value(){
 	if(document.getElementById("prikaz").value == "Vik"){
 		document.getElementById("zahtjev").innerHTML = "Zahtjev";
 	}
-	
+	if(document.getElementById("prikaz").value == "CEK"){
+		document.getElementById("zahtjev").innerHTML = "Zahtjev";
+	}
 }

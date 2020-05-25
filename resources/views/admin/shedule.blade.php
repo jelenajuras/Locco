@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ URL::asset('css/raspored.css') }}" type="text/css">
 <?php 
 	use App\Http\Controllers\GodisnjiController;
-
 	$datum = new DateTime('now');    /* današnji dan */
 	$ova_godina = date_format($datum,"Y");
 	$prosla_godina = $ova_godina-1;
@@ -48,28 +47,25 @@
 						</thead>
 						<tbody id="myTable">
 							@foreach($employees as $djelatnik)
-							<?php 
-								$time = round((	(int) (substr(GodisnjiController::izlasci_ukupno($djelatnik),0,-2)) / 8), 0 ,PHP_ROUND_HALF_DOWN);
-
-								$godineZahtjeva = GodisnjiController::godineZahtjeva();
-								$dani_GO = 0;
-
-								foreach ($godineZahtjeva as $g) {
-									if( $g == $ova_godina) {
-										$dani_GO += GodisnjiController::razmjeranGO($djelatnik); // razmjerni dani ova godina
-									
-									} else {
-										$dani_GO += GodisnjiController::razmjeranGO_PG($djelatnik, $g); // razmjerni dani za sve godine
+								<?php 
+									$time = round((	(int) (substr(GodisnjiController::izlasci_ukupno($djelatnik),0,-2)) / 8), 0 ,PHP_ROUND_HALF_DOWN);
+									$godineZahtjeva = GodisnjiController::godineZahtjeva();
+									$dani_GO = 0;
+									foreach ($godineZahtjeva as $g) {
+										if( $g == $ova_godina) {
+											$dani_GO += GodisnjiController::razmjeranGO($djelatnik); // razmjerni dani ova godina
+										
+										} else if($g == $prosla_godina) {
+											$dani_GO += GodisnjiController::razmjeranGO_PG($djelatnik, $g); // razmjerni dani za sve godine
+										}
 									}
-								}
 
-								$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($djelatnik); // zahtjevi dani za sve godine
-								$brojDanaZahtjeva = 0;
-								foreach($zahtjeviSveGodine  as $zahtjevi) {
-									$brojDanaZahtjeva += count($zahtjevi); 
-								}					
-							?>
-								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
+									$zahtjeviSveGodine = GodisnjiController::zahtjeviSveGodine($djelatnik); // zahtjevi dani za sve godine
+									$brojDanaZahtjeva = 0;
+									$brojDanaZahtjeva += count($zahtjeviSveGodine[ $prosla_godina]); 
+									$brojDanaZahtjeva += count($zahtjeviSveGodine[ $ova_godina]); 
+												
+								?>
 									<tr>
 										<td>{{ $djelatnik->employee['last_name'] . ' ' . $djelatnik->employee['first_name'] }}</td> 
 										<td>@if($djelatnik->slDani == 1) Slobodi dani @elseif($djelatnik->slDani == "0") Isplata @endif </td>
@@ -86,16 +82,49 @@
 										<td>{{ round(GodisnjiController::prekovremeni_satiMj($djelatnik, $mjesec, $godina) , 2)}}</td>
 										<td>{{ GodisnjiController::izlasci_Mj($djelatnik, $mjesec, $godina) }}</td>
 										<?php 
-											$iskorišteno_mj = GodisnjiController::daniZahtjevi_mj($djelatnik, 'GO', $mjesec, $godina);
-
-											$daniZahtjevi = count($zahtjeviSveGodine[$ova_godina]);  // 0
-											$daniZahtjeviPG = count($zahtjeviSveGodine[$prosla_godina]); //19
-											$GO_PG = GodisnjiController::razmjeranGO_PG($djelatnik, $prosla_godina); // razmjerni dani prošla godina  - 20
+											$iskorišteno_mj = GodisnjiController::daniZahtjevi_mj($djelatnik, 'GO', $mjesec, $godina); // 4 dana
+											
+											$daniZahtjevi = count($zahtjeviSveGodine[$ova_godina]);  // 3
+											$daniZahtjeviPG = count($zahtjeviSveGodine[$prosla_godina]); //8
+											
+/* 
+$zahtjeviSveGodine[$prosla_godina]
+array:8 [▼
+  0 => "2019-12-24"
+  1 => "2019-12-31"
+  2 => "2020-04-27"
+  3 => "2020-04-28"
+  4 => "2020-04-29"
+  5 => "2020-04-30"
+  6 => "2020-05-04"
+  7 => "2020-05-05"
+] 
+$zahtjeviSveGodine[$ova_godina]
+array:3 [▼
+  0 => "2020-05-06"
+  1 => "2020-05-07"
+  2 => "2020-05-08"
+]
+*/
+											$GO_PG = GodisnjiController::razmjeranGO_PG($djelatnik, $prosla_godina); // razmjerni dani prošla godina  - 8 
+										
 											$neiskPG = 0;
 										
-											$dani_PG = "";
-											$dani_OG = "";
-											if($iskorišteno_mj > 0) {
+											$dani_PG = 0;
+											$dani_OG = 0;
+											
+											foreach ($zahtjeviSveGodine[$prosla_godina] as $zahtjev_prosla) {
+												
+												if( strpos($zahtjev_prosla, $godina .'-'. $mjesec) !== false ) {
+													$dani_PG++;
+												}
+											}
+											foreach ($zahtjeviSveGodine[$ova_godina] as $zahtjev_ova) {
+												if( strpos($zahtjev_ova, $godina .'-'. $mjesec)  !== false ) {
+													$dani_OG++;
+												}
+											}
+											/* if($iskorišteno_mj > 0) {  // da 4>0
 												if($iskorišteno_mj <= $daniZahtjevi) {
 													$dani_OG = $iskorišteno_mj;
 													$dani_PG = 0;
@@ -103,13 +132,13 @@
 													$dani_PG = $iskorišteno_mj - $daniZahtjevi;
 													$dani_OG = $daniZahtjevi;
 												} 
-											}											
+											}		 */									
 										?>
-										<td>{{ $dani_PG  }}</td> <!-- dani GO prošla godina-->
-										<td>{{ $dani_OG}}</td> <!-- dani GO ova godina-->
+										<td>{{ $dani_PG }}</td> <!-- dani GO prošla godina-->
+										<td>{{ $dani_OG }}</td> <!-- dani GO ova godina-->
 									</tr>
-									@endif
-								@endforeach
+									
+							@endforeach
 						</tbody>
 					</table>
 				</div>	
