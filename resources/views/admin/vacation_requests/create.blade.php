@@ -37,6 +37,8 @@
 					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()" required>
 						<option disabled selected value></option>
 						<option class="editable1" value="GO">korištenje godišnjeg odmora za period od</option>
+						<option class="editable1" value="RD">rad od doma</option>
+						<option class="editable1" value="COVID-19">Oslobođenje od rada - COVID-19</option>
 						<option class="editable8" value="CEK">čekanje</option>
 						<option class="editable2" value="Bolovanje">bolovanje</option>
 						<option class="editable3" value="Izlazak">izlazak</option>
@@ -64,20 +66,20 @@
 						Nemoguće je poslati zahtjev za slobodni dan.
 					@endif
 				</p>
-				<div class="datum form-group editOption1 display-none {{ ($errors->has('GOpocetak')) ? 'has-error' : '' }}" >
+				<div class="datum form-group editOption1 display-none {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 					<label class="padd_10">Od datuma</label>
-					<input name="GOpocetak" class="date form-control" type="date" value = "{{ old('GOpocetak')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
-					{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
+					<input name="start_date" class="date form-control" type="date" value = "{{ old('start_date')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
+					{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 			
 				<div class="datum form-group editOption2 display-none">					
 					<label class="padd_10">Zaključno sa datumom</label>
-					<input name="GOzavršetak" class="date form-control" type="date" value ="{{ old('GOzavršetak')}}" id="date2"><i class="far fa-calendar-alt" ></i>
-					{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
+					<input name="end_date" class="date form-control" type="date" value ="{{ old('end_date')}}" id="date2"><i class="far fa-calendar-alt" ></i>
+					{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<div class="datum2 form-group editOption3 display-none">
-					<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value="08:00">
-					<span>do</span><input 	type="time" name="vrijeme_do" class="vrijeme" value="16:00" >
+					<span>od</span><input type="time" name="start_time" class="vrijeme" value="08:00">
+					<span>do</span><input 	type="time" name="end_time" class="vrijeme" value="16:00" >
 				</div>
 				<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 					<label>Napomena:</label>
@@ -135,9 +137,9 @@
 		<script>
 			function GO_dani(){
 				if(document.getElementById("prikaz").value == "GO" ){
-					var dan1 =  new Date(document.forms["myForm"]["GOpocetak"].value);
-					var dan2 = new Date(document.forms["myForm"]["GOzavršetak"].value);
-					var person = {GOpocetak:dan1, GOzavršetak:dan2};
+					var dan1 =  new Date(document.forms["myForm"]["start_date"].value);
+					var dan2 = new Date(document.forms["myForm"]["end_date"].value);
+					var person = {start_date:dan1, end_date:dan2};
 					
 					//razlika dana
 					var datediff = (dan2 - dan1);
@@ -155,7 +157,7 @@
 				
 				var x = document.forms["myForm"]["zahtjev"].value;
 				var y = document.forms["myForm"]["Dani"].value;
-				var z = document.forms["myForm"]["GOpocetak"].value;
+				var z = document.forms["myForm"]["start_date"].value;
 				var role = document.forms["myForm"]["role"].value;
 				console.log(role);
 				if (z == "") {
@@ -176,4 +178,5 @@
 		</script>
 		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
 		<script src="{{ asset('js/go_value.js') }}"></script>
+		
 @stop

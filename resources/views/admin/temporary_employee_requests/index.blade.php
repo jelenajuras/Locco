@@ -37,8 +37,8 @@
 						<tbody id="myTable">
 						@foreach($requests as $request)
 							<?php 
-								$brojDana = GodisnjiController::daniGO(['GOpocetak' => $request->GOpocetak, 'GOzavršetak' => $request->GOzavršetak] );
-								$vrijeme = GodisnjiController::izlazak(['od' => $request->vrijeme_od, 'do' => $request->vrijeme_do] );
+								$brojDana = GodisnjiController::daniGO(['start_date' => $request->start_date, 'end_date' => $request->end_date] );
+								$vrijeme = GodisnjiController::izlazak(['od' => $request->start_time, 'do' => $request->end_time] );
 							?>
 							<tr>
 							<tr>
@@ -51,8 +51,8 @@
 									</a>
 								@endif
 								</td>
-								<td>{{ date('Y.m.d.', strtotime( $request->GOpocetak)) }}</td>
-								<td>{{ date('Y.m.d.', strtotime( $request->GOzavršetak)) }}</td>
+								<td>{{ date('Y.m.d.', strtotime( $request->start_date)) }}</td>
+								<td>{{ date('Y.m.d.', strtotime( $request->end_date)) }}</td>
 								
 								<td>@if($request->zahtjev == 'Izlazak')
 										{{$vrijeme . ' h' }}
@@ -62,7 +62,7 @@
 								</td>
 								<td>	
 									@if($request->zahtjev == 'Izlazak') 
-										{{ date('H:i', strtotime($request->vrijeme_od))  }} - {{  date('H:i', strtotime($request->vrijeme_do)) }}
+										{{ date('H:i', strtotime($request->start_time))  }} - {{  date('H:i', strtotime($request->end_time)) }}
 									@endif
 								</td>
 								<td>{{ $request->zahtjev }}

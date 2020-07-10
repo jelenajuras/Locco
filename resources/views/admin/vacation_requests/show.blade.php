@@ -41,8 +41,8 @@
 					<tbody id="myTable">
 					@foreach($vacationRequests as $vacationRequest)
 						<?php 
-							$brojDana = GodisnjiController::daniGO(['GOpocetak' => $vacationRequest->GOpocetak, 'GOzavršetak' => $vacationRequest->GOzavršetak] );
-							$vrijeme = GodisnjiController::izlazak(['od' => $vacationRequest->vrijeme_od, 'do' => $vacationRequest->vrijeme_do] );
+							$brojDana = GodisnjiController::daniGO(['start_date' => $vacationRequest->start_date, 'end_date' => $vacationRequest->end_date] );
+							$vrijeme = GodisnjiController::izlazak(['od' => $vacationRequest->start_time, 'do' => $vacationRequest->end_time] );
 							if($vacationRequest->zahtjev == 'GO' && $vacationRequest->odobreno == 'DA' ) {
 								$iskorišteno_GO += $brojDana;
 							}
@@ -63,8 +63,8 @@
 								</a>
 							@endif
 							</td>
-							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->GOpocetak)) }}</td>
-							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->GOzavršetak)) }}</td>
+							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->start_date)) }}</td>
+							<td>{{ date('Y.m.d.', strtotime( $vacationRequest->end_date)) }}</td>
 							
 							<td>@if($vacationRequest->zahtjev == 'Izlazak')
 									{{$vrijeme . ' h' }}
@@ -73,7 +73,7 @@
 								@endif</td>
 							<td>	
 								@if($vacationRequest->zahtjev == 'Izlazak') 
-									{{ date('H:i', strtotime($vacationRequest->vrijeme_od))  }} - {{  date('H:i', strtotime($vacationRequest->vrijeme_do)) }}
+									{{ date('H:i', strtotime($vacationRequest->start_time))  }} - {{  date('H:i', strtotime($vacationRequest->end_time)) }}
 								@endif
 							</td>
 							<td>{{ $vacationRequest->zahtjev }}
@@ -130,11 +130,11 @@
 									if($afterHour->odobreno_h ) {
 										$razlika_vremena = $afterHour->odobreno_h;
 									} else {
-										$vrijeme_1 = new DateTime($afterHour->vrijeme_od );
-										if($afterHour->vrijeme_do == '00:00:00') {
+										$vrijeme_1 = new DateTime($afterHour->start_time );
+										if($afterHour->end_time == '00:00:00') {
 											$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
 										} else {
-											$vrijeme_2 = new DateTime($afterHour->vrijeme_do);  /* vrijeme do */
+											$vrijeme_2 = new DateTime($afterHour->end_time);  /* vrijeme do */
 										}
 										
 										$razlika_vremena = $vrijeme_2->diff($vrijeme_1);
@@ -160,7 +160,7 @@
 								<tr>
 									<td>{{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name'] }}</td>
 									<td>{{ date('Y-m-d', strtotime($afterHour->datum )) }}</td>
-									<td>{{ $afterHour->vrijeme_od . '-' . $afterHour->vrijeme_do}}</td>
+									<td>{{ $afterHour->start_time . '-' . $afterHour->end_time}}</td>
 									<td>{{ $afterHour->napomena }}</td>
 									<td>{!! $afterHour->odobreno == "DA" ? round($razlika_vremena, 1, PHP_ROUND_HALF_DOWN) : '' !!}</td>
 									<td>{{ $afterHour->odobreno }}</td>

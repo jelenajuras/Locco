@@ -17,7 +17,7 @@
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.education_themes.update', $educationTheme->id) }}">
 					<div class="form-group {{ ($errors->has('education_id'))  ? 'has-error' : '' }}">
                         <label>Edukacija</label>
-						<select class="form-control"  name="education_id">
+						<select  class="form-control"  name="education_id">
 							<option value="" disabled selected</option>
 							@foreach ($educations as $education)
 								<option value="{{ $education->id }}" {!! $education->id == $educationTheme->education_id ? 'selected' : '' !!}>{{ $education->name }}</option>
@@ -29,9 +29,10 @@
                         <label>Naziv kategorije</label>
 						<input name="name" type="text" class="form-control" value="{{ $educationTheme->name }}">
 						{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
-					{{ method_field('PUT') }}
+                    </div>
 					{{ csrf_field() }}
+					{{ method_field('PUT') }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>
 			</div>

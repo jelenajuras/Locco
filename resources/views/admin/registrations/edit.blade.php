@@ -25,6 +25,11 @@
 						<input name="employee_id" type="hidden" class="form-control" value="{{ $registration->employee_id }}" >
 					</div>
 					{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
+					<div class="form-group {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}">
+						<span><b>ERP ID:</b></span>
+						<input type="text" name="erp_id" type="text" class="form-control" value="{{ $registration->erp_id }}">
+						{!! ($errors->has('erp_id') ? $errors->first('erp_id', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
 					<div class="form-group {{ ($errors->has('radnoMjesto_id'))  ? 'has-error' : '' }}">
 						<span><b>Radno mjesto:</b></span>
 						<select class="form-control" name="radnoMjesto_id" id="sel1" value="{{ $registration->radnoMjesto_id }}">

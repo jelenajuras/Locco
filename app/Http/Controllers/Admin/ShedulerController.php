@@ -49,10 +49,10 @@ class ShedulerController extends Controller
 		$godina = $datum[0];
         $mjesec = $datum[1];
         if( $mjesec > 1) {
-            $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('GOpocetak','>=',$mjesec-1 )->whereYear('GOpocetak', $godina )->orderBy('employees.last_name','ASC')->get();
+            $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('start_date','>=',$mjesec-1 )->whereYear('start_date', $godina )->orderBy('employees.last_name','ASC')->get();
         } else {
-            $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('GOpocetak','=', $mjesec )->whereYear('GOpocetak', '=', $godina )->orderBy('employees.last_name','ASC')->get();
-            $requests2 = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('GOpocetak','=', 12 )->whereYear('GOpocetak', '=', $godina-1 )->orderBy('employees.last_name','ASC')->get();
+            $requests = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('start_date','=', $mjesec )->whereYear('start_date', '=', $godina )->orderBy('employees.last_name','ASC')->get();
+            $requests2 = VacationRequest::join('employees','vacation_requests.employee_id','employees.id')->select('vacation_requests.*', 'employees.first_name', 'employees.last_name')->where('odobreno','DA')->whereMonth('start_date','=', 12 )->whereYear('start_date', '=', $godina-1 )->orderBy('employees.last_name','ASC')->get();
             foreach($requests2 as $request2) {
                 $requests->push( $request2);
             }

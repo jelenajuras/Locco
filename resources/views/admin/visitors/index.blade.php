@@ -12,7 +12,6 @@
 		<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
 
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-
 	</head>
 	<body>
 		<header>
@@ -29,7 +28,6 @@
 			<div class="lang_choose">
 				<label></label><img class="img_flag flag_hr" src="{{ asset('img/flag/hr-flag.png') }}" /><img class="img_flag flag_de" src="{{ asset('img/flag/de-flag.png') }}" /><img class="img_flag flag_en" src="{{ asset('img/flag/en-flag.png') }}" />
 			</div>
-			
 		</section>
 		<main class="visitors">
 			@include('notifications')
@@ -139,7 +137,6 @@
 					<input class="btn-submit btn_submit_reg" type="submit" value="Bestätigung"> 
 				</form>
 			</section>
-			
 		</main>
 		<footer>
 

@@ -54,7 +54,7 @@ class Probni extends Command
 			$otkaz = EmployeeTermination::where('employee_terminations.employee_id','=',$djelatnik->employee_id)->first();
 			if(!$otkaz){
 			// Send the email to user
-				Mail::queue('email.Probni', ['djelatnik' => $djelatnik, 'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik ) {
+				Mail::queue('email.Probni', ['djelatnik' => $djelatnik, 'ime' => $djelatnik->first_name, 'prezime' =>  $djelatnik->last_name], function ($mail) use ($djelatnik ) {
 					$mail->to('uprava@duplico.hr')
 						->cc('andrea.glivarec@duplico.hr')
 						->cc('jelena.juras@duplico.hr')

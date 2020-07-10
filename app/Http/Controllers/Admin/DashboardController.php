@@ -148,8 +148,8 @@ class DashboardController extends Controller
 		$ukupnoGO_PG = 0;
 		foreach($zahtjevi as $zahtjev){
 			if($zahtjev->zahtjev == 'GO' & $zahtjev->odobreno == 'DA' ){
-				$begin = new DateTime($zahtjev->GOpocetak);
-				$end = new DateTime($zahtjev->GOzavršetak);
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
 				if(date_format($end,'Y') == $ova_godina){
@@ -234,7 +234,7 @@ class DashboardController extends Controller
 			$godinaUk_PG = 0;
 		}
 
-		$zahtjeviD = VacationRequest::orderBy('GOpocetak','DESC')->take(30)->get();
+		$zahtjeviD = VacationRequest::orderBy('start_date','DESC')->take(30)->get();
 		
 		$posts = Post::where('to_employee_id',$employee->id)->take(5)->get();
 		$posts2 = Post::where('employee_id',$user->id)->take(5)->get();

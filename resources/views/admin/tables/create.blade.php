@@ -24,7 +24,7 @@
 						<input name="description" type="text" class="form-control" value="{{ old('description') }}" >
                     </div>
 					
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>
 			</div>

@@ -41,7 +41,8 @@ $(document).ready(function() {
 			extend: 'excelHtml5',
 			text: 'Izradi XLS',
 			exportOptions: {
-				columns: ":not(.not-export-column)"
+				columns: ":not(.not-export-column)",
+				rows: ':visible'
 			}
 			},
 			],

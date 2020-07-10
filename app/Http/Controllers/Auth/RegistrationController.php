@@ -114,7 +114,7 @@ class RegistrationController extends Controller
 
         // There is no need to send the payload data to the end user
         $result->clearPayload();
-		
+
         // Return the appropriate response
         return $result->dispatch(route('auth.login.form'));
     }

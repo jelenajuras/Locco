@@ -26,8 +26,8 @@ class AfterHourRequest extends FormRequest
        return [
 			'employee_id' => 'required',
 			'datum' => 'required',
-			'vrijeme_od' => 'required',
-			'vrijeme_do' => 'required',
+			'start_time' => 'required',
+			'end_time' => 'required',
 			'napomena' => 'required',
         ];
     }
@@ -37,8 +37,8 @@ class AfterHourRequest extends FormRequest
 		return [
 			'employee_id.required' => 'Unos djelatnika je obavezan.',
 			'datum.required' => 'Unos datuma je obavezan',
-			'vrijeme_od.required' => 'Unos vremena je obavezan',
-			'vrijeme_do.required' => 'Unos vremena je obavezan',
+			'start_time.required' => 'Unos vremena je obavezan',
+			'end_time.required' => 'Unos vremena je obavezan',
 			'napomena.required' => 'Unos napomene je obavezan',
 		];
 	}

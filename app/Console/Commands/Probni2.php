@@ -51,7 +51,9 @@ class Probni2 extends Command
 		$djelatnici = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->whereYear('registrations.datum_prijave', '=', $godina)->whereMonth('registrations.datum_prijave', '=', $mjesec)->whereDay('registrations.datum_prijave', '=', $dan)->get();
 		
 		foreach($djelatnici as $djelatnik) {
-			$otkaz = EmployeeTermination::where('employee_terminations.employee_id','=',$djelatnik->employee_id)->first();
+            $otkaz = EmployeeTermination::where('employee_terminations.employee_id','=',$djelatnik->employee_id)->first();
+            $ime = $djelatnik->first_name;
+            $prezime =  $djelatnik->last_name;
 			if(!$otkaz){
 			// Send the email to user
 				Mail::queue('email.Probni', ['djelatnik' => $djelatnik, 'ime' => $ime, 'prezime' => $prezime], function ($mail) use ($djelatnik ) {

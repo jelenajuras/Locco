@@ -1,9 +1,10 @@
+
 @extends('layouts.admin')
 
 @section('title', 'Zaposlenici po odjelima')
-<?php 
+@php
 	use App\Models\Employee_department; 
-?>
+@endphp
 @section('content')
 <a class="btn btn-md pull-left" href="{{ url()->previous() }}">
 	<i class="fas fa-angle-double-left"></i>

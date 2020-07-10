@@ -62,7 +62,6 @@
 					{{'Nema podataka!'}}
 				@endif
             </div>
-		
         </div>
     </div>
 </div>

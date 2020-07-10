@@ -1,3 +1,5 @@
+@if (! Sentinel::inRole('erp_test'))
+	
 @extends('layouts.admin')
 
 @section('title', 'Users')
@@ -63,3 +65,4 @@
     });
     </script>
 @stop
+@endif

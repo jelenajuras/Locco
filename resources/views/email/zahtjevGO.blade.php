@@ -34,15 +34,15 @@
 	</style>
 	<body>
 		<h4>Ja, {{ $employee->first_name . ' ' . $employee->last_name }}</h4>
-		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "PL" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD" || $vacationRequest->zahtjev == "VIK" || $vacationRequest->zahtjev == "CEK" )
+		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "PL" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD" || $vacationRequest->zahtjev == "VIK" || $vacationRequest->zahtjev == "CEK"  || $vacationRequest->zahtjev == "COVID-19"|| $vacationRequest->zahtjev == "RD" )
 			<h4>molim da mi se odobri {{ $zahtjev2 }} za
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $vacationRequest->GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $vacationRequest->end_date)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
 		@elseif($vacationRequest->zahtjev == "Bolovanje")
 			<h4>prijavljujem bolovanje za
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $vacationRequest->GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $vacationRequest->end_date)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
 		@elseif($vacationRequest->zahtjev == "Izlazak")
 			<h4>molim da mi se odobri {{ $zahtjev2 }} za
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vrijeme  }}</h4>
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' od ' . $vrijeme  }}</h4>
 		@endif
 
 		<div><b>Napomena: </b></div>

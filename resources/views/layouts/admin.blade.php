@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="csrf-token" content="{{ csrf_token() }}">
+
 		<title>@yield('title')</title>
 
 		<!-- Bootstrap - Latest compiled and minified CSS -->
@@ -64,10 +64,9 @@
 				@if(Sentinel::check() && !Sentinel::inRole('otkaz'))
 					<a href="{{ route('home') }}" class="naslov">Naslovnica</a>
 					<a href="{{ route('users.edit', Sentinel::getUser('id')) }}">Ispravi lozinku</a></li>
-					@if (! Sentinel::inRole('temporary'))
+					@if (! Sentinel::inRole('temporary') && ! Sentinel::inRole('erp_test'))
 						<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
 					@endif
-						<a class="" href="{{ route('admin.ads.index') }}">Predaj oglas</a>
 					@if(Sentinel::inRole('administrator') || Sentinel::inRole('uprava') || Sentinel::inRole('basic') || Sentinel::inRole('temporary') )
 						<a class="" href="{{ route('admin.documents.index') }}">Dokumenti</a>
 					@endif				

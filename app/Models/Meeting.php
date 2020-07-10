@@ -11,7 +11,7 @@ class Meeting extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['datum','vrijeme_od','vrijeme_do','employee_id','meeting_room_id','project_id','description'];
+	protected $fillable = ['datum','start_time','end_time','employee_id','meeting_room_id','project_id','description'];
 	
 	/*
 	* The Eloquent employee model name

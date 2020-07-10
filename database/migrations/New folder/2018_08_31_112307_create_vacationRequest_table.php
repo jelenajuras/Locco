@@ -16,8 +16,8 @@ class CreateVacationRequestTable extends Migration
         Schema::create('vacation_requests', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('employee_id');
-			$table->date('GOpocetak')->nullable($value = true);
-			$table->date('GOzavršetak')->nullable($value = true);
+			$table->date('start_date')->nullable($value = true);
+			$table->date('end_date')->nullable($value = true);
 			$table->string('napomena')->nullable($value = true);
 			$table->string('odobreno')->nullable($value = true);
 			$table->integer('odobrio_id');

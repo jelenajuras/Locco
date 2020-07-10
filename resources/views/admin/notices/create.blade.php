@@ -49,7 +49,7 @@
 						{!! ($errors->has('notice') ? $errors->first('notice', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji obavijest" id="stil1">
 				</form>
 			</div>
@@ -85,6 +85,7 @@
 					<p  class="level1" style="padding-left:20px">{{ $department1->name }}</p>
 				@endif	
 	
+
 				@foreach($departments->where('level',2)->where('level1', $department1->id ) as $department2)
 					<details  class="level2" style="padding-left:40px">
 						<summary>{{ $department2->name }}</summary>

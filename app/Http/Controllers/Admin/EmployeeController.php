@@ -64,6 +64,7 @@ class EmployeeController extends Controller
 		$data = array(
 			'first_name'  			=> $input['first_name'],
 			'last_name'     		=> $input['last_name'],
+			'maiden_name'     		=> $input['maiden_name'],
 			'ime_oca'     			=> $input['ime_oca'],
 			'ime_majke'     		=> $input['ime_majke'],
 			'oib'           		=> $input['oib'],
@@ -185,6 +186,7 @@ class EmployeeController extends Controller
 			'first_name'  		   => $input['first_name'],
 			'last_name'   		   => $input['last_name'],
 			'ime_oca'     		   => $input['ime_oca'],
+			'maiden_name'     		=> $input['maiden_name'],
 			'ime_majke'   		   => $input['ime_majke'],
 			'oib'  		           => $input['oib'],
 			'oi'          		   => $input['oi'],

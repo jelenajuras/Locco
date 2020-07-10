@@ -24,12 +24,12 @@
 		@foreach($vacationRequests as $vacationRequest)
 			@if($vacationRequest->zahtjev != 'Izlazak') 
 				<?php
-					$dani = GodisnjiController::daniGO(['GOpocetak' => $vacationRequest->GOpocetak, 'GOzavršetak' => $vacationRequest->GOzavršetak] );
+					$dani = GodisnjiController::daniGO(['start_date' => $vacationRequest->start_date, 'end_date' => $vacationRequest->end_date] );
 				?>
 				<tr>
 					<td>{{  $vacationRequest->employee['last_name']  . ' ' . $vacationRequest->employee['first_name']}}</td>
-					<td>{{ date('d.m.Y', strtotime( $vacationRequest->GOpocetak)) }}</td>
-					<td>{{ date('d.m.Y', strtotime( $vacationRequest->GOzavršetak)) }}</td>
+					<td>{{ date('d.m.Y', strtotime( $vacationRequest->start_date)) }}</td>
+					<td>{{ date('d.m.Y', strtotime( $vacationRequest->end_date)) }}</td>
 					<td>{{ $dani }}</td>
 					<td>{{ $vacationRequest->zahtjev }}</td>
 					<td class="align-left">{{ $vacationRequest->napomena }}</td>
@@ -56,12 +56,12 @@
 		@foreach($vacationRequests as $vacationRequest)
 			@if($vacationRequest->zahtjev == 'Izlazak') 
 				<?php
-					$vrijeme = GodisnjiController::izlazak(['od' => $vacationRequest->vrijeme_od, 'do' => $vacationRequest->vrijeme_do] );
+					$vrijeme = GodisnjiController::izlazak(['od' => $vacationRequest->start_time, 'do' => $vacationRequest->end_time] );
 				?>
 				<tr>
 					<td>{{ $vacationRequest->employee['first_name'] . ' ' . $vacationRequest->employee['last_name']}}</td>
-					<td>{{ date('d.m.Y.', strtotime( $vacationRequest->GOpocetak)) }}</td>
-					<td>{{ date('H:i', strtotime( $vacationRequest->GOpocetak. ' '. $vacationRequest->vrijeme_od))  }} - {{  date('H:i', strtotime( $vacationRequest->GOpocetak. ' '. $vacationRequest->vrijeme_do)) }}</td>
+					<td>{{ date('d.m.Y.', strtotime( $vacationRequest->start_date)) }}</td>
+					<td>{{ date('H:i', strtotime( $vacationRequest->start_date. ' '. $vacationRequest->start_time))  }} - {{  date('H:i', strtotime( $vacationRequest->start_date. ' '. $vacationRequest->end_time)) }}</td>
 					<td>{{ $vrijeme }}</td>
 					<td>{{ $vacationRequest->napomena }}</td>
 				</tr>

@@ -11,6 +11,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('roles.update', $role->id) }}">
+                <fieldset>
                     <div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
                         <input class="form-control" placeholder="Name" name="name" type="text" value="{{ $role->name }}" />
                         {!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
@@ -32,9 +33,11 @@
 								@endforeach
 							@endforeach
 						</div>
-                    {{ csrf_field() }}
-                    {{ method_field('PUT') }}
+
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    <input name="_method" value="PUT" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" id="stil1">
+                </fieldset>
                 </form>
 			</div>
 		</div>

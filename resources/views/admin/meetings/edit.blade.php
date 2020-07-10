@@ -18,8 +18,8 @@
 						{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="datum2 form-group">
-						<span>od</span><input type="text" name="vrijeme_od" class="timepicker form-control" value="{{ $meeting->vrijeme_od }}">
-						<span>do</span><input type="text" name="vrijeme_do" class="timepicker form-control" value="{{ $meeting->vrijeme_do }}" >
+						<span>od</span><input type="text" name="start_time" class="timepicker form-control" value="{{ $meeting->start_time }}">
+						<span>do</span><input type="text" name="end_time" class="timepicker form-control" value="{{ $meeting->end_time }}" >
 					</div>
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 						<label class="padd_10">Djelatnik</label>
@@ -58,8 +58,9 @@
 						<input name="description" type="text" class="form-control" value="{{ $meeting->description }}" >
 						{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					{{ method_field('PUT') }}
 					{{ csrf_field() }}
+					{{ method_field('PUT') }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="ispravi" id="stil1">
 				</form>
 			</div>

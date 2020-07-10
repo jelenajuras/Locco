@@ -126,8 +126,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO_PG = 0;
 		foreach($zahtjevi as $zahtjev){
 			if($zahtjev->zahtjev == 'GO' & $zahtjev->odobreno == 'DA' ){
-				$begin = new DateTime($zahtjev->GOpocetak);
-				$end = new DateTime($zahtjev->GOzavršetak);
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
 				$brojDana = date_diff($end, $begin);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
@@ -138,29 +138,30 @@ class GodisnjiController extends Controller
 						$ukupnoGO += 1;
 						$ukupnoGO_PG += 1;
 					}
-					if(date_format($dan,'N') < 6 & date_format($dan,'d') == '01' & date_format($dan,'m') == '01' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '06' & date_format($dan,'m') == '01' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '01' & date_format($dan,'m') == '05' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '22' & date_format($dan,'m') == '06' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '25' & date_format($dan,'m') == '06' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '15' & date_format($dan,'m') == '08' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '05' & date_format($dan,'m') == '08' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '08' & date_format($dan,'m') == '10' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '01' & date_format($dan,'m') == '11' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '25' & date_format($dan,'m') == '12' ||
-						date_format($dan,'N') < 6 & date_format($dan,'d') == '26' & date_format($dan,'m') == '12'){
+					if(date_format($dan,'N') < 6 && date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2018' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+					date_format($dan,'N') < 6 && date_format($dan,'d') == '26' && date_format($dan,'m') == '12'){
 							if(date_format($dan,'Y') == $ova_godina ){
 								$ukupnoGO -= 1;
 							} elseif(date_format($dan,'Y') == $prosla_godina ){
 								$ukupnoGO_PG -= 1;
 							}
 					}
-					if(date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-						date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
-						date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
-						date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
-						date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
-						date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
+					if(date_format($dan,'d') == '02' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '31' && date_format($dan,'m') == '05' && date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '22' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '20' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
+						date_format($dan,'d') == '13' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2020' ||
+						date_format($dan,'d') == '11' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2020'){
 						$ukupnoGO -= 1;
 					}
 				}
@@ -244,8 +245,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -258,19 +259,20 @@ class GodisnjiController extends Controller
 							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
 							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
 							date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
 							date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
 							date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
-							date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-							date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
-							date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
-							date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
-							date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
-							date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
+							date_format($dan,'d') == '02' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '31' && date_format($dan,'m') == '05' && date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '22' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '20' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
+							date_format($dan,'d') == '13' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2020' ||
+							date_format($dan,'d') == '11' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2020'){
 								$ukupnoGO -= 1;
 						}
 					}
@@ -293,8 +295,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO_PG = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -307,7 +309,8 @@ class GodisnjiController extends Controller
 							date_format($dan,'d-m') == '06-01' ||
 							date_format($dan,'d-m') == '01-05' ||
 							date_format($dan,'d-m') == '22-06' ||
-							date_format($dan,'d-m') == '25-06' ||
+							date_format($dan,'d-m-Y') == '25-06-2018' ||
+							date_format($dan,'d-m-Y') == '25-06-2019' ||
 							date_format($dan,'d-m') == '15-08' ||
 							date_format($dan,'d-m') == '05-08' ||
 							date_format($dan,'d-m') == '08-10' ||
@@ -342,8 +345,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO_PG = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -354,7 +357,8 @@ class GodisnjiController extends Controller
 							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
 							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -388,8 +392,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -402,7 +406,8 @@ class GodisnjiController extends Controller
 							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06'  && date_format($dan,'Y') == '2018' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06'  && date_format($dan,'Y') == '2019' ||
 							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -427,8 +432,8 @@ class GodisnjiController extends Controller
 	// Računa broj radnih dana između dva datuma
 	public static function daniGO($zahtjev)
 	{
-		$begin = new DateTime($zahtjev['GOpocetak']);
-		$end = new DateTime($zahtjev['GOzavršetak']);
+		$begin = new DateTime($zahtjev['start_date']);
+		$end = new DateTime($zahtjev['end_date']);
 		$end->setTime(0,0,1);
 		$interval = DateInterval::createFromDateString('1 day');
 		$period = new DatePeriod($begin, $interval, $end);
@@ -441,7 +446,8 @@ class GodisnjiController extends Controller
 			date_format($dan,'d-m') != '06-01' &&
 			date_format($dan,'d-m') != '01-05' && 
 			date_format($dan,'d-m') != '22-06' &&
-			date_format($dan,'d-m') != '25-06' && 
+			date_format($dan,'d-m-Y') != '25-06-2018' && 
+			date_format($dan,'d-m-Y') != '25-06-2019' && 
 			date_format($dan,'d-m') != '15-08' && 
 			date_format($dan,'d-m') != '05-08' && 
 			date_format($dan,'d-m') != '08-10' && 
@@ -463,8 +469,8 @@ class GodisnjiController extends Controller
 	// Računa broj dana između dva datuma sa vikendima i praznicima
 	public static function ukupnoDani($zahtjev)
 	{
-		$begin = new DateTime($zahtjev['GOpocetak']);
-		$end = new DateTime($zahtjev['GOzavršetak']);
+		$begin = new DateTime($zahtjev['start_date']);
+		$end = new DateTime($zahtjev['end_date']);
 		$end->setTime(0,0,1);
 		$interval = DateInterval::createFromDateString('1 day');
 		$period = new DatePeriod($begin, $interval, $end);
@@ -489,11 +495,11 @@ class GodisnjiController extends Controller
 				if($prekovremeni->odobreno_h ) {
 					$razlika_vremena = $prekovremeni->odobreno_h;
 				} else {
-					$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od );
-					if($prekovremeni->vrijeme_do == '00:00:00') {
+					$vrijeme_1 = new DateTime($prekovremeni->start_time );
+					if($prekovremeni->end_time == '00:00:00') {
 						$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
 					} else {
-						$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+						$vrijeme_2 = new DateTime($prekovremeni->end_time);  /* vrijeme do */
 					}
 					
 					$razlika_vremena = $vrijeme_2->diff($vrijeme_1);
@@ -531,11 +537,11 @@ class GodisnjiController extends Controller
 				if($prekovremeni->odobreno_h ) {
 					$razlika_vremena = $prekovremeni->odobreno_h;
 				} else {
-					$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od );
-					if($prekovremeni->vrijeme_do == '00:00:00') {
+					$vrijeme_1 = new DateTime($prekovremeni->start_time );
+					if($prekovremeni->end_time == '00:00:00') {
 						$vrijeme_2 = new DateTime('23:59:59');  /* vrijeme do */
 					} else {
-						$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+						$vrijeme_2 = new DateTime($prekovremeni->end_time);  /* vrijeme do */
 					}
 					
 					$razlika_vremena = $vrijeme_2->diff($vrijeme_1);
@@ -587,8 +593,8 @@ class GodisnjiController extends Controller
 		$razlika_m = 0;
 		
 		foreach($izlasci as $izlazak){
-			$vrijeme_1 = new DateTime($izlazak->vrijeme_od);  /* vrijeme od */
-			$vrijeme_2 = new DateTime($izlazak->vrijeme_do);  /* vrijeme do */
+			$vrijeme_1 = new DateTime($izlazak->start_time);  /* vrijeme od */
+			$vrijeme_2 = new DateTime($izlazak->end_time);  /* vrijeme do */
 			$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 			
 			$razlika_h += (int)$razlika_vremena->h;
@@ -606,14 +612,14 @@ class GodisnjiController extends Controller
 	// računa sate izlazaka u zadanom mjeseci    /************ RADI!!!!!!! ***************/
 	public static function izlasci_Mj($user, $mjesec, $godina )  //user = registration!!!
 	{
-		$izlasci = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','Izlazak')->where('odobreno','DA')->whereMonth('vacation_requests.GOpocetak', $mjesec)->whereYear('vacation_requests.GOpocetak', $godina)->get();
+		$izlasci = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','Izlazak')->where('odobreno','DA')->whereMonth('vacation_requests.start_date', $mjesec)->whereYear('vacation_requests.start_date', $godina)->get();
 		
 		$razlika_h =0;
 		$razlika_m =0;
 		
 		foreach($izlasci as $izlazak){
-			$vrijeme_1 = new DateTime($izlazak->vrijeme_od);  /* vrijeme od */
-			$vrijeme_2 = new DateTime($izlazak->vrijeme_do);  /* vrijeme do */
+			$vrijeme_1 = new DateTime($izlazak->start_time);  /* vrijeme od */
+			$vrijeme_2 = new DateTime($izlazak->end_time);  /* vrijeme do */
 			$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 			
 			
@@ -670,8 +676,8 @@ class GodisnjiController extends Controller
 		
 		foreach($sl_dani as $sl_dan){
 			if($sl_dan->odobreno == 'DA'){
-				$begin = new DateTime($sl_dan->GOpocetak);
-				$end = new DateTime($sl_dan->GOzavršetak);
+				$begin = new DateTime($sl_dan->start_date);
+				$end = new DateTime($sl_dan->end_date);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
@@ -683,7 +689,8 @@ class GodisnjiController extends Controller
 						date_format($dan,'d-m') == '06-01' ||
 						date_format($dan,'d-m') == '01-05' ||
 						date_format($dan,'d-m') == '22-06' ||
-						date_format($dan,'d-m') == '25-06' ||
+						date_format($dan,'d-m-Y') == '25-06-2018' ||
+						date_format($dan,'d-m-Y') == '25-06-2019' ||
 						date_format($dan,'d-m') == '15-08' ||
 						date_format($dan,'d-m') == '05-08' ||
 						date_format($dan,'d-m') == '08-10' ||
@@ -848,15 +855,15 @@ class GodisnjiController extends Controller
 	public static function razmjeranGO_date($user, $request)    /************ RADI!!!!!!! ***************/
 	{	
 		//početak zahtjeva
-		$godina_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
-		$mjesec_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
-		$dan_pocetak_zahtjeva = date('Y', strtotime($request['GOpocetak']));
+		$godina_pocetak_zahtjeva = date('Y', strtotime($request['start_date']));
+		$mjesec_pocetak_zahtjeva = date('Y', strtotime($request['start_date']));
+		$dan_pocetak_zahtjeva = date('Y', strtotime($request['start_date']));
 		//kraj zahtjeva
-		$ova_godina = date('Y', strtotime($request['GOzavršetak']));
-		$ovaj_mjesec = date('m', strtotime($request['GOzavršetak']));
-		$ovaj_dan = date('d', strtotime($request['GOzavršetak']));
+		$ova_godina = date('Y', strtotime($request['end_date']));
+		$ovaj_mjesec = date('m', strtotime($request['end_date']));
+		$ovaj_dan = date('d', strtotime($request['end_date']));
 
-		$date = new DateTime($request['GOzavršetak']);
+		$date = new DateTime($request['end_date']);
 
 		$dan_pola_mjeseca = round(cal_days_in_month(CAL_GREGORIAN, $ovaj_mjesec, $ova_godina )/2,0,PHP_ROUND_HALF_UP);   // 15 dana ili 14 ili 16
 
@@ -1063,8 +1070,8 @@ class GodisnjiController extends Controller
 		foreach ($godine as $godina) {
 			$GO_dani = GodisnjiController::razmjeranGO_PG($user, $godina); // razmjerni dani za godinu
 			$dani[$godina] = $GO_dani;
-
 		}
+		
 		return $dani;
 	}
 
@@ -1085,8 +1092,8 @@ class GodisnjiController extends Controller
 		$zahtjevi_Dani_PG = 0;
 			
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -1096,7 +1103,8 @@ class GodisnjiController extends Controller
 						date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 						date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 						date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-						date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2018' ||
+						date_format($dan,'d') == '25' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
 						date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 						date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 						date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -1145,14 +1153,15 @@ class GodisnjiController extends Controller
 		$zahtjevi = VacationRequest::where('zahtjev','GO')->where('odobreno','DA')->get();
 		$godine = array();
 		if($zahtjevi->first()) {
-			$prva_godina = date('Y',strtotime($zahtjevi->first()->GOpocetak));
+			$prva_godina = date('Y',strtotime($zahtjevi->first()->start_date));
 		}
 
 		while ($prva_godina <= $ova_godina) {
 			array_push($godine, strval($prva_godina));
 			$prva_godina++;
 		}
-
+		asort($godine);
+		
 		return $godine;
 	}
 
@@ -1162,20 +1171,20 @@ class GodisnjiController extends Controller
 		$zahtjevi_godina_SG = array();
 		$zahtjevi_godina_PG = array();
 	
-		$godine = GodisnjiController::godineZahtjeva(); // sve godine zahtjeva
-		$zahtjevi = VacationRequest::where('employee_id',$registration->employee_id)->where('zahtjev','GO')->where('odobreno','DA')->orderBy('GOpocetak','ASC')->get(); // svi zahtjevi djelatnika
-	
+		$godine = GodisnjiController::godineZahtjeva(); // sve godine zahtjeva 2018/2019/2020
+		$zahtjevi = VacationRequest::where('employee_id',$registration->employee_id)->where('zahtjev','GO')->where('odobreno','DA')->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
+		$razmjeranGO_years = GodisnjiController::razmjeranGO_years($registration); // razmjerni dani sve  godine  20/20/11
+
 		foreach ($godine as $godina) {
 			$zahtjeviArray[$godina] = array();
-			$GO_dani = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani za godinu
-			$razmjeranGO_years = GodisnjiController::razmjeranGO_years($registration); // razmjerni dani sve  godine
+			$GO_dani = $razmjeranGO_years[$godina]; // razmjerni dani za godinu
 			
 			$zahtjevi_godina_PG = array_unique(array_merge($zahtjevi_godina_PG, $zahtjevi_godina_SG));  // zahtjevi_PG - zahtjevi iz slijedeće godine do 30.6. ako ima razmjernih dana slobodnih + prebačeni zahtjevi iz prošle godine ako nije bilo dana - maknuti dupli datumi
 			$zahtjevi_godina = array();
 			
 			foreach($zahtjevi as $zahtjev){
-				$begin = new DateTime($zahtjev->GOpocetak);
-				$end = new DateTime($zahtjev->GOzavršetak);
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
@@ -1186,7 +1195,8 @@ class GodisnjiController extends Controller
 							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06'  && date_format($dan,'Y') == '2018'  ||
+							date_format($dan,'d') == '25' && date_format($dan,'m') == '06'  && date_format($dan,'Y') == '2019'  ||
 							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -1237,12 +1247,13 @@ class GodisnjiController extends Controller
 			$zahtjeviArray[$godina] = (array_merge( $zahtjevi_godina));	
 			
 		}
+	
 		return $zahtjeviArray;
 	}
 
 	public static function go_na_dan ($employee_id, $date)
 	{
-		$zahtjev = VacationRequest::where('employee_id',$employee_id)->where('GOpocetak',$date)->where('odobreno','<>','NE')->first(); // svi zahtjevi djelatnika
+		$zahtjev = VacationRequest::where('employee_id',$employee_id)->where('start_date',$date)->where('odobreno','<>','NE')->first(); // svi zahtjevi djelatnika
 
 		if($zahtjev) {
 			return false;
@@ -1259,8 +1270,8 @@ class GodisnjiController extends Controller
 			$response = GodisnjiController::go_na_dan($employee_id, $date_start);
 		} else {
 			foreach($zahtjevi as $zahtjev){		
-				$begin = new DateTime($zahtjev->GOpocetak);
-				$end = new DateTime($zahtjev->GOzavršetak);
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
@@ -1287,8 +1298,8 @@ class GodisnjiController extends Controller
 		$zahtjevi = VacationRequest::where('employee_id',$employee_id)->where('zahtjev', '<>', 'Izlazak')->where('odobreno', 'DA')->get(); // svi zahtjevi djelatnika
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -1309,7 +1320,7 @@ class GodisnjiController extends Controller
 		$response =  true;
 		foreach($zahtjevi as $zahtjev){
 			
-			if($zahtjev->datum == $date && date('H:i',strtotime($zahtjev->vrijeme_od)) == $time1) {
+			if($zahtjev->datum == $date && date('H:i',strtotime($zahtjev->start_time)) == $time1) {
 				$response =  false;
 			}
 		}

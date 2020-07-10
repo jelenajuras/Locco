@@ -79,7 +79,7 @@ class VisitorController extends Controller
         }
 
         $email = $request['email'];
-        try {
+         try {
             Mail::queue(
                 'email.visitors',
                 ['text_for_mail' => $text_for_mail, 'lang' => $lang],
@@ -96,7 +96,6 @@ class VisitorController extends Controller
 
         $message = session()->flash('success', $text);
 
-        //return redirect()->back()->withFlashMessage($messange);
        // return redirect()->back()->withFlashMessage($message);
         return view('email.visitors_welcome', ['text'=>$text]);
     }

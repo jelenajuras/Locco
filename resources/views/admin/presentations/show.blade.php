@@ -7,6 +7,9 @@
 	<i class="fas fa-angle-double-left"></i>
 	Natrag
 </a>
+<?php 
+				
+			?>
 <div class="post" >
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 	@if($presentations)
@@ -85,20 +88,6 @@ $( document ).ready(function() {  // filter knowledge base
 		}
 	});	
 });
-
-$( document ).ready(function() {  // filter knowledge base
-	$('#filter2').change(function() {
-		var trazi = $('#filter2').val().toLowerCase();
-
-		if(trazi == "all"){
-			$('#articles > .article').show();
-		} else {
-			$('#articles > .article').filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
-			});
-		}
-	});	
-});
 </script>
 <script>
 function mySearch() {
@@ -131,4 +120,5 @@ function mySearch() {
     }
 }
 </script>
+
 @stop

@@ -77,8 +77,8 @@
 												@foreach($requests as $request)
 													@if($request->employee_id == $djelatnik->employee_id)
 														<?php 
-															$begin = new DateTime($request['GOpocetak']);
-															$end = new DateTime($request['GOzavršetak']);
+															$begin = new DateTime($request['start_date']);
+															$end = new DateTime($request['end_date']);
 															$end->setTime(0,0,1);
 															$interval = DateInterval::createFromDateString('1 day');
 															$period = new DatePeriod($begin, $interval, $end);
@@ -88,7 +88,8 @@
 																		date_format($dan3,'d') == '06' & date_format($dan3,'m') == '01' ||
 																		date_format($dan3,'d') == '01' & date_format($dan3,'m') == '05' ||
 																		date_format($dan3,'d') == '22' & date_format($dan3,'m') == '06' ||
-																		date_format($dan3,'d') == '25' & date_format($dan3,'m') == '06' ||
+																		date_format($dan3,'N') < 6 && date_format($dan3,'d') == '25' && date_format($dan3,'m') == '06' && date_format($dan3,'Y') == '2018' ||
+																		date_format($dan3,'N') < 6 && date_format($dan3,'d') == '25' && date_format($dan3,'m') == '06' && date_format($dan3,'Y') == '2019' ||
 																		date_format($dan3,'d') == '15' & date_format($dan3,'m') == '08' ||
 																		date_format($dan3,'d') == '05' & date_format($dan3,'m') == '08' ||
 																		date_format($dan3,'d') == '08' & date_format($dan3,'m') == '10' ||
@@ -101,17 +102,25 @@
 																		date_format($dan3,'d') == '13' & date_format($dan3,'m') == '04' & date_format($dan3,'Y') == '2020' ||
 																		date_format($dan3,'d') == '11' & date_format($dan3,'m') == '06' & date_format($dan3,'Y') == '2020'){
 																			
-																		}else{
+																		} else {
 																			$zahtjev = $request->zahtjev;
 																			$class = '';
 																				switch ($zahtjev) {
-																				 case 'Izlazak':
+																				case 'Izlazak':
 																					$zahtjev = 'IZL';
 																					$class = 'green';
 																					break;
 																				case 'Bolovanje':
 																					$zahtjev = 'BOL';
 																					$class = 'blue';
+																					break;
+																				case 'COVID-19':
+																					$zahtjev = 'COV';
+																					$class = 'blue';
+																					break;
+																				case 'RD':
+																					$zahtjev = 'RD';
+																					$class = '';
 																					break;
 																				case 'GO':
 																					$zahtjev = 'GO';

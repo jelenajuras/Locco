@@ -61,8 +61,8 @@ class TemporaryEmployeeRequestController extends Controller
     {
         $input = $request->except(['_token']);
 
-		if($input['GOzavršetak'] == '' ){
-			$input['GOzavršetak'] = $input['GOpocetak'];
+		if($input['end_date'] == '' ){
+			$input['end_date'] = $input['start_date'];
 		}
 
 		if(is_array($input['employee_id']) ) {   /* ZAHTJEV NA VIŠE DJELATNIKA */
@@ -70,10 +70,10 @@ class TemporaryEmployeeRequestController extends Controller
 				$data = array(
 				'zahtjev'  			=> $input['zahtjev'],
 				'employee_id'  		=> $employee_id,
-				'GOpocetak'    		=> date("Y-m-d", strtotime($input['GOpocetak'])),
-				'GOzavršetak'		=> date("Y-m-d", strtotime($input['GOzavršetak'])),
-				'vrijeme_od'  		=> $input['vrijeme_od'],
-				'vrijeme_do'  		=> $input['vrijeme_do'],
+				'start_date'    		=> date("Y-m-d", strtotime($input['start_date'])),
+				'end_date'		=> date("Y-m-d", strtotime($input['end_date'])),
+				'start_time'  		=> $input['start_time'],
+				'end_time'  		=> $input['end_time'],
 				'napomena'  		=> $input['napomena'],
 				'odobreno' 			=> '',   // ODOBRENO ILI NE????
 				'odobrio_id' 		=> '58'
@@ -89,10 +89,10 @@ class TemporaryEmployeeRequestController extends Controller
             $data = array(
                 'zahtjev'  			=> $input['zahtjev'],
                 'employee_id'  		=> $employee->id,
-                'GOpocetak'    		=> date("Y-m-d", strtotime($input['GOpocetak'])),
-                'GOzavršetak'		=> date("Y-m-d", strtotime($input['GOzavršetak'])),
-                'vrijeme_od'  		=> $input['vrijeme_od'],
-                'vrijeme_do'  		=> $input['vrijeme_do'],
+                'start_date'    		=> date("Y-m-d", strtotime($input['start_date'])),
+                'end_date'		=> date("Y-m-d", strtotime($input['end_date'])),
+                'start_time'  		=> $input['start_time'],
+                'end_time'  		=> $input['end_time'],
                 'napomena'  		=> $input['napomena']
             );
             if($input['zahtjev'] == 'Bolovanje'){
@@ -104,7 +104,7 @@ class TemporaryEmployeeRequestController extends Controller
 
             if($input['zahtjev'] == 'Izlazak') {
                 $zahtjev2 = 'prijevremeni izlaz';
-                $vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
+                $vrijeme = 'od ' . $input['start_time'] . ' do ' . $input['end_time']; 
             } elseif($input['zahtjev'] == 'Bolovanje'){
                 $zahtjev2 = 'bolovanje';
                 $vrijeme="";
@@ -135,7 +135,7 @@ class TemporaryEmployeeRequestController extends Controller
                     $mail_work_voditelj = $work_nadredjeni->email;	
                 }
 
-                $zahtjev = array('GOpocetak' =>$input['GOpocetak'], 'GOzavršetak' =>$input['GOzavršetak']);  // array zatjev početak - kraj
+                $zahtjev = array('start_date' =>$input['start_date'], 'end_date' =>$input['end_date']);  // array zatjev početak - kraj
                 $dani_zahtjev = GodisnjiController::daniGO($zahtjev); 		
                 
                 $ja = 'jelena.juras@duplico.hr';
@@ -146,7 +146,7 @@ class TemporaryEmployeeRequestController extends Controller
                         if($input['zahtjev'] == 'Bolovanje'){ 			// ako je bolovanje
                             Mail::queue(
                                 'email.zahtjevTemp',
-                                ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                                ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                                 function ($message) use ($ja, $employee) {
                                     $message->to('matija.barberic@duplico.hr')
                                             ->from('info@duplico.hr', 'Duplico')
@@ -155,7 +155,7 @@ class TemporaryEmployeeRequestController extends Controller
                             );
                             Mail::queue(
                                 'email.zahtjevTemp',
-                                ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                                ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                                 function ($message) use ($mail_work_voditelj, $employee) {
                                     $message->to($mail_work_voditelj)
                                             ->from('info@duplico.hr', 'Duplico')
@@ -166,7 +166,7 @@ class TemporaryEmployeeRequestController extends Controller
                             if($mail_work_voditelj != '' || $mail_work_voditelj != null) {
                                 Mail::queue(
                                     'email.zahtjevTemp',
-                                    ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                                    ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                                     function ($message) use ($mail_work_voditelj, $employee) {
                                         $message->to($mail_work_voditelj)
                                             ->from('info@duplico.hr', 'Duplico')
@@ -175,9 +175,18 @@ class TemporaryEmployeeRequestController extends Controller
                                 );
                                 Mail::queue(
                                     'email.zahtjevTemp',
-                                    ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                                    ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                                     function ($message) use ($ja, $employee) {
                                         $message->to($ja)
+                                            ->from('info@duplico.hr', 'Duplico')
+                                            ->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
+                                    }
+                                );
+                                Mail::queue(
+                                    'email.zahtjevTemp',
+                                    ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
+                                    function ($message) use ($ja, $employee) {
+                                        $message->to('matija.barberic@duplico.hr')
                                             ->from('info@duplico.hr', 'Duplico')
                                             ->subject('Zahtjev - ' .  $employee->first_name . ' ' .  $employee->last_name);
                                     }
@@ -240,10 +249,10 @@ class TemporaryEmployeeRequestController extends Controller
         $data = array(
             'zahtjev'  			=> $input['zahtjev'],
             'employee_id'  		=> $employee->id,
-            'GOpocetak'    		=> date("Y-m-d", strtotime($input['GOpocetak'])),
-            'GOzavršetak'		=> date("Y-m-d", strtotime($input['GOzavršetak'])),
-            'vrijeme_od'  		=> $input['vrijeme_od'],
-            'vrijeme_do'  		=> $input['vrijeme_do'],
+            'start_date'    		=> date("Y-m-d", strtotime($input['start_date'])),
+            'end_date'		=> date("Y-m-d", strtotime($input['end_date'])),
+            'start_time'  		=> $input['start_time'],
+            'end_time'  		=> $input['end_time'],
             'napomena'  		=> $input['napomena']
         );
         if($input['zahtjev'] == 'Bolovanje'){
@@ -254,7 +263,7 @@ class TemporaryEmployeeRequestController extends Controller
 
         if($input['zahtjev'] == 'Izlazak') {
             $zahtjev2 = 'prijevremeni izlaz';
-            $vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
+            $vrijeme = 'od ' . $input['start_time'] . ' do ' . $input['end_time']; 
         } elseif($input['zahtjev'] == 'Bolovanje'){
             $zahtjev2 = 'bolovanje';
             $vrijeme="";
@@ -285,7 +294,7 @@ class TemporaryEmployeeRequestController extends Controller
                 $mail_work_voditelj = $work_nadredjeni->email;	
             }
 
-            $zahtjev = array('GOpocetak' =>$input['GOpocetak'], 'GOzavršetak' =>$input['GOzavršetak']);  // array zatjev početak - kraj
+            $zahtjev = array('start_date' =>$input['start_date'], 'end_date' =>$input['end_date']);  // array zatjev početak - kraj
             $dani_zahtjev = GodisnjiController::daniGO($zahtjev); 		
             
             $ja = 'jelena.juras@duplico.hr';
@@ -295,7 +304,7 @@ class TemporaryEmployeeRequestController extends Controller
                  if($mail_work_voditelj != '' || $mail_work_voditelj != null) {
                     Mail::queue(
                         'email.zahtjevTemp',
-                        ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                        ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                         function ($message) use ($mail_work_voditelj, $employee) {
                             $message->to($mail_work_voditelj)
                                 ->from('info@duplico.hr', 'Duplico')
@@ -304,7 +313,7 @@ class TemporaryEmployeeRequestController extends Controller
                     );
                     Mail::queue(
                         'email.zahtjevTemp',
-                        ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'GOzavršetak' => $input['GOzavršetak']],
+                        ['employee' => $employee,'request' => $request,'zahtjev2' => $zahtjev2,'vrijeme' => $vrijeme, 'dani_zahtjev' => $dani_zahtjev, 'end_date' => $input['end_date']],
                         function ($message) use ($ja, $employee) {
                             $message->to($ja)
                                 ->from('info@duplico.hr', 'Duplico')
@@ -410,24 +419,14 @@ class TemporaryEmployeeRequestController extends Controller
 			$email_work_nadredjeni = $work_nadredjeni->email;				// email glavnog nadređenog
 			$superior_mail = $employee->superior['email'];   //mail nadređenog djelatnika
 
-			$uprava = array('zeljko.rendulic@duplico.hr','durdica.rendulic@duplico.hr','ivan.rendulic@duplico.hr','nikola.rendulic@duplico.hr','matija.rendulic@duplico.hr');
+            $mail_djelatnik = $employee_mail;
+
+			$uprava = array('zeljko.rendulic@duplico.hr','durdica.rendulic@duplico.hr','ivan.rendulic@duplico.hr','nikola.rendulic@duplico.hr','matija.rendulic@duplico.hr', $mail_djelatnik);
 			$mail_to = array($email_work_nadredjeni, $superior_mail,'pravni@duplico.hr','jelena.juras@duplico.hr');
 
 			$mails = array_diff( array_unique(array_merge($uprava, $mail_to)), array( $odobrio_user->email )); // svi mailovi uprava, djelatnik i voditelj - bez duplih, bez onog tko je odobrio
-			$mail_djelatnik = $employee_mail;
-
-			try {
-
-                Mail::queue(
-                    'email.zahtjevOD_uprave_temp',    // mail sa svim podacima
-                    ['employee' => $employee,'vacationRequest' => $vacationRequest,'employee_mail' => $employee_mail, 'odobrenje' => $odobrenje, 'zahtjev2' => $zahtjev2, 'razlog'=> $request['razlog'], 'odobrio' => $odobrio, 'ime' => $ime, 'subject' => $subject],
-                    function ($message) use ($employee, $subject) {
-                        $message->to('jelena.juras@duplico.hr')
-                            ->from('info@duplico.hr', 'Duplico')
-                            ->subject($subject . ' - ' .  $employee->first_name . ' ' . $employee->last_name);
-                    }
-                );
-                /* 	foreach($mails as $mail) {  
+			    try {
+                    foreach($mails as $mail) {  
                         if($mail != '' && $mail != null) {
                             Mail::queue(
                                 'email.zahtjevOD_uprave_temp',    // mail sa svim podacima
@@ -440,28 +439,20 @@ class TemporaryEmployeeRequestController extends Controller
                             );
                         }
                     }
-                    Mail::queue(   
-                        'email.zahtjevOD_djelatniku',     // mail za djelatnika podacima
-                        ['employee' => $employee,'vacationRequest' => $vacationRequest,'employee_mail' => $employee_mail, 'odobrenje' => $odobrenje, 'zahtjev2' => $zahtjev2, 'razlog'=> $request['razlog'], 'odobrio' => $odobrio, 'ime' => $ime, 'subject' => $subject],
-                        function ($message) use ($mail_djelatnik, $employee, $subject) {
-                            $message->to($mail_djelatnik)
-                                ->from('info@duplico.hr', 'Duplico')
-                                ->subject($subject . ' - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
-                        }
-                    ); */
+                   
                 } catch (\Throwable $th) {
                     $message = session()->flash('error', 'Nešto je pošlo krivo, javite se administratoru portala');
                     
                     return redirect()->route('home')->withFlashMessage($message);
                 }
-			}
-			if( ( $vacationRequest->odobreno == 'DA' ) ) {
-				$message = session()->flash('success', 'Poruka je poslana, zahtjev je odobren');
-			} 
-			if( ( $vacationRequest->odobreno == 'NE' ) ) {
-				$message = session()->flash('success', 'Poruka je poslana, zahtjev je odbijen');
-			}
-			
-			return redirect()->route('home')->withFlashMessage($message);			
+		}
+        if( ( $vacationRequest->odobreno == 'DA' ) ) {
+            $message = session()->flash('success', 'Poruka je poslana, zahtjev je odobren');
+        } 
+        if( ( $vacationRequest->odobreno == 'NE' ) ) {
+            $message = session()->flash('success', 'Poruka je poslana, zahtjev je odbijen');
+        }
+        
+        return redirect()->route('home')->withFlashMessage($message);			
     }
 }

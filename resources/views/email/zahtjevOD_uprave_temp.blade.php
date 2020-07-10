@@ -36,9 +36,9 @@ body {
 	<body>
 		<h4>Zahtjev djelatnika {{ $employee->first_name . ' ' . $employee->last_name }} za {{ $zahtjev2 }} za
 		@if($vacationRequest->zahtjev != "Izlazak")
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->GOzavršetak)) }} 
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->end_date)) }} 
 		@elseif($vacationRequest->zahtjev == "Izlazak")
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vacationRequest->vrijeme_od . ' do ' . $vacationRequest->vrijeme_do }}</h4>
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' od ' . $vacationRequest->start_time . ' do ' . $vacationRequest->end_time }}</h4>
 		@endif
 		
 		<br/> 

@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Zahtjev')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="{{ URL::asset('css/create.css') }}"/>
 @section('content')
 <div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
@@ -21,19 +22,28 @@
 							</select>
 							{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
-						<p class="padd_10 text1 ">moli da mu se potvrdi izvršen prekovremeni rad dana</p>
+						<p class="padd_10 text1 ">moli da mu se potvrdi izvršen prekovremeni rad za projekt</p>
 				@else
 					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se potvrdi izvršen prekovremeni rad dana</p>
 					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
 				@endif
+			
+			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($projects as $project)
+						<option class="project_list" name="project_id" value="{{ intval($project->id) }}">{{ $project->erp_id  . ' ' . str_limit($project->naziv, 100)}}</option>
+					@endforeach	
+				</select>
+				
+			</div>
 			<div class="datum form-group">
-				<input name="datum" class="date form-control" type="date" value = "{{ old('datum')}}" id="date1" required><i class="far fa-calendar-alt" ></i>
+				<input name="datum" class="date form-control" type="date" value = "{{ old('datum')}}" id="date1" required>{{-- <i class="far fa-calendar-alt" ></i> --}}
 				{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-
 			<div class="datum2 form-group">
-				<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value="08:00" required>
-				<span>do</span><input type="time" name="vrijeme_do" class="vrijeme" value="16:00" required>
+				<span>od</span><input type="time" name="start_time" class="vrijeme" value="08:00" required>
+				<span>do</span><input type="time" name="end_time" class="vrijeme" value="16:00" required>
 			</div>
 			<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 				<label>Opis izvršenog rada:</label>
@@ -68,6 +78,9 @@ console.log( ! $('.role_admin').text());
 				$('.editOption5').attr('disabled','true');
 			}
 		}
+	});
+	$(document).ready(function () {
+		$('#select-state').selectize();
 	});
 </script>
 @stop

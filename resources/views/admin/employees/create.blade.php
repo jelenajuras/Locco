@@ -23,6 +23,11 @@
 						autofocus>
 						{!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
+					<div class="form-group {{ ($errors->has('maiden_name')) ? 'has-error' : '' }}">
+						<label>Djevojačko prezime:</label>
+						<input name="maiden_name" type="text" class="form-control" value="{!! $job_interview_id ? $job_interview['maiden_name'] : '' !!}"">
+						{!! ($errors->has('maiden_name') ? $errors->first('maiden_name', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
 					<div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
 						<label>Prezime:</label>
 						<input name="last_name" type="text" class="form-control" value="{!! $job_interview_id ? $job_interview['last_name'] : '' !!}"">

@@ -62,8 +62,9 @@
 					<label>Status</label>
 					<label class="status" for="active_1">Aktivan <input name="active" type="radio" value="1" id="active_1" checked /></label>
 					<label class="status" for="active_0">Neaktivan <input name="active" type="radio" value="0" id="active_0" /></label>
-					{!! ($errors->has('active') ? $errors->first('active', '<p class="text-danger">:message</p>') : '') !!}
+					{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
+				
 				{{ csrf_field() }}
 				<input class="btn btn-lg btn-primary btn-block" type="submit" value="Spremi zadatak" id="stil1">
 			</form>

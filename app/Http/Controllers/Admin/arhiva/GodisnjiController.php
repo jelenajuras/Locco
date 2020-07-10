@@ -126,8 +126,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO_PG = 0;
 		foreach($zahtjevi as $zahtjev){
 			if($zahtjev->zahtjev == 'GO' & $zahtjev->odobreno == 'DA' ){
-				$begin = new DateTime($zahtjev->GOpocetak);
-				$end = new DateTime($zahtjev->GOzavršetak);
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
 				$brojDana = date_diff($end, $begin);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
@@ -203,8 +203,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -252,8 +252,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO_PG = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -298,8 +298,8 @@ class GodisnjiController extends Controller
 		$ukupnoGO = 0;
 		
 		foreach($zahtjevi as $zahtjev){
-			$begin = new DateTime($zahtjev->GOpocetak);
-			$end = new DateTime($zahtjev->GOzavršetak);
+			$begin = new DateTime($zahtjev->start_date);
+			$end = new DateTime($zahtjev->end_date);
 			$end->setTime(0,0,1);
 			$interval = DateInterval::createFromDateString('1 day');
 			$period = new DatePeriod($begin, $interval, $end);
@@ -337,8 +337,8 @@ class GodisnjiController extends Controller
 	// Računa broj radnih dana između dva datuma
 	public static function daniGO($zahtjev)
 	{
-		$begin = new DateTime($zahtjev['GOpocetak']);
-		$end = new DateTime($zahtjev['GOzavršetak']);
+		$begin = new DateTime($zahtjev['start_date']);
+		$end = new DateTime($zahtjev['end_date']);
 		$interval = DateInterval::createFromDateString('1 day');
 		$period = new DatePeriod($begin, $interval, $end);
 		
@@ -372,8 +372,8 @@ class GodisnjiController extends Controller
 	// Računa broj dana između dva datuma sa vikendima i praznicima
 	public static function ukupnoDani($zahtjev)
 	{
-		$begin = new DateTime($zahtjev['GOpocetak']);
-		$end = new DateTime($zahtjev['GOzavršetak']);
+		$begin = new DateTime($zahtjev['start_date']);
+		$end = new DateTime($zahtjev['end_date']);
 		$end->setTime(0,0,1);
 		$interval = DateInterval::createFromDateString('1 day');
 		$period = new DatePeriod($begin, $interval, $end);
@@ -395,8 +395,8 @@ class GodisnjiController extends Controller
 
 		foreach($prekovremeniEmpl as $prekovremeni){
 			if($prekovremeni->odobreno == 'DA'){
-				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
-				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				$vrijeme_1 = new DateTime($prekovremeni->start_time);  /* vrijeme od */
+				$vrijeme_2 = new DateTime($prekovremeni->end_time);  /* vrijeme do */
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 				
 				// konvert vremena u decimalan broj
@@ -427,8 +427,8 @@ class GodisnjiController extends Controller
 		
 		foreach($prekovremeniEmpl as $prekovremeni){
 			if($prekovremeni->odobreno == 'DA'){
-				$vrijeme_1 = new DateTime($prekovremeni->vrijeme_od);  /* vrijeme od */
-				$vrijeme_2 = new DateTime($prekovremeni->vrijeme_do);  /* vrijeme do */
+				$vrijeme_1 = new DateTime($prekovremeni->start_time);  /* vrijeme od */
+				$vrijeme_2 = new DateTime($prekovremeni->end_time);  /* vrijeme do */
 				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 				// konvert vremena u decimalan broj
 				$razlika_vremena = $razlika_vremena->h . ':' . $razlika_vremena->i;
@@ -476,8 +476,8 @@ class GodisnjiController extends Controller
 		$razlika_m =0;
 		
 		foreach($izlasci as $izlazak){
-			$vrijeme_1 = new DateTime($izlazak->vrijeme_od);  /* vrijeme od */
-			$vrijeme_2 = new DateTime($izlazak->vrijeme_do);  /* vrijeme do */
+			$vrijeme_1 = new DateTime($izlazak->start_time);  /* vrijeme od */
+			$vrijeme_2 = new DateTime($izlazak->end_time);  /* vrijeme do */
 			$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 			
 			$razlika_h += (int)$razlika_vremena->h;
@@ -496,14 +496,14 @@ class GodisnjiController extends Controller
 	// računa sate izlazaka u zadanom mjeseci    /************ RADI!!!!!!! ***************/
 	public static function izlasci_Mj($user, $mjesec, $godina )  //user = registration!!!
 	{
-		$izlasci = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','Izlazak')->where('odobreno','DA')->whereMonth('vacation_requests.GOpocetak', $mjesec)->whereYear('vacation_requests.GOpocetak', $godina)->get();
+		$izlasci = VacationRequest::where('employee_id', $user->employee_id)->where('zahtjev','Izlazak')->where('odobreno','DA')->whereMonth('vacation_requests.start_date', $mjesec)->whereYear('vacation_requests.start_date', $godina)->get();
 		
 		$razlika_h =0;
 		$razlika_m =0;
 		
 		foreach($izlasci as $izlazak){
-			$vrijeme_1 = new DateTime($izlazak->vrijeme_od);  /* vrijeme od */
-			$vrijeme_2 = new DateTime($izlazak->vrijeme_do);  /* vrijeme do */
+			$vrijeme_1 = new DateTime($izlazak->start_time);  /* vrijeme od */
+			$vrijeme_2 = new DateTime($izlazak->end_time);  /* vrijeme do */
 			$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
 			
 			
@@ -560,8 +560,8 @@ class GodisnjiController extends Controller
 		
 		foreach($sl_dani as $sl_dan){
 			if($sl_dan->odobreno == 'DA'){
-				$begin = new DateTime($sl_dan->GOpocetak);
-				$end = new DateTime($sl_dan->GOzavršetak);
+				$begin = new DateTime($sl_dan->start_date);
+				$end = new DateTime($sl_dan->end_date);
 				$end->setTime(0,0,1);
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);

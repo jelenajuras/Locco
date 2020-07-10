@@ -103,19 +103,19 @@
 						</thead>
 						@foreach($zahtjeviD as $zahtjevD)
 							<tbody>
-								@if(date('Y', strtotime( $zahtjevD->GOzavršetak)) == $ova_godina)
+								@if(date('Y', strtotime( $zahtjevD->end_date)) == $ova_godina)
 								<tr><td>{{ $zahtjevD->employee['first_name'] . ' ' . $zahtjevD->employee['last_name'] }}</td>
-									<td>{{ date('d.m.Y.', strtotime( $zahtjevD->GOpocetak)) }}<br>
-									@if($zahtjevD->GOzavršetak != $zahtjevD->GOpocetak ){{ date('d.m.Y.', strtotime( $zahtjevD->GOzavršetak)) }}
+									<td>{{ date('d.m.Y.', strtotime( $zahtjevD->start_date)) }}<br>
+									@if($zahtjevD->end_date != $zahtjevD->start_date ){{ date('d.m.Y.', strtotime( $zahtjevD->end_date)) }}
 									@elseif( $zahtjevD->zahtjev != 'GO')
-									{{ date('H:i', strtotime( $zahtjevD->GOpocetak. ' '. $zahtjevD->vrijeme_od))  }} - {{  date('H:i', strtotime( $zahtjevD->GOpocetak. ' '. $zahtjevD->vrijeme_do)) }}
+									{{ date('H:i', strtotime( $zahtjevD->start_date. ' '. $zahtjevD->start_time))  }} - {{  date('H:i', strtotime( $zahtjevD->start_date. ' '. $zahtjevD->end_time)) }}
 									@endif
 									</td>
 									
 									<?php 
 										$brojDana =1;
-										$begin = new DateTime($zahtjevD->GOpocetak);
-										$end = new DateTime($zahtjevD->GOzavršetak);
+										$begin = new DateTime($zahtjevD->start_date);
+										$end = new DateTime($zahtjevD->end_date);
 										$interval = DateInterval::createFromDateString('1 day');
 										$period = new DatePeriod($begin, $interval, $end);
 										foreach ($period as $dan) {

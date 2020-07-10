@@ -36,19 +36,19 @@
 		<h4>Ja, {{ $employee->first_name . ' ' . $employee->last_name }}</h4>
 		@if($request->zahtjev == "SLD" || $request->zahtjev == "VIK" )
 			<h4>molim da mi se odobri {{ $zahtjev2 }} za
-			{{ date("d.m.Y", strtotime($request->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $request->GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
+			{{ date("d.m.Y", strtotime($request->start_date)) . ' do ' . date("d.m.Y", strtotime( $request->end_date)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
 		@elseif($request->zahtjev == "Bolovanje")
 			<h4>prijavljujem bolovanje za
-			{{ date("d.m.Y", strtotime($request->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $request->GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
+			{{ date("d.m.Y", strtotime($request->start_date)) . ' do ' . date("d.m.Y", strtotime( $request->end_date)) . ' - ' . $dani_zahtjev . ' dana' }} </h4>
 		@elseif($request->zahtjev == "Izlazak")
 			<h4>molim da mi se odobri {{ $zahtjev2 }} za
-			{{ date("d.m.Y", strtotime($request->GOpocetak)) . ' od ' . $vrijeme  }}</h4>
+			{{ date("d.m.Y", strtotime($request->start_date)) . ' od ' . $vrijeme  }}</h4>
 		@endif
 
 		<div><b>Napomena: </b></div>
 		<div class="marg_20">
 			{{ $request->napomena }}
-		</div>
+		</div>		
 		@if($request->zahtjev != "Bolovanje")
 			<form name="contactform" method="get" target="_blank" action="{{ route('admin.confirmationTemp') }}">
 				<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="razlog" value=""><br>

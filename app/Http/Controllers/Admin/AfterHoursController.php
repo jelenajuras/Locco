@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AfterHour;
 use App\Models\Employee;
 use App\Models\Registration;
+use App\Models\Project;
 use App\Http\Requests\AfterHourRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\GodisnjiController;
@@ -37,13 +38,13 @@ class AfterHoursController extends GodisnjiController
 		$registration = Registration::where('employee_id', $employee->id)->first();
 		$slobodni_dani = $this->slobodni_dani($registration); /* računa broj slobodnih dana prema prekovremenim satima */
 		$koristeni_slobodni_dani = $this->koristeni_slobodni_dani($registration);/* računa iskorištene slobodne dane */
-
+		
 		if(Sentinel::inRole('administrator')){
 			$afterHours = AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->orderBy('datum','DESC')->get();
 		} else {
 			$afterHours = AfterHour::where('employee_id',$employee->id)->where('odobreno','')->orderBy('datum','DESC')->orderBy('employees.last_name','ASC')->get();				
 		}
-		return view('admin.afterHours.index',['afterHours'=>$afterHours, 'registration'=>$registration])->with('employee', $employee)->with('slobodni_dani', $slobodni_dani)->with('koristeni_slobodni_dani', $koristeni_slobodni_dani);
+		return view('admin.afterHours.index',['afterHours'=>$afterHours,'registration'=>$registration])->with('employee', $employee)->with('slobodni_dani', $slobodni_dani)->with('koristeni_slobodni_dani', $koristeni_slobodni_dani);
     }
 
     /**
@@ -56,8 +57,9 @@ class AfterHoursController extends GodisnjiController
         $user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
-	
-		return view('admin.afterHours.create',['employee'=> $employee, 'registrations'=> $registrations]);
+		$projects = Project::where('active',1)->get();
+
+		return view('admin.afterHours.create',['employee'=> $employee,'projects'=>$projects,'registrations'=> $registrations]);
     }
 
     /**
@@ -74,9 +76,10 @@ class AfterHoursController extends GodisnjiController
 			foreach($input['employee_id'] as $employee_id){
 				$data = array(
 					'employee_id'  		=> $employee_id,
+					'project_id'  		=> $input['project_id'],
 					'datum'    			=> date("Y-m-d", strtotime($input['datum'])),
-					'vrijeme_od'  		=> $input['vrijeme_od'],
-					'vrijeme_do'  		=> $input['vrijeme_do'],
+					'start_time'  		=> $input['start_time'],
+					'end_time'  		=> $input['end_time'],
 					'napomena'  		=> $input['napomena']
 				);
 				
@@ -86,36 +89,42 @@ class AfterHoursController extends GodisnjiController
 				$employee = Employee::where('employees.id', $afterHour->employee_id)->first();
 				$registration = Registration::join('works','registrations.radnoMjesto_id','works.id')->where('registrations.employee_id', $afterHour->employee_id)->select('registrations.*','works.*')->first();
 				
-				$nadredjeni = Employee::where('employees.id', $registration->user_id)->value('email'); // nadređeni iz uprave
-				$nadredjeni1 = $registration->user_id; // id nadređene osobe
-				$drugi_user_id = $registration->drugi_userId;   //postavljeno za prekovremene za IT 
+				$nadredjeni1 = $registration->work->nadredjeni; //  nadređena osobe - iz uprave
+				$nadredjeni_voditelj = $registration->work->prvi_nadredjeni; //  nadređena osobe - voditelj
+				$drugi_voditelj = $registration->work->drugi_nadredjeni;   //postavljeno za prekovremene za IT 
 				
 				$emails = array('jelena.juras@duplico.hr', 'uprava@duplico.hr');
 		
 				$email ='uprava@duplico.hr';
-	
-				if($drugi_user_id){
-					$nadređeni_mail = Employee::where('id', $drugi_user_id)->first()->email;
-					array_push($emails, $nadređeni_mail);
-				}
-				
-				$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
-				$time1 = new DateTime($input['vrijeme_od'] );
-				$time2 = new DateTime($input['vrijeme_do']);
+
+				$vrijeme = 'od ' . $input['start_time'] . ' do ' . $input['end_time']; 
+				$time1 = new DateTime($input['start_time'] );
+				$time2 = new DateTime($input['end_time']);
 				
 				$interval = $time2->diff($time1);
 				$interval = $interval->format('%H:%I');
 				
 				try {
+					Mail::queue(
+						'email.zahtjevAfterHour',
+						['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
+						function ($message) use ($employee, $email) {
+							$message->to($email)
+								->from('info@duplico.hr', 'Duplico')
+								->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
+						}
+					);
+					if ( isset($drugi_voditelj) && $drugi_voditelj->employee['last_name'] == 'Novosel') {
 						Mail::queue(
-							'email.zahtjevAfterHour',
+							'email.zahtjevAfterHour_info',
 							['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
-							function ($message) use ($employee, $email) {
-								$message->to($email)
-									->from('info@duplico.hr', 'Duplico')
-									->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
+							function ($message) use ($employee, $nadredjeni_voditelj) {
+								$message->to($nadredjeni_voditelj->email)
+										->from('info@duplico.hr', 'Duplico')
+										->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
 							}
 						);
+					}
 					
 				} catch (Exception $e) {
 					$message = session()->flash('error', 'Mail nije poslan, došlo je do problema.');
@@ -124,46 +133,43 @@ class AfterHoursController extends GodisnjiController
 				} 
 			}
 		} else {
-			$data = array(
-				'employee_id'  		=> $input['employee_id'],
-				'datum'    			=> date("Y-m-d", strtotime($input['datum'])),
-				'vrijeme_od'  		=> $input['vrijeme_od'],
-				'vrijeme_do'  		=> $input['vrijeme_do'],
-				'napomena'  		=> $input['napomena']
-			);
+			$request_exist = GodisnjiController::afterHour_for_request($input['employee_id'], $input['datum'], $input['start_time'], $input['end_time'] );
 			
-			$request_exist = GodisnjiController::afterHour_for_request($input['employee_id'], $input['datum'], $input['vrijeme_od'], $input['vrijeme_do'] );
-			 if(! Sentinel::inRole('administrator') && $request_exist == false) {
+			if(! Sentinel::inRole('administrator') && $request_exist == false) {
 				$message = session()->flash('error', 'Zahtjev za taj dan već postoji, nije moguće poslati zahtjev');    /*  AKO ZAHTJEV VEĆ POSTOJI VRATI PORUKU  */
 				return redirect()->back()->withFlashMessage($message);
 			} else { 
+				$data = array(
+					'employee_id'  		=> $input['employee_id'],
+					'project_id'  		=> $input['project_id'],
+					'datum'    			=> date("Y-m-d", strtotime($input['datum'])),
+					'start_time'  		=> $input['start_time'],
+					'end_time'  		=> $input['end_time'],
+					'napomena'  		=> $input['napomena']
+				);
 				$afterHour = new AfterHour();
 				$afterHour->saveAfterHour($data);
 			
 				$employee = Employee::where('employees.id', $input['employee_id'])->first();
 				$registration = Registration::join('works','registrations.radnoMjesto_id','works.id')->where('registrations.employee_id', $input['employee_id'])->select('registrations.*','works.*')->first();
+				$employee_mail = $employee->email;
 				
-				$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email'); // nadređeni iz uprave
-				$nadredjeni1 = $registration->user_id; // id nadređene osobe
-				$drugi_user_id = $registration->drugi_userId;   //postavljeno za prekovremene za IT 
+				/* $nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email');  */// nadređeni iz uprave
+				$nadredjeni1 = $registration->work->nadredjeni; //  nadređena osobe - iz uprave
+				$nadredjeni_voditelj = $registration->work->prvi_nadredjeni; //  nadređena osobe - voditelj
+				$drugi_voditelj = $registration->work->drugi_nadredjeni;   //postavljeno za prekovremene za IT 
 				
-				$emails = array('jelena.juras@duplico.hr', 'uprava@duplico.hr');
-		
-				$email ='uprava@duplico.hr';
-				
-				if($drugi_user_id){
-					$nadređeni_mail = Employee::where('id', $drugi_user_id)->first()->email;
-					array_push($emails, $nadređeni_mail);
-				}
-				
-				$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
-				$time1 = new DateTime($input['vrijeme_od'] );
-				$time2 = new DateTime($input['vrijeme_do']);
+				$emails = array('uprava@duplico.hr', 'jelena.juras@duplico.hr');
+
+				$vrijeme = 'od ' . $input['start_time'] . ' do ' . $input['end_time']; 
+				$time1 = new DateTime($input['start_time'] );
+				$time2 = new DateTime($input['end_time']);
 				
 				$interval = $time2->diff($time1);
 				$interval = $interval->format('%H:%I');
-				
+		
 				try {
+					foreach ($emails as $email) {
 						Mail::queue(
 							'email.zahtjevAfterHour',
 							['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
@@ -173,6 +179,28 @@ class AfterHoursController extends GodisnjiController
 									->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
 							}
 						);
+					}
+					
+					Mail::queue(
+						'email.zahtjevAfterHour_send',
+						['afterHour' => $afterHour ],
+						function ($message) use ( $employee_mail ) {
+							$message->to($employee_mail)
+								->from('info@duplico.hr', 'Duplico')
+								->subject('Zahtjev');
+						}
+					);
+					if ( isset($drugi_voditelj) && $drugi_voditelj->employee['last_name'] == 'Novosel') {
+						Mail::queue(
+							'email.zahtjevAfterHour_info',
+							['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
+							function ($message) use ($employee, $nadredjeni_voditelj) {
+								$message->to($nadredjeni_voditelj->email)
+										->from('info@duplico.hr', 'Duplico')
+										->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
+							}
+						);
+					}
 					
 				} catch (Exception $e) {
 					$message = session()->flash('error', 'Mail nije poslan, došlo je do problema.');
@@ -208,8 +236,8 @@ class AfterHoursController extends GodisnjiController
         $afterHour = AfterHour::find($id);
 		$user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-		
-		return view('admin.afterHours.edit', ['afterHour' => $afterHour])->with('employee', $employee);
+		$projects = Project::where('active',1)->get();
+		return view('admin.afterHours.edit', ['afterHour' => $afterHour, 'projects' => $projects, 'employee' => $employee]);
 
     }
 
@@ -227,9 +255,10 @@ class AfterHoursController extends GodisnjiController
 		
 		$data = array(
 			'employee_id'  		=> $input['employee_id'],
+			'project_id'  		=> $input['project_id'],
 			'datum'    			=> date("Y-m-d", strtotime($input['datum'])),
-			'vrijeme_od'  		=> $input['vrijeme_od'],
-			'vrijeme_do'  		=> $input['vrijeme_do'],
+			'start_time'  		=> $input['start_time'],
+			'end_time'  		=> $input['end_time'],
 			'napomena'  		=> $input['napomena']
 		);
 		$afterHour->updateAfterHour($data);
@@ -237,22 +266,17 @@ class AfterHoursController extends GodisnjiController
 		$employee = Employee::where('employees.id', $input['employee_id'])->first();
 		$registration = Registration::join('works','registrations.radnoMjesto_id','works.id')->where('registrations.employee_id', $input['employee_id'])->select('registrations.*','works.*')->first();
 		
-		$nadredjeni = Employee::where('employees.id',$registration->user_id)->value('email'); // nadređeni iz uprave
-		$nadredjeni1 = $registration->user_id; // id nadređene osobe
-		$drugi_user_id = $registration->drugi_userId;   //postavljeno za prekovremene za IT 
+		$nadredjeni1 = $registration->work->nadredjeni; //  nadređena osobe - iz uprave
+		$nadredjeni_voditelj = $registration->work->prvi_nadredjeni; //  nadređena osobe - voditelj
+		$drugi_voditelj = $registration->work->drugi_nadredjeni;   //postavljeno za prekovremene za IT 
 		
 		$emails = array('jelena.juras@duplico.hr', 'uprava@duplico.hr');
 
 		$email ='uprava@duplico.hr';
 		
-		if($drugi_user_id){
-			$nadređeni_mail = Employee::where('id', $drugi_user_id)->first()->email;
-			array_push($emails, $nadređeni_mail);
-		}
-		
-		$vrijeme = 'od ' . $input['vrijeme_od'] . ' do ' . $input['vrijeme_do']; 
-		$time1 = new DateTime($input['vrijeme_od'] );
-		$time2 = new DateTime($input['vrijeme_do']);
+		$vrijeme = 'od ' . $input['start_time'] . ' do ' . $input['end_time']; 
+		$time1 = new DateTime($input['start_time'] );
+		$time2 = new DateTime($input['end_time']);
 		
 		$interval = $time2->diff($time1);
 		$interval = $interval->format('%H:%I');
@@ -359,8 +383,8 @@ class AfterHoursController extends GodisnjiController
 		$nadredjeni1 = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
 		$afterHour = AfterHour::find($request->id);
 
-		$time1 = new DateTime($afterHour->vrijeme_od );
-		$time2 = new DateTime($afterHour->vrijeme_do );
+		$time1 = new DateTime($afterHour->start_time );
+		$time2 = new DateTime($afterHour->end_time );
 		
 		$interval = $time2->diff($time1);
 		$interval = $interval->format('%H:%I');
@@ -368,6 +392,8 @@ class AfterHoursController extends GodisnjiController
 		return view('admin.confirmationAfterHour')->with('afterHour', $afterHour)->with('nadredjeni1', $nadredjeni1->id)->with('interval', $interval);
 	}
 
+
+	/* Odobrenje sa portala */
 	public function confDirectorAfter(Request $request)
 	{
 		$afterHour = AfterHour::find($request['id']);
@@ -376,16 +402,10 @@ class AfterHoursController extends GodisnjiController
 		
 		$user = Sentinel::getUser(); 	// prijavljena osoba - odobrava
 		$odobrio_user = Employee::where('employees.first_name', $user->first_name)->where('employees.last_name', $user->last_name)->first(); // prijavljeni djelatnik - odobrava
-		
-		$time1 = new DateTime($afterHour->vrijeme_od );
-		$time2 = new DateTime($afterHour->vrijeme_do );
-		
-		$interval = $time2->diff($time1);
-		$interval = $interval->format('%H:%I');
 
 		$data = array(
 			'odobreno'  		=> $request['odobreno'],
-			'odobreno_h'  		=> $interval,
+			'odobreno_h'  		=> $request['odobreno_h'],
 			'odobrio_id'    	=> $odobrio_user->id,
 			'razlog'  			=> $request['razlog'],
 			'datum_odobrenja'	=> date("Y-m-d")
@@ -399,23 +419,22 @@ class AfterHoursController extends GodisnjiController
 			$odobrenje = 'nije potvrđen';
 		}
 
-
-		try {
+	/* 	try {
 			Mail::queue(
 				'email.zahtjevAfterHourOD',
 				['employee' => $employee,'afterHour' => $afterHour,'mail' => $mail, 'odobrenje' => $odobrenje, 'razlog'=> $afterHour->razlog ],
 				function ($message) use ($mail, $employee) {
 					$message->to($mail)
 						->from('info@duplico.hr', 'Duplico')
-						->subject('Odobrenje zahtjeva');
+						->subject('Obrađen zahtjev');
 				}
 			);
 		} catch (Exception $e) {
-			$message = session()->flash('error', 'Mail nije poslan, došlo je do problema.');
+			$message = session()->flash('error', 'Odobrenje je snimljeno ali mail nije poslan, došlo je do problema.');
 		
 			return redirect()->back()->withFlashMessage($message);
-		} 
-		// return "Zahtjev " . $odobrenje;
+		}  */
+
 		return redirect()->back();	
 	}
 }

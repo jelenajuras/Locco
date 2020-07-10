@@ -48,6 +48,7 @@
                                 <option value="{{ $departments->where('email','pravni@duplico.hr')->first()->id }}">{{ $departments->where('email','pravni@duplico.hr')->first()->name }}</option>
                                 <option value="{{ $departments->where('email','itodrzavanje@duplico.hr')->first()->id }}">{{ $departments->where('email', 'itodrzavanje@duplico.hr')->first()->name }}</option>
                                 <option value="{{ $departments->where('email', 'racunovodstvo@duplico.hr')->first()->id }}">{{ $departments->where('email','racunovodstvo@duplico.hr')->first()->name }}</option>
+                              
                             </select>
                         @endif
                         {!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -57,12 +58,12 @@
                         {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <div class="form-group {{ ($errors->has('content')) ? 'has-error' : '' }}">
-                       <textarea class="form-control" name="content" id="post-content" maxlength="65535"></textarea>
+                       <textarea class="form-control" name="content" id="post-content" maxlength="65535" required></textarea>
 						
                         {!! ($errors->has('content') ? $errors->first('content', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 
-                    {{ csrf_field() }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji" id="stil1">
                 </form>
             </div>

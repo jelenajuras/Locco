@@ -28,9 +28,9 @@ class CarController extends Controller
      */
     public function index()
     {
-      $vozila = Car::orderBy('registracija','ASC')->get();
-      
-      return view('admin.cars.index',['vozila'=>$vozila]);
+		$vozila = Car::orderBy('registracija','ASC')->get();
+		
+		return view('admin.cars.index',['vozila'=>$vozila]);
     }
 
     /**
@@ -146,10 +146,10 @@ class CarController extends Controller
     public function destroy($id)
     {
         $vozilo = Car::find($id);
-        $vozilo->delete();
-        
-        $message = session()->flash('success', 'Vozilo je uspješno obrisano');
-        
-        return redirect()->route('admin.cars.index')->withFlashMessage($message);
+		$vozilo->delete();
+		
+		$message = session()->flash('success', 'Vozilo je uspješno obrisano');
+		
+		return redirect()->route('admin.cars.index')->withFlashMessage($message);
     }
 }

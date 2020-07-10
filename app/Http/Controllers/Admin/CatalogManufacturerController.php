@@ -93,7 +93,7 @@ class CatalogManufacturerController extends Controller
         $catalog_manufacturer = CatalogManufacturer::find($id);
         $catalog_categories = CatalogCategory::get();
 
-        return view('admin.catalog_manufacturers.edit', ['catalog_manufacturer' => $catalog_manufacturer, 'catalog_categories' => $catalog_categories ]);
+        return view('admin.catalog_manufacturers.edit',['catalog_manufacturer' => $catalog_manufacturer, 'catalog_categories' => $catalog_categories ]);
     }
 
     /**
@@ -116,9 +116,10 @@ class CatalogManufacturerController extends Controller
         );
 
         $catalog_manufacturer->updateCatalogManufacturer($data);
-       
-        $message = session()->flash('success', 'Podaci su ispravljeni');
+        $category = CatalogCategory::find($catalog_manufacturer->category_id);
 
+        $message = session()->flash('success', 'Podaci su ispravljeni');
+        
         return redirect()->back()->withFlashMessage($message);
     }
 

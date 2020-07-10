@@ -30,7 +30,7 @@
 						<span>do</span>
 						<input name="vrijemeDo" type="time" class="datum " value="16:00" />
 					</div>
-                    {{ csrf_field() }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji" id="stil1">
                 </fieldset>
                 </form>

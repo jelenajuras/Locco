@@ -56,7 +56,7 @@ class EmployeeTerminationController extends Controller
     public function store(EmployeeTerminationRequest $request)
     {
         $input = $request->except(['_token']);
-
+		//dd($input);
 		$data = array(
 			'employee_id'  	 => $input['employee_id'],
 			'otkaz_id'   	 => $input['otkaz_id'],

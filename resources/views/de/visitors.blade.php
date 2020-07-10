@@ -35,47 +35,8 @@
 		<main class="visitors">
 			<section class="de col-md-12 col-lg-9 col-xl-6" >	
 				<h1>Sicherheitshinweise für besucher</h1>
+				@include('admin.visitors.smjernice_de')
 				
-				<form accept-charset="UTF-8" role="form" class="visitor_form" method="post" action="{{ route('admin.visitors.store') }}">
-					<div class="form-group {{ ($errors->has('first_name')) ? 'has-error' : '' }}">
-						<input class="form-control" placeholder="Name" name="first_name" type="text" maxlength="20" value="{{ old('first_name') }}" autofocus/>
-						{!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
-					<div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
-						<input class="form-control" placeholder="Nachname" name="last_name" type="text" maxlength="20" value="{{ old('last_name') }}" />
-						{!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
-					<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-						<input class="form-control" placeholder="E-mail" name="email" type="text" maxlength="50" value="{{ old('email') }}">
-						{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
-					<div class="form-group {{ ($errors->has('company')) ? 'has-error' : '' }}">
-						<input class="form-control" placeholder="Firma" name="company" type="text" maxlength="50" value="{{ old('company') }}">
-						{!! ($errors->has('company') ? $errors->first('company', '<p class="text-danger">:message</p>') : '') !!}
-					</div>
-					<input class="form-control" name="lang" type="hidden" value="en">
-					<div class="form-group smjernice">
-						@include('admin.visitors.smjernice_de')
-					
-						<div class="{{ ($errors->has('accept')) ? 'has-error' : '' }} ">
-							<label>
-								<input name="accept" type="checkbox" value="1" {{ old('accept') == 'true' ? 'checked' : ''}} > <b>Hiermit bestätige ich, dass ich die Hinweise zur Besuchersicherheit gelesen, verstanden und akzeptiert habe!</b>
-							</label>
-							{!! ($errors->has('accept') ? $errors->first('accept', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<div class="{{ ($errors->has('confirm')) ? 'has-error' : '' }} ">
-							<label>
-								<input name="confirm" type="checkbox" value="1" {{ old('confirm') == 'true' ? 'checked' : ''}} > <b>Hiermit bestätige ich das ich das ich den Schlüssel übernommen habe und mir die Benutzung bekannt ist.
-								</b>
-							</label>
-							{!! ($errors->has('confirm') ? $errors->first('confirm', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-					</div>								
-					<input class="form-control" name="card_id" type="hidden" maxlength="20" value="{{ $card_id }}">	
-					{{ csrf_field() }}
-					<input class="btn-submit btn_submit_reg" type="submit" value="Bestätigung"> 
-					
-				</form>
 				<p>* Wir verarbeiten Ihre personenbezogenen Daten gemäß Artikel 6 der Allgemeinen Datenschutzverordnung (DSGVO) und um die gesetzlichen Verpflichtungen von Duplico d.o.o. zu gewährleisten  und zum Schutz Ihrer Hauptinteressen</p>
 				@if( ! isset($_COOKIE['cookie_confirme'])  )
 					<footer class="cookie">

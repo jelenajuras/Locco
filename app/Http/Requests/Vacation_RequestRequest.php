@@ -24,8 +24,8 @@ class Vacation_RequestRequest extends FormRequest
     public function rules()
     {
         return [
-			'GOpocetak' => 'required',
-			'GOzavršetak' => 'date|after_or_equal:GOpocetak',
+			'start_date' => 'required',
+			'end_date' => 'date|after_or_equal:start_date',
 			'napomena' => 'required|max:255',
 			'employee_id' => 'required',
 			'zahtjev' => 'required'
@@ -35,8 +35,8 @@ class Vacation_RequestRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'GOpocetak.required' 		 => 'Unos datuma je obavezan',
-			'GOzavršetak.after_or_equal' => 'Datuma završetka ne može biti prije datuma početka.',
+			'start_date.required' 		 => 'Unos datuma je obavezan',
+			'end_date.after_or_equal' => 'Datuma završetka ne može biti prije datuma početka.',
 			'napomena.required' 		 => 'Unos napomene je obavezan',
 			'napomena.max'				 => 'Dozvoljen je unos maximalno 255 znakova!',
 			'employee_id.required' 		 => 'Unos imena je obavezan',

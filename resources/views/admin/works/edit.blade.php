@@ -76,8 +76,9 @@
 						@endforeach
 						</select>
 					</div>
-					{{ method_field('PUT') }}
 					{{ csrf_field() }}
+					{{ method_field('PUT') }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi radno mjesto" id="stil1">
 				</form>
 			</div>

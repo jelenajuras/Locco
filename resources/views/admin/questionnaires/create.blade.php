@@ -22,7 +22,7 @@
                     </div>
 					<div class="form-group {{ ($errors->has('opis'))  ? 'has-error' : '' }}">
                         <label>Opis</label>
-						<textarea name="opis" type="text" class="form-control" value="{{ old('opis') }}"></textarea>
+						<textarea name="opis" type="text" class="form-control" value="{{ old('naziv') }}"></textarea>
 						{!! ($errors->has('opis') ? $errors->first('opis', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					<div class="aktivna form-group {{ ($errors->has('status'))  ? 'has-error' : '' }}">
@@ -31,7 +31,7 @@
 						<input type="radio" class="" name="status" value="aktivna" />AKTIVNA
 						{!! ($errors->has('status') ? $errors->first('status', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>
 			</div>

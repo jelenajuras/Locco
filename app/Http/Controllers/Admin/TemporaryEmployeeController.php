@@ -115,7 +115,7 @@ class TemporaryEmployeeController extends Controller
     public function show($id)
     {
         $temporaryEmployee = TemporaryEmployee::find($id);
-       
+
         return view('admin.temporary_employees.show', ['temporaryEmployee'=>$temporaryEmployee]);
     }
 

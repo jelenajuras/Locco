@@ -47,8 +47,8 @@ class HomeController extends GodisnjiController
 				$ova_godina = date_format($datum,'Y');
 
 				if(Sentinel::inRole('administrator')) {
-					$zahtjevi_neodobreni = VacationRequest::where('odobreno',null)->orderBy('GOpocetak','DESC')->get();
-					$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->whereYear('GOzavršetak',$ova_godina )->orderBy('GOpocetak','DESC')->get()->take(30);
+					$zahtjevi_neodobreni = VacationRequest::where('odobreno',null)->orderBy('start_date','DESC')->get();
+					$zahtjevi_odobreni = VacationRequest::where('odobreno','DA')->whereYear('end_date',$ova_godina )->orderBy('start_date','DESC')->get()->take(30);
 					$afterHours = AfterHour::where('odobreno', null)->orderBy('datum','DESC')->get();
 				} else {
 					$zahtjevi_neodobreni = null;
@@ -97,18 +97,18 @@ class HomeController extends GodisnjiController
 					}
 				}			
 
-				$absences = VacationRequest::where('odobreno','DA')->whereYear('GOpocetak', $god_select)->get();
-				$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('GOzavršetak', $god_select)->get());
+				$absences = VacationRequest::where('odobreno','DA')->whereYear('start_date', $god_select)->get();
+				$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('end_date', $god_select)->get());
 				foreach($absences as $absence) {
-					$begin = new DateTime($absence->GOpocetak);
-					$end = new DateTime($absence->GOzavršetak);
+					$begin = new DateTime($absence->start_date);
+					$end = new DateTime($absence->end_date);
 					$end->setTime(0,0,1);
 					$interval = DateInterval::createFromDateString('1 day');
 					$period = new DatePeriod($begin, $interval, $end);
 					foreach ($period as $dan) {
 						if(date_format($dan,'Y') >= $god_select) {  // ako je trenutna godina
 							if($absence->zahtjev == 'Izlazak') {
-								array_push($dataArr, ['name' => 'absence', 'type' => $absence->zahtjev, 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee['first_name'] . ' ' . $absence->employee['last_name'], 'time' => date( 'G:i',(strtotime($absence->vrijeme_od))) . '-' . date( 'G:i',(strtotime($absence->vrijeme_do))) ]);
+								array_push($dataArr, ['name' => 'absence', 'type' => $absence->zahtjev, 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee['first_name'] . ' ' . $absence->employee['last_name'], 'time' => date( 'G:i',(strtotime($absence->start_time))) . '-' . date( 'G:i',(strtotime($absence->end_time))) ]);
 							} else {
 								array_push($dataArr, ['name' => 'absence', 'type' => $absence->zahtjev, 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee['first_name'] . ' ' . $absence->employee['last_name'] ]);
 							}

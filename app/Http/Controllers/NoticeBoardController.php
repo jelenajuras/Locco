@@ -30,7 +30,12 @@ class NoticeBoardController extends Controller
    
 		$user = Sentinel::getUser();
         $employee = Employee::where('first_name',$user->first_name)->where('last_name',$user->last_name)->first();
-        $reg_employee = Registration::where('employee_id', $employee->id)->first();
+        if( $employee) {
+            $reg_employee = Registration::where('employee_id', $employee->id)->first();
+        } else {
+            $reg_employee = null;
+        }
+     
         $employee_departments = array();
 
         if ($reg_employee) {         

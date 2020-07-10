@@ -24,6 +24,11 @@
 						<span>{{ $employee->first_name . ' ' . $employee->last_name }}</span>
 						<input type="hidden" name="employee_id" type="text" class="form-control" value="{{ $employee->id }}">
 					</div>
+					<div class="form-group {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}""">
+						<span><b>ERP ID:</b></span>
+						<input type="text" name="erp_id" type="text" class="form-control" value="{{ old('erp_id')}}">
+						{!! ($errors->has('erp_id') ? $errors->first('erp_id', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
 					<div class="form-group {{ ($errors->has('radnoMjesto_id'))  ? 'has-error' : '' }}">
 						<span><b>Radno mjesto:</b></span>
 						<select class="form-control" name="radnoMjesto_id" id="sel1" value="{{ $employee->radnoMjesto_id }}">
@@ -94,7 +99,7 @@
 						<label>Datum isteka dozvole boravka u RH: </label>
 						<input name="datum_dozvola" class="date form-control" type="date">
 					</div>
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi radnika" id="stil1">
 				</form>
 

@@ -33,10 +33,10 @@
 		<h4>Djelatnik, {{ $employee->first_name . ' ' . $employee->last_name }}</h4>
 		
 		<h4>poslao je zahtjev za {{ $zahtjev2 }} za
-		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "Bolovanje" || $vacationRequest->zahtjev == "NPL" )
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime( $GOzavršetak)) . ' - ' . $dani_zahtjev . ' dana' }} 
+		@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "Bolovanje" || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "PL" || $vacationRequest->zahtjev == "COVID-19"|| $vacationRequest->zahtjev == "RD"  )
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $end_date)) . ' - ' . $dani_zahtjev . ' dana' }} 
 		@elseif($vacationRequest->zahtjev == "Izlazak")
-			{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vrijeme  }}</h4>
+			{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' od ' . $vrijeme  }}</h4>
 		@endif
 
 		<div><b>Napomena: </b></div>

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
         <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css">
-
+        <link rel="stylesheet" href="{{ URL::asset('css/admin.css') }}" type="text/css" >
         <style>
             html, body {
                 height: 100%;
@@ -30,6 +30,52 @@
                 font-size: 20px;
                 margin-bottom: 40px;
             }
+            .alert_box {
+                display: flex;
+                overflow: hidden;
+            }
+            .alert_box.video  {
+                margin-bottom: 20px;
+            }
+            .alert_box.video .alert_icons {
+                width: 100px;
+            } 
+            .alert_box.video .alert_text {
+                width: calc(100% - 100px);
+            } 
+            .icon_alert {
+                width: auto;
+                height: 45px;
+            }
+            .alert_icons {
+                float: left;
+                width: 60px;
+                text-align: center;
+            }
+            .alert_icons .icon_alert {
+                width: 100%;
+                height: auto;
+            }
+            .alert_text {
+                float: left;
+                width: calc(100% - 60px);
+                margin: 0;
+                padding-left: 20px;
+                vertical-align: middle;
+                align-self: center;
+
+            }
+            .content h1 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .content h5 {
+                font-size: 16px;
+                text-align: justify;
+                font-weight: 400;
+                line-height: 24px;
+                margin-top: 30px;
+            }
         </style>
     </head>
     <body>
@@ -37,11 +83,11 @@
             <div class="content">
                 <div class="title">{{ $text_for_mail }}</div>
                 @if ($lang == 'hr')
-                    @include('admin.visitors.smjernice')
+                    @include('admin.visitors.smjernice1')
                 @elseif ($lang == 'en')
-                    @include('admin.visitors.smjernice_en')
+                    @include('admin.visitors.smjernice1_en')
                 @elseif ($lang == 'de')
-                    @include('admin.visitors.smjernice_de')
+                    @include('admin.visitors.smjernice1_de')
                 @endif
             </div>
         </div>

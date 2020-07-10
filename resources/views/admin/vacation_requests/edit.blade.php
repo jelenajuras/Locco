@@ -10,6 +10,8 @@
 					<p>Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se odobri </p>
 					<select name="zahtjev" id="prikaz" oninput="this.className = ''" >
 						<option class="editable1" value="GO" {!! ($vacationRequest->zahtjev == 'GO' ? 'selected ': '') !!}>korištenje godišnjeg odmora za period od</option >
+							<option class="editable1" value="RD" {!! ($vacationRequest->zahtjev == 'RD' ? 'selected ': '') !!} >rad od doma</option>
+						<option class="editable1" value="COVID-19" {!! ($vacationRequest->zahtjev == 'COVID-19' ? 'selected ': '') !!}>Oslobođenje od rada - COVID-19</option>
 						<option class="editable8" value="CEK"  {!! ($vacationRequest->zahtjev == 'CEK' ? 'selected ': '') !!} >čekanje</option>
 						<option class="editable2" value="Bolovanje" {!! ($vacationRequest->zahtjev == 'Bolovanje' ? 'selected ': '') !!}>bolovanje</option >
 						<option class="editable3"  value="Izlazak" {!! ($vacationRequest->zahtjev == 'Izlazak' ? 'selected ': '') !!}>Prijevremeni izlaz dana</option >
@@ -40,17 +42,17 @@
 							</p>
 						@endif
 					<div class="datum form-group editOption1" >
-						<input name="GOpocetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOpocetak)) }}" required><i class="far fa-calendar-alt"></i>
-						{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
+						<input name="start_date" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->start_date)) }}" required><i class="far fa-calendar-alt"></i>
+						{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<span class="editOption2 do" >do</span>
 					<div class="datum form-group editOption2">
-						<input name="GOzavršetak" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->GOzavršetak)) }}" ><i class="far fa-calendar-alt"></i>
-						{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
+						<input name="end_date" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($vacationRequest->end_date)) }}" ><i class="far fa-calendar-alt"></i>
+						{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="datum2 form-group editOption3" {!! ($vacationRequest->zahtjev == 'GO' || $vacationRequest->zahtjev == 'Bolovanje' ? ' style="display:none;" ': '') !!}>
-						<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value={!! !$vacationRequest->vrijeme_od ? '08:00' : $vacationRequest->vrijeme_od !!} >
-						<span>do</span><input type="time" name="vrijeme_do" class="vrijeme" value={!! !$vacationRequest->vrijeme_do ? '16:00' : $vacationRequest->vrijeme_do !!} }}" >
+						<span>od</span><input type="time" name="start_time" class="vrijeme" value={!! !$vacationRequest->start_time ? '08:00' : $vacationRequest->start_time !!} >
+						<span>do</span><input type="time" name="end_time" class="vrijeme" value={!! !$vacationRequest->end_time ? '16:00' : $vacationRequest->end_time !!} }}" >
 					</div>
 					<div class="form-group padd_10 { ($errors->has('sprema')) ? 'has-error' : '' }}" style="clear:left">
 						<label>Napomena:</label>
@@ -72,9 +74,9 @@
 		<script>
 			function GO_dani(){
 				if(document.getElementById("prikaz").value == "GO" ){
-					var dan1 =  new Date(document.forms["myForm"]["GOpocetak"].value);
-					var dan2 = new Date(document.forms["myForm"]["GOzavršetak"].value);
-					var person = {GOpocetak:dan1, GOzavršetak:dan2};
+					var dan1 =  new Date(document.forms["myForm"]["start_date"].value);
+					var dan2 = new Date(document.forms["myForm"]["end_date"].value);
+					var person = {start_date:dan1, end_date:dan2};
 					//razlika dana
 					var datediff = (dan2 - dan1);
 					document.getElementById('demo').innerHTML=(datediff / (24*60*60*1000)) +1;

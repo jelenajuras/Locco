@@ -30,7 +30,7 @@
                         <input class="form-control" placeholder="Potvrdi lozinku" name="password_confirmation" type="password">
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    {{ csrf_field() }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Registriraj me!" id="stil1">
                 </fieldset>
                 </form>

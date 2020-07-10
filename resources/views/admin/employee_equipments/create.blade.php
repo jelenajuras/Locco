@@ -91,7 +91,7 @@ $employee = $employees->where('id', $employee)->first();
 								<textarea class="form-control" name="napomena"></textarea>
 							</div>
 
-						{{ csrf_field() }}
+						<input name="_token" value="{{ csrf_token() }}" type="hidden">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Zaduži opremu" id="stil1">
 					
 				</form>

@@ -102,8 +102,8 @@ class MeetingController extends Controller
 			
 		$data = array(
 			'datum'  			=>date("Y-m-d", strtotime($input['datum'])),
-			'vrijeme_od'  		=> $input['vrijeme_od'],
-			'vrijeme_do'  		=> $input['vrijeme_do'],
+			'start_time'  		=> $input['start_time'],
+			'end_time'  		=> $input['end_time'],
 			'employee_id'   	=> $input['employee_id'],
 			'meeting_room_id'   => $input['meeting_room_id'],
 			'project_id'  		=> $input['project_id'],
@@ -178,8 +178,8 @@ class MeetingController extends Controller
 
 		$data = array(
 			'datum'  			=>date("Y-m-d", strtotime($input['datum'])),
-			'vrijeme_od'  		=> $input['vrijeme_od'],
-			'vrijeme_do'  		=> $input['vrijeme_do'],
+			'start_time'  		=> $input['start_time'],
+			'end_time'  		=> $input['end_time'],
 			'employee_id'   	=> $input['employee_id'],
 			'meeting_room_id'   => $input['meeting_room_id'],
 			'project_id'  		=> $input['project_id'],

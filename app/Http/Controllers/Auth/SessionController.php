@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use Sentinel;
+use Redirect;
+use Session;
 use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Centaur\Dispatches\BaseDispatch;
-
+use Cartalyst\Sentinel\Users\UserInterface;
 class SessionController extends Controller
 {
     /** @var Centaur\AuthManager */
@@ -51,19 +53,18 @@ class SessionController extends Controller
             'password' => $request->get('password'),
         ];
 		
-        $remember = (bool)$request->get('remember', false);
-		
-        // Attempt the Login
-        $result = $this->authManager->authenticate($credentials, $remember);
-		
+		Sentinel::authenticate($credentials);
+
+		$user = Sentinel::getUser();
 		// Return the appropriate response
         if(Sentinel::check())  {
-			  return $result->dispatch(route('index'));
+			Sentinel::loginAndRemember($user);
+			return Redirect::to('home');
         }	
-		
+
 		$message = "Korisničko ime ili lozinka nisu ispravni!";
 		
-		return $result->dispatch(route('auth.login.form'))->with('message', $message);
+		return Redirect::to('auth.login.form')->with('message', $message);
     }
 
     /**

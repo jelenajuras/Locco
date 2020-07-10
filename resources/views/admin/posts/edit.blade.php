@@ -56,8 +56,9 @@ Ispravi {{ $post->title }}
                         {!! ($errors->has('content') ? $errors->first('content', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					
+					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-                    {{ csrf_field() }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg  btn-block" type="submit" value="Ispravi" >
                 </fieldset>
                 </form>

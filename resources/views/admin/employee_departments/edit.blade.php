@@ -25,6 +25,7 @@
                 @endforeach	
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
+                   
             </div>
         </div>
     </form>

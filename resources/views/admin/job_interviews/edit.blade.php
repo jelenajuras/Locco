@@ -93,8 +93,9 @@
 						<label>Napomena: </label>
 						<textarea class="form-control" name="napomena">{{ $job_interview->napomena }}</textarea>
 					</div>
-					{{ method_field('PUT') }}
 					{{ csrf_field() }}
+					{{ method_field('PUT') }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke" id="stil1">
 				</form>
 			</div>

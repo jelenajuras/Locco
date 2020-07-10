@@ -12,7 +12,7 @@
 		<div class="form-group col-md-offset-1 col-md-10">
 			<p><b>{{ $afterHour->employee['first_name'] .' '.  $afterHour->employee['last_name']}}</b></p>
 			<p>{{ date('d.m.Y', strtotime($afterHour->datum)) }}</p>
-			<p>{{ $afterHour->vrijeme_od . ' - ' . $afterHour->vrijeme_do }}</p>
+			<p>{{ $afterHour->start_time . ' - ' . $afterHour->end_time }}</p>
 			<p>{{ $afterHour->napomena }}</p>
 		</div>
 		<form name="contactform" method="get" action="{{ route('admin.confirmationAfter') }}">

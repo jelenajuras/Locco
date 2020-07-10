@@ -27,8 +27,9 @@
 								@foreach($registrations as $registration)
 									@if(!DB::table('employee_terminations')->where('employee_id',$registration->employee_id)->first() )
 										<tr>
-											<td>{{ $registration->employee['last_name'] . ' ' . $registration->employee['first_name'] }}
-											
+											<td><a href="{{ route('admin.evaluating_employees.show', ['id' => $registration->employee_id ]) }}">{{ $registration->employee['last_name'] . ' ' . $registration->employee['first_name'] }}</a>
+												<!--<a href="{{ route('admin.evaluating_employees.create', ['id' => $registration->employee_id ] ) }}"><i class="fas fa-edit"></i></a>-->
+												
 											</td>
 											<td>	
 												@if($evaluatingEmployees->where('employee_id',$registration->employee_id))

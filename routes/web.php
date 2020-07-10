@@ -600,6 +600,7 @@ Route::post('confirmTask', ['as' => 'confirmTask', 'uses' => 'Admin\EmployeeTask
 Route::get('admin/contacts', ['as' => 'contacts', 'uses' => 'Admin\RegistrationController@contacts']);
 Route::get('admin/deleteDoc', ['as' => 'deleteDoc', 'uses' => 'DocumentController@deleteDoc']);
 
-Route::get('importExport', 'Admin\JobRecordController@importExport');
-Route::get('downloadExcel/{type}', 'Admin\JobRecordController@downloadExcel');
-Route::post('importExcel', 'Admin\JobRecordController@importExcel');
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});

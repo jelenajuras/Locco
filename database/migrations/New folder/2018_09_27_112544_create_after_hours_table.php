@@ -17,8 +17,8 @@ class CreateAfterHoursTable extends Migration
             $table->increments('id');
 			$table->integer('employee_id');
 			$table->date('datum')->nullable();
-			$table->time('vrijeme_od')->after('GOzavršetak');
-			$table->time('vrijeme_do')->after('vrijeme_od');
+			$table->time('start_time')->after('end_date');
+			$table->time('end_time')->after('start_time');
 			$table->string('napomena')->nullable($value = true);
 			$table->string('odobreno')->nullable($value = true);
 			$table->integer('odobrio_id');

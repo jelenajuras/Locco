@@ -21,7 +21,7 @@ class CreateMeetingsTable extends Migration
 			$table->integer('project_id')->nullable($value = true);
 			$table->string('description')->nullable($value = true);
 			$table->time('vrijeme_od')->nullable($value = true);
-			$table->time('vrijeme_do')->nullable($value = true);
+			$table->time('end_time')->nullable($value = true);
 			$table->timestamps();
 			$table->foreign('employee_id')->references('id')->on('employees');
 			$table->foreign('meeting_room_id')->references('id')->on('meeting_rooms');

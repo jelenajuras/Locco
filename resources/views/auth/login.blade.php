@@ -25,7 +25,7 @@
 								<input name="remember" type="checkbox" value="true" {{ old('remember') == 'true' ? 'checked' : ''}}> Zapamti me
 							</label>
 						</div>
-						{{ csrf_field() }}
+						<input name="_token" value="{{ csrf_token() }}" type="hidden">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Prijavi me" id="stil1">
 						<p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">Zaboravio si lozinku?</a></p>
 					</fieldset>
@@ -34,4 +34,32 @@
         </div>
     </div>
 </div>
+
+<script>
+	var userValue = '';
+</script>
+<script>
+	window.onload = function loadStorage(){
+		if(typeof(Storage) !== 'undefined'){
+			function saveData(email){ //dohvaća varijable
+				//da li preglednik podržava lokalnu pohranu
+				if(typeof(Storage) !== 'undefined'){
+					localStorage['userEmail'] = email;
+				} else {
+					alert('Nema podrške za lokalnu pohranu!');
+				}
+			
+			};
+	
+			var form = document.getElementById('form');
+			form.addEventListener('submit',function(event){ //šalju se dva parametra, drugi je call back funkcija
+				var email = document.getElementById('email');
+				userValue = email.value;
+				saveData(userValue);
+			});
+		} else {
+			alert('Nema podrške za lokalnu pohranu!');
+		}
+	}
+</script>
 @stop

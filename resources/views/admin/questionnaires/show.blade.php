@@ -85,7 +85,7 @@
 					@endforeach
 				</div>
 			</section>
-			{{ csrf_field() }}
+			<input name="_token" value="{{ csrf_token() }}" type="hidden">
 			<input class="btn btn-lg btn-primary" type="submit" value="Upiši" id="stil1">
 		</form>
 	</div>

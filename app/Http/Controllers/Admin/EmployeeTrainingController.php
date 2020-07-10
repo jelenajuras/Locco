@@ -8,7 +8,6 @@ use App\Models\EmployeeTraining;
 use App\Models\Registration;
 use App\Models\EmployeeTermination;
 use App\Models\Training;
-use DateTime;
 
 class EmployeeTrainingController extends Controller
 {
@@ -31,9 +30,7 @@ class EmployeeTrainingController extends Controller
     public function index()
     {
         $employeeTrainings = EmployeeTraining::orderBy('expiry_date','DESC')->get();
-		$datum = new DateTime('now');
-		$datum->modify('+2 month');
-
+		
 		return view('admin.employee_trainings.index',['employeeTrainings'=>$employeeTrainings]);
     }
 

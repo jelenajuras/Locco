@@ -17,7 +17,11 @@
 						<input name="first_name" type="text" class="form-control" value="{{ $employee->first_name }}">
 						{!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					<div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
+					<div class="form-group {{ ($errors->has('maiden_name')) ? 'has-error' : '' }}">
+						<label>Djevojačko prezime:</label>
+						<input name="maiden_name" type="text" class="form-control" value="{{ $employee->maiden_name }}" }}">
+					</div>
+					<div class="form-group {{ ($errors->has('maiden_name')) ? 'has-error' : '' }}">
 						<label>Prezime:</label>
 						<input name="last_name" type="text" class="form-control" value="{{ $employee->last_name }}" }}">
 					</div>

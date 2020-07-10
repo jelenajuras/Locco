@@ -30,8 +30,9 @@
 					<input class="form-control" placeholder="OIB" name="oib" type="text" value="{{ $customer->oib }}" />
 					{!! ($errors->has('oib') ? $errors->first('oib', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-			{{ method_field('PUT') }}
 			{{ csrf_field() }}
+			{{ method_field('PUT') }}
+			<input name="_token" value="{{ csrf_token() }}" type="hidden">
 			<input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi podatke"  id="stil1">
 		</fieldset>
 		</form>

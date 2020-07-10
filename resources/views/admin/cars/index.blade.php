@@ -1,3 +1,5 @@
+@if (! Sentinel::inRole('erp_test'))
+    
 @extends('layouts.admin')
 
 @section('title', 'Vozila')
@@ -65,3 +67,5 @@
     </div>
 </div>
 @stop
+
+@endif

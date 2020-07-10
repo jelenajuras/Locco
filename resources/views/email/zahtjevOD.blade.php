@@ -36,10 +36,10 @@ body {
 		<div>
 			<h4>Zahtjev za {{ $zahtjev2 }} <br>
 			za 
-			@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "Bolovanje" || $vacationRequest->zahtjev == "PL"  || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD")
-				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->GOzavršetak)) }} 
+			@if($vacationRequest->zahtjev == "GO" || $vacationRequest->zahtjev == "Bolovanje" || $vacationRequest->zahtjev == "RD" || $vacationRequest->zahtjev == "COVID-19" || $vacationRequest->zahtjev == "PL"  || $vacationRequest->zahtjev == "NPL" || $vacationRequest->zahtjev == "SLD")
+				{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' do ' . date("d.m.Y", strtotime($vacationRequest->end_date)) }} 
 			@elseif($vacationRequest->zahtjev == "Izlazak")
-				{{ date("d.m.Y", strtotime($vacationRequest->GOpocetak)) . ' od ' . $vacationRequest->vrijeme_od . ' do ' . $vacationRequest->vrijeme_do }}
+				{{ date("d.m.Y", strtotime($vacationRequest->start_date)) . ' od ' . $vacationRequest->start_time . ' do ' . $vacationRequest->end_time }}
 			@endif
 			</h4>
 			<br> 

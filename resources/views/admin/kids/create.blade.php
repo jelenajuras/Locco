@@ -37,7 +37,7 @@
 						<input name="datum_rodjenja" class="date form-control" type="date" value = "">
 						{!! ($errors->has('datum_rodjenja') ? $errors->first('datum_rodjenja', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši dijete" id="stil1">
 				</form>
 			</div>

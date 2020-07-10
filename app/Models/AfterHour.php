@@ -11,7 +11,7 @@ class AfterHour extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','datum','vrijeme_od', 'vrijeme_do', 'napomena','odobreno','odobrio_id','datum_odobrenja','odobreno_h'];
+	protected $fillable = ['employee_id','project_id','datum','start_time', 'end_time', 'napomena','odobreno','odobrio_id','datum_odobrenja','odobreno_h'];
 	
 	/*
 	* The Eloquent employee model name
@@ -19,6 +19,13 @@ class AfterHour extends Model
 	* @var string
 	*/
 	protected static $employeeModel = 'App\Models\Employee'; 
+
+		/*
+	* The Eloquent project model name
+	* 
+	* @var string
+	*/
+	protected static $projectModel = 'App\Models\Project'; 
 	
 	/*
 	* Returns the employee relationship
@@ -30,6 +37,17 @@ class AfterHour extends Model
 		return $this->belongsTo(static::$employeeModel,'employee_id');
 	}
 	
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function project()
+	{
+		return $this->belongsTo(static::$projectModel,'project_id');
+	}
+	
+
 	/*
 	* Returns the employee relationship
 	* 

@@ -25,6 +25,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'employee_id'  =>'required',
+            'erp_id'  =>'numeric',
 			'radnoMjesto_id'  =>'required',
 			'datum_prijave'  =>'required',
 			'probni_rok'  =>'required|numeric',

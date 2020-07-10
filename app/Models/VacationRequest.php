@@ -10,7 +10,7 @@ class VacationRequest extends Model
 	*
 	* @var array
 	*/
-    protected $fillable = ['zahtjev','employee_id','GOpocetak','GOzavršetak','vrijeme_od','vrijeme_do','napomena','odobreno','odobreno2','razlog','odobrio_id','datum_odobrenja'];
+    protected $fillable = ['zahtjev','employee_id','start_date','end_date','start_time','end_time','napomena','odobreno','odobreno2','razlog','odobrio_id','datum_odobrenja'];
 	
 	/*
 	* The Eloquent employee model name

@@ -41,7 +41,7 @@
 							</div>
 							@endif
 						@endforeach
-						 <hr/>
+						 <hr />
 					</div>
                    
                     <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
@@ -52,8 +52,8 @@
                         <input class="form-control" placeholder="Potvrdi lozinku" name="password_confirmation" type="password" value="{{ old('password_confirmation') }}" />
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    {{ csrf_field() }}
-                    {{ method_field('PUT') }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                    <input name="_method" value="PUT" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Ispravi" id="stil1">
                 </fieldset>
                 </form>

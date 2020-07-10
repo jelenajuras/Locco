@@ -17,10 +17,10 @@ class CreateTemporaryEmployeeRequestsTable extends Migration
             $table->increments('id');
             $table->string('zahtjev',10)->nullable($value = true);
 			$table->integer('employee_id');
-			$table->date('GOpocetak')->nullable($value = true);
-            $table->date('GOzavršetak')->nullable($value = true);
-            $table->time('vrijeme_od')->nullable($value = true);
-			$table->time('vrijeme_do')->nullable($value = true);
+			$table->date('start_date')->nullable($value = true);
+            $table->date('end_date')->nullable($value = true);
+            $table->time('start_time')->nullable($value = true);
+			$table->time('end_time')->nullable($value = true);
 			$table->string('napomena',255)->nullable($value = true);
 			$table->string('odobreno',10)->nullable($value = true);
 			$table->string('odobreno2',10)->nullable($value = true);

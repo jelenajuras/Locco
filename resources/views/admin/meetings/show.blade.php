@@ -64,8 +64,8 @@
 										@foreach($requests as $request)
 											@if($request->employee_id == $djelatnik->employee_id)
 												<?php 
-													$begin = new DateTime($request['GOpocetak']);
-													$end = new DateTime($request['GOzavršetak']);
+													$begin = new DateTime($request['start_date']);
+													$end = new DateTime($request['end_date']);
 													$end->setTime(0,0,1);
 													$interval = DateInterval::createFromDateString('1 day');
 													$period = new DatePeriod($begin, $interval, $end);
@@ -78,6 +78,12 @@
 																break;
 															case 'Bolovanje':
 																$zahtjev = 'BOL';
+																break;
+															case 'COVID-19':
+																$zahtjev = 'COV';
+																break;
+															case 'RD':
+																$zahtjev = 'RD';
 																break;
 															case 'GO':
 																$zahtjev = 'GO';

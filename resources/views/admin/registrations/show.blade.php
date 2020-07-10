@@ -11,9 +11,11 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
             <div class="panel-heading">
 				<h3>{{ $registration->employee['first_name'] . ' ' . $registration->employee['last_name'] }}</h3>
+				<p><b>ERP_ID: </b>{{ $registration->erp_id }}</p>
 				<br>
 				<h4>Osobni podaci</h4>
 				<p><b>Ime oca, majke: </b>{{ $registration->employee['ime_oca']. ', ' . $registration->employee['ime_majke'] }}</p>
+				<p><b>Djevojačko prezime: </b>{{ $registration->employee['maiden_name'] }}</p>
 				<p><b>OIB: </b>{{ $registration->employee['oib'] }}</p>
 				<p><b>Osobna iskaznica: </b>{{ $registration->employee['oi'] }}</p>
 				<p><b>Datum isteka osobne iskaznice: </b>{{ date('d.m.Y', strtotime( $registration->employee['oi_istek'] )) }}</p>

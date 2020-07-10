@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
 	
-	protected $fillable = ['id','investitor_id','customer_id','naziv','objekt','user_id','active'];
+	protected $fillable = ['id','erp_id','investitor_id','customer_oib','customer_id','naziv','objekt','user_id','active'];
 	
 	/*
 	* The Eloquent customer model name

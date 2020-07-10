@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Employee;
 use Sentinel;
-use Spatie\CalendarLinks\Link;
 
 class EventController extends Controller
 {
@@ -69,7 +68,8 @@ class EventController extends Controller
 		
 		session()->flash('success', "Događaj je spremljen");
 		
-        return redirect()->route('home');        
+        return redirect()->route('home');
+        
     }
 
     /**

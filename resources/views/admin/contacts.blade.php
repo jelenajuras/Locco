@@ -32,7 +32,7 @@ input {
                         <tr>
 							<th width="{!! Sentinel::inRole('administrator') ? '20%' : '25%' !!}" onclick="sortTable(0)">Ime i prezime</th>
 							<th width="{!! Sentinel::inRole('administrator') ? '15%' : '25%' !!}" onclick="sortTable(1)">Telefon</th>
-							{{-- <th width="{!! Sentinel::inRole('administrator') ? '15%' : '25%' !!}" onclick="sortTable(2)">Privatan telefon</th> --}}
+							<th width="{!! Sentinel::inRole('administrator') ? '15%' : '25%' !!}" onclick="sortTable(2)">Privatan telefon</th>
                             <th width="{!! Sentinel::inRole('administrator') ? '25%' : '25%' !!}" onclick="sortTable(3)" >E-mail</th>
                             @if (Sentinel::inRole('administrator'))
                                 <th width="{!! Sentinel::inRole('administrator') ? '25%' : '25%' !!}" onclick="sortTable(4)" >Prebivalište</th> 
@@ -44,7 +44,7 @@ input {
                             <tr>
 								<td>{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}</td>
                                 <td>{{ $registration->employee->mobitel }}</td>
-                               {{--  <td>{{ $registration->employee->priv_mobitel }}</td> --}}
+                                <td>{{ $registration->employee->priv_mobitel }}</td>
                                 <td style="text-align: left">{{ $registration->employee->email }}</td>
                                 @if (Sentinel::inRole('administrator'))
                                     <td style="text-align: left">{{ $registration->employee->prebivaliste_adresa . ', ' . $registration->employee->prebivaliste_grad }}</td> 
@@ -55,7 +55,7 @@ input {
                             <tr>
 								<td>{{ $temporary_Employee->last_name  . ' '. $temporary_Employee->first_name }}</td>
                                 <td>{{ $temporary_Employee->mobitel }}</td>
-                               {{--  <td>{{ $temporary_Employee->priv_mobitel }}</td> --}}
+                                <td>{{ $temporary_Employee->priv_mobitel }}</td>
                                 <td style="text-align: left">{{ $temporary_Employee->email }}</td>
                                 @if (Sentinel::inRole('administrator'))
                                     <td style="text-align: left">{{ $registration->prebivaliste_adresa . ', ' . $registration->prebivaliste_grad }}</td> 

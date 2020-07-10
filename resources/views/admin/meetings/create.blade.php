@@ -13,13 +13,13 @@
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.meetings.store') }}">
 					<div class="datum1 form-group {{ ($errors->has('datum')) ? 'has-error' : '' }}">
 						<label>Datum:</label>
-						<input name="datum" class="date form-control" type="text" value = "{{ old('datum')}}">
+						<input name="datum" class="date form-control" type="text" value = "{{ old('datum')}}" autofocus>
 						<i class="far fa-calendar-alt"></i>
 						{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="datum2 form-group">
-						<span>od</span><input type="text" name="vrijeme_od" class="timepicker form-control" value="08:00">
-						<span>do</span><input type="text" name="vrijeme_do" class="timepicker form-control"  value="08:00" >
+						<span>od</span><input type="text" name="start_time" class="timepicker form-control" value="08:00">
+						<span>do</span><input type="text" name="end_time" class="timepicker form-control"  value="08:00" >
 					</div>
 					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 						<label class="padd_10">Djelatnik</label>
@@ -60,7 +60,7 @@
 						<input name="description" type="text" class="form-control" value="{{ old('description') }}" >
 						{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upiši" id="stil1">
 				</form>
 			</div>

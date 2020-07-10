@@ -8,18 +8,24 @@
 	<h2>Ispravak evidencije prekovremenog rada</h2>
 	<div class="panel-body">
 			<form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.afterHours.update', $afterHour->id) }}">
-		
-				<p class="padd_10">Ja, {{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name '] }}molim da mi se potvrdi izvršen prekovremeni rad dana</p>
+				<p class="padd_10">Ja, {{ $afterHour->employee['first_name'] . ' ' . $afterHour->employee['last_name '] }}molim da mi se potvrdi izvršen prekovremeni rad za projekt</p>
 				<input name="employee_id" type="hidden" value="{{ $afterHour->employee_id }}" />
-			
+			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($projects as $project)
+						<option class="project_list" name="project_id" {!! $project->erp_id == $afterHour->project_id ? 'selected' : '' !!} value="{{ intval($project->id) }}">{{ $project->erp_id  . ' ' . str_limit($project->naziv, 100)}}</option>
+					@endforeach	
+				</select>
+			</div>
 			<div class="datum form-group">
 				<input name="datum" class="date form-control" type="date" value = "{{  date('Y-m-d', strtotime($afterHour->datum)) }}" id="date1" ><i class="far fa-calendar-alt" ></i>
 				{!! ($errors->has('datum') ? $errors->first('datum', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 
 			<div class="datum2 form-group">
-				<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value="{{ $afterHour->vrijeme_od }}">
-				<span>do</span><input type="time" name="vrijeme_do" class="vrijeme" value="{{ $afterHour->vrijeme_do }}" >
+				<span>od</span><input type="time" name="start_time" class="vrijeme" value="{{ $afterHour->start_time }}">
+				<span>do</span><input type="time" name="end_time" class="vrijeme" value="{{ $afterHour->end_time }}" >
 			</div>
 			<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 				<label>Opis izvršenog rada:</label>
@@ -49,6 +55,9 @@
 			alert("Zahtjev je moguće poslati samo na danas i jučer");
 			$('.editOption5').attr('disabled','true');
 		}
+	});
+	$(document).ready(function () {
+		$('#select-state').selectize();
 	});
 </script>
 @stop

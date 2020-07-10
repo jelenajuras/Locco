@@ -77,7 +77,6 @@ class InstructionController extends Controller
             $instruction = new Instruction();
             $instruction->saveInstruction($data);
         }
-
         
         foreach ($departments as $department_id) {
             $department = Department::where('id', $department_id )->first();
@@ -158,20 +157,23 @@ class InstructionController extends Controller
         $instruction = Instruction::find($id);
         $employee = Employee::where('first_name', Sentinel::getUser()->first_name)->where('last_name', Sentinel::getUser()->last_name)->first();
         $uprava = false;
-
-        foreach ($employee->departments() as $department) {
-            if($department->department->name == 'Uprava') {
-               $uprava = true;
-            }
+        
+        $employee_departments = array();
+        foreach ( $employee->departments as $employee_department) {
+            array_push($employee_departments,$employee_department->department['name']);
         }
-     
+
+        if(in_array('Uprava', $employee_departments)) {
+            $uprava = true;
+        }
+       
         return view('admin.instructions.show', ['instruction'=>$instruction, 'uprava'=> $uprava]);
     }
 
     public function show_instructions()
      {
         $employee = Employee::where('first_name', Sentinel::getUser()->first_name)->where('last_name', Sentinel::getUser()->last_name)->first();
-        $instructions = Instruction::where('active','<>',null)->orderBy('title', 'ASC')->get();
+        $instructions = Instruction::where('active',1)->orderBy('title', 'ASC')->get();
         
         if ($employee ) {
             $reg_employee = Registration::where('employee_id', $employee->id)->first();

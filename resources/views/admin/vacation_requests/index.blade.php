@@ -88,7 +88,7 @@
 									@foreach ($godine as $godina)
 										@php
 											$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani zadana godina
-											if ($godina == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
+											if ($godina == $prosla_godina ) {   //  ako je danas mjesec manji od 7
 												$ukupno_GO += $razmjeranGO_PG;
 											} elseif ( $godina == $ova_godina ){
 												$ukupno_GO += $razmjeranGO_PG;
@@ -111,10 +111,10 @@
 											@if ($godina == $prosla_godina)
 												<td class="1">{{ $razmjeranGO_PG }}</td>
 											@else
-												<td>{{GodisnjiController::godisnjiUser($registration) }}</td>
+												<td>{{ GodisnjiController::godisnjiUser($registration) }}</td>
 												<td class="2">{{ $razmjeranGO  }}</td>												
 											@endif
-											<td class="3">{{ count ($zahtjeviSveGodine[$godina] ) }}</td>	
+											<td class="3">{{ count ($zahtjeviSveGodine[$godina] ) }}</td>
 										@endif																				
 									@endforeach
 									<td class="width_10">{{ $ukupno_GO - $ukupnoDani }}</td> <!-- Neiskorišteni dani GO -->

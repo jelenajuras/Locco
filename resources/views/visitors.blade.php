@@ -14,6 +14,7 @@
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
 @php	
 	$card_id = substr($_SERVER['REQUEST_URI'],10);
+	
 @endphp
 	</head>
 	<body>
@@ -36,47 +37,8 @@
 			@include('notifications')
 			<section class="hr col-md-12 col-lg-9 col-xl-6" >			
 				<h1>Upute za sigurnost posjetitelja</h1>
-				<form accept-charset="UTF-8" role="form" class="visitor_form" method="post" action="{{ route('admin.visitors.store') }}">
+				@include('admin.visitors.smjernice',['card_id' => $card_id])
 				
-						<div class="form-group {{ ($errors->has('first_name')) ? 'has-error' : '' }} ">
-							<input class="form-control" placeholder="Ime" name="first_name" type="text" maxlength="20" value="{{ old('first_name') }}" autofocus/>
-							{!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="Prezime" name="last_name" type="text" maxlength="20" value="{{ old('last_name') }}" />
-							{!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="E-mail" name="email" type="text" maxlength="50" value="{{ old('email') }}">
-							{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<div class="form-group {{ ($errors->has('company')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="Tvrtka" name="company" type="text" maxlength="50" value="{{ old('company') }}">
-							{!! ($errors->has('company') ? $errors->first('company', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<input class="form-control" name="lang" type="hidden" value="hr">					
-					<div class="form-group smjernice">
-						@include('admin.visitors.smjernice')
-						
-						<div class="{{ ($errors->has('accept')) ? 'has-error' : '' }} ">
-							<label>
-								<input name="accept" type="checkbox" value="1" {{ old('accept') == 'checked' ? 'checked' : ''}}  > <b>Potvrđujem da sam upoznat sa uvjetima i smjernicama zaštite na radu tvrtke Duplico.</b>
-							</label>
-							{!! ($errors->has('accept') ? $errors->first('accept', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<div class="{{ ($errors->has('confirm')) ? 'has-error' : '' }} ">
-							<label>
-								<input name="confirm" type="checkbox" value="1" {{ old('confirm') == 'true' ? 'checked' : ''}} > <b>Potvrđujem da sam preuzeo/la i da sam upoznat s načinom korištenja ključa za ulazak u prostorije tvrtke </b>
-							</label>
-							{!! ($errors->has('confirm') ? $errors->first('confirm', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-					</div>
-					
-						<input class="form-control" name="card_id" type="hidden" maxlength="20" value="{{ $card_id }}">
-						{{ csrf_field() }}
-						<input class="btn-submit btn_submit_reg" type="submit" value="Potvrda"> 
-					
-				</form>
 				<p>* Vaše osobne podatke obrađujemo sukladno članku 6. Opće uredbe o zaštiti podataka (GDPR), a u svrhu poštivanja pravnih obveza Duplico d.o.o. i zaštite Vaših ključnih interesa.</p>
 				@if(! isset($_COOKIE['cookie_confirme'])  )
 					<footer class="cookie">

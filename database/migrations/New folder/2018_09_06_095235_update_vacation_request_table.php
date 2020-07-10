@@ -14,8 +14,8 @@ class UpdateVacationRequestTable extends Migration
     public function up()
     {
         Schema::table('vacation_requests', function (Blueprint $table) {
-			$table->time('vrijeme_od');
-			$table->time('vrijeme_do');
+			$table->time('start_time');
+			$table->time('end_time');
 			$table->string('zahtjev')->nullable($value = true);
 		});
     }

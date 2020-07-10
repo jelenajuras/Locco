@@ -27,19 +27,19 @@
 					</select> 
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
-				<div class="datum form-group editOption1 display-none {{ ($errors->has('GOpocetak')) ? 'has-error' : '' }}" >
+				<div class="datum form-group editOption1 display-none {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 					<label class="padd_10">Za datum</label>
-					<input name="GOpocetak" class="date form-control" type="date" value = "{{ $request->GOpocetak}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
-					{!! ($errors->has('GOpocetak') ? $errors->first('GOpocetak', '<p class="text-danger">:message</p>') : '') !!}
+					<input name="start_date" class="date form-control" type="date" value = "{{ $request->start_date}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
+					{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<div class="datum form-group editOption2 display-none">					
 					<label class="padd_10">Zaključno sa datumom</label>
-					<input name="GOzavršetak" class="date form-control" type="date" value ="{{ $request->GOzavršetak }}" id="date2"><i class="far fa-calendar-alt" ></i>
-					{!! ($errors->has('GOzavršetak') ? $errors->first('GOzavršetak', '<p class="text-danger">:message</p>') : '') !!}
+					<input name="end_date" class="date form-control" type="date" value ="{{ $request->end_date }}" id="date2"><i class="far fa-calendar-alt" ></i>
+					{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<div class="datum2 form-group editOption3 display-none">
-					<span>od</span><input type="time" name="vrijeme_od" class="vrijeme" value="{!! $request->vrijeme_od ?  $request->vrijeme_od : '08:00' !!}">
-					<span>do</span><input 	type="time" name="vrijeme_do" class="vrijeme" value="{!! $request->vrijeme_do ?  $request->vrijeme_od : '16:00' !!}" >
+					<span>od</span><input type="time" name="start_time" class="vrijeme" value="{!! $request->start_time ?  $request->start_time : '08:00' !!}">
+					<span>do</span><input 	type="time" name="end_time" class="vrijeme" value="{!! $request->end_time ?  $request->start_time : '16:00' !!}" >
 				</div>
 				<div class="napomena form-group padd_10 padd_20b {{ ($errors->has('napomena')) ? 'has-error' : '' }}">
 					<label>Napomena:</label>

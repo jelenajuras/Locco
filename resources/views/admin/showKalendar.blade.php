@@ -7,6 +7,7 @@
 	 <div class='btn-toolbar'>
 		<a class="btn btn-md" href="{{ route('home') }}">
 			<i class="fas fa-home"></i>
+			
 		</a>
 		<a class="btn btn-md" href="{{ url()->previous() }}">
 			<i class="fas fa-angle-double-left"></i>
@@ -34,6 +35,7 @@
 								@foreach($list as $value)
 								<?php 
 								$dan1 = date('D', strtotime($value));
+								
 								switch ($dan1) {
 									 case 'Mon':
 										$dan = 'P';
@@ -83,7 +85,7 @@
 													?>
 													@if($meeting->meeting_room_id == $room->id && $dan3 == $dan2 && $mjesec2 == $mjesec)
 														
-														@if($meeting->vrijeme_od == $time . ':00:00')
+														@if($meeting->start_time == $time . ':00:00')
 															<p><small>{{ $time . ':00' }}</small>
 															{{ $meeting->employee['last_name']  }}
 															</p>
@@ -91,6 +93,7 @@
 													@endif
 											@endforeach
 										@endfor
+
 										</td>
 									@endforeach
 								</tr>

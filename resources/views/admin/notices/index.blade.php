@@ -1,3 +1,5 @@
+@if (! Sentinel::inRole('erp_test'))
+	
 @extends('layouts.admin')
 
 @section('title', 'Obavijesti')
@@ -106,3 +108,4 @@ $(document).ready(function() {
 </script>
 
 @stop
+@endif

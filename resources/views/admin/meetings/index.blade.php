@@ -34,14 +34,14 @@
                         @foreach ($meetings as $meeting)
                             <tr>
                                 <td>{{ date('d.m.Y.', strtotime($meeting->datum)) }}</td>
-								<td>{{ $meeting->vrijeme_od . '-'. $meeting->vrijeme_do }}</td>
+								<td>{{ $meeting->start_time . '-'. $meeting->end_time }}</td>
 								<td>{{ $meeting->employee['first_name'] . ' ' . $meeting->employee['last_name']}}</td>
 								<td>{{ $meeting->meetingRoom['name'] . '-'. $meeting->meetingRoom['description'] }}</td>
 								<td>{{ $meeting->project_id . ' ' . $meeting->project['naziv']}}</td>
 								<td>{{ $meeting->description }}</td>
                                 <td>
                                     <a href="{{ route('admin.meetings.edit', $meeting->id) }}">
-                                        <i class="far fa-edit"></i>
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </a>
                                     <a href="{{ route('admin.meetings.destroy', $meeting->id) }}" class="action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
                                         <i class="far fa-trash-alt"></i>

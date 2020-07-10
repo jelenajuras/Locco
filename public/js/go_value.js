@@ -2,7 +2,7 @@ function GO_value(){
 	if(document.getElementById("prikaz").value == "GO" ){
 		document.getElementById("napomena").value = "GO" ;
 		document.getElementById("zahtjev").innerHTML = "Zahtjev";
-	}else {
+	} else {
 		document.getElementById("napomena").value = "" ;
 	}
 	if(document.getElementById("prikaz").value == "Bolovanje" ){
@@ -21,6 +21,12 @@ function GO_value(){
 		document.getElementById("zahtjev").innerHTML = "Zahtjev";
 	}
 	if(document.getElementById("prikaz").value == "CEK"){
+		document.getElementById("zahtjev").innerHTML = "Zahtjev";
+	}
+	if(document.getElementById("prikaz").value == "COVID-19"){
+		document.getElementById("zahtjev").innerHTML = "Zahtjev";
+	}
+	if(document.getElementById("prikaz").value == "RD"){
 		document.getElementById("zahtjev").innerHTML = "Zahtjev";
 	}
 }

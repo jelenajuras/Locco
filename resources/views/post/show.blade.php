@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.index')
 
 @section('title')
 {{ $post->title }}
@@ -7,9 +7,9 @@
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar'>
-            <a class="btn btn-lg" href="{{ url('/') }}" id="stil1">
+            <a class="btn btn-primary btn-lg" href="{{ url('/') }}">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                Natrag
+                Go Back
             </a>
         </div>
     </div>

@@ -10,7 +10,6 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Controllers\Controller;
 use Sentinel;
 
-
 class ProjectController extends Controller
 {
     /**
@@ -30,8 +29,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-		$projects = Project::orderBy('id','ASC')->get();
-		
+		$projects = Project::orderBy('active','DESC')->orderBy('erp_id','ASC')->get();
 		
 		return view('admin.projects.index',['projects'=>$projects]);
     }
@@ -54,24 +52,25 @@ class ProjectController extends Controller
      * @param  \App\Http\Requests\ProjektRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProjectRequest $request)
+    public function store(Request $request)
     {
        // $user_id = Sentinel::getUser()->id;
 		$input = $request;
-		
-		if($input['investitor_id'] == ''){
+
+		if(isset($input['investitor_id']) && $input['investitor_id'] == ''){
 			$input['investitor_id'] = $input['customer_id'];
 		}
 		
 		$data = array(
-			'id'             => $input['id'],
-			'customer_id'    => $input['customer_id'],
-			'investitor_id'  => $input['investitor_id'],
-			'naziv' 		 => $input['naziv'],
+			'erp_id'         => $input['erp_id'],
+			/* 'customer_id'    => $input['customer_id'],
+			'investitor_id'  => $input['investitor_id'], */
+            'naziv' 		 => $input['naziv'],
+            'customer_oib'    => $input['customer_oib'],
 			'objekt' 		 => $input['objekt'],
 			'active' 		 => '1'
 		);
-		
+	
 		if($input['user_id']){
 			$data += ['user_id' => $input['user_id']];
 		}
@@ -119,12 +118,13 @@ class ProjectController extends Controller
 		$input = $request;
 
 		$data = array(
-			'customer_id'    => $input['customer_id'],
-			'investitor_id'  => $input['investitor_id'],
-			'naziv' 		 => $input['naziv'],
+			'erp_id'         => $input['erp_id'],
+			/* 'customer_id'    => $input['customer_id'],
+			'investitor_id'  => $input['investitor_id'], */
+            'naziv' 		 => $input['naziv'],
+            'customer_oib'    => $input['customer_oib'],
 			'objekt' 		 => $input['objekt'],
-			'user_id' 		 => $input['user_id'],
-			'active' 		 => $input['active']
+			'active' 		 => '1'
 		);
 		
 		$project->updateProject($data);

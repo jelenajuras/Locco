@@ -4,10 +4,10 @@
 <link rel="stylesheet" href="{{ URL::asset('css/create.css') }}"/>
 @section('content')
 <div class"row">
-	<a class="btn btn-md pull-left" href="{{ url()->previous() }}">
-		<i class="fas fa-angle-double-left"></i>
-		Natrag
-	</a>
+<a class="btn btn-md pull-left" href="{{ url()->previous() }}">
+	<i class="fas fa-angle-double-left"></i>
+	Natrag
+</a>
 <div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-4 col-lg-offset-4">
 	<h2 id="zahtjev">Dodaj događaj</h2>
 		<div class="panel-body">

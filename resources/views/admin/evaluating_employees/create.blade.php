@@ -25,7 +25,7 @@
 							@endif
 						@endforeach
 					</div>	
-					<div class="box form-group {{ ($errors->has('questionnaire_id'))  ? 'has-error' : '' }}">
+					<div class="box form-group  {{ ($errors->has('questionnaire_id'))  ? 'has-error' : '' }}">
 						<label class="">Anketa</label>
 						<select name="questionnaire_id" class="form-control">
 							<option disabled selected></option>
@@ -41,7 +41,7 @@
 						<i class="far fa-calendar-alt" ></i>
 						{!! ($errors->has('mjesec_godina') ? $errors->first('mjesec_godina', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
-					{{ csrf_field() }}
+					<input name="_token" value="{{ csrf_token() }}" type="hidden">
 					<input class="btn_align" type="submit" value="&#10004" title="Snimi promjenu" >
 				</form>
 			</div>

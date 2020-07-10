@@ -1,3 +1,5 @@
+@if (! Sentinel::inRole('erp_test'))
+
 @extends('layouts.admin')
 
 @section('title', 'Pogodnosti')
@@ -55,3 +57,5 @@
     </div>
 </div>
 @stop
+
+@endif

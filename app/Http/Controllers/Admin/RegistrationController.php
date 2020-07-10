@@ -87,6 +87,7 @@ class RegistrationController extends Controller
 		}
 	
 		$data = array(
+			'erp_id'  			=> $input['erp_id'],
 			'employee_id'  		=> $input['employee_id'],
 			'radnoMjesto_id'    => $input['radnoMjesto_id'],
 			'datum_prijave'		=> date("Y-m-d", strtotime($input['datum_prijave'])),
@@ -229,6 +230,7 @@ class RegistrationController extends Controller
 		
 		$data = array(
 			'employee_id'  		=> $input['employee_id'],
+			'erp_id'  			=> $input['erp_id'],
 			'radnoMjesto_id'    => $input['radnoMjesto_id'],
 			'datum_prijave'		=> date("Y-m-d", strtotime($input['datum_prijave'])),
 			'probni_rok'  		=> $input['probni_rok'],
@@ -244,7 +246,6 @@ class RegistrationController extends Controller
 				$data += ['datum_dozvola'  => $input['datum_dozvola']];
 			}
 		}
-		
 		
 		if( $input['superior_id'] != 0 ) {
 			$data += ['superior_id'  => $input['superior_id']];

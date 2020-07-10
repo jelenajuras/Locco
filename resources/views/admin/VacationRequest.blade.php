@@ -16,7 +16,7 @@
 		</header>
 		<main>
 		<p>Ja {{ $vacationRequest->employee['first_name'] . ' ' . $vacationRequest->employee['last_name'] }} molim da mi se odobri {{ $zahtjev }}</p>
-		<p>u periodu od {{ date('d.m.Y', strtotime( $vacationRequest->GOpocetak )) }} do  {{date('d.m.Y', strtotime( $vacationRequest->GOzavršetak ))   }} u trajanju od {{ $daniGO }} radnih dana.</p>
+		<p>u periodu od {{ date('d.m.Y', strtotime( $vacationRequest->start_date )) }} do  {{date('d.m.Y', strtotime( $vacationRequest->end_date ))   }} u trajanju od {{ $daniGO }} radnih dana.</p>
 		</main>
 		<footer>
 			<div class="datum">
