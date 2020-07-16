@@ -97,8 +97,14 @@ class HomeController extends GodisnjiController
 					}
 				}			
 
-				$absences = VacationRequest::where('odobreno','DA')->whereYear('start_date', $god_select)->get();
-				$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('end_date', $god_select)->get());
+				if(Sentinel::inRole('superadmin') || Sentinel::inRole('uprava')) {
+					$absences = VacationRequest::where('odobreno','DA')->whereYear('start_date', $god_select)->get();
+					$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('end_date', $god_select)->get());
+				} else {
+					$absences = VacationRequest::where('employee_id',$employee->id )->where('odobreno','DA')->whereYear('start_date', $god_select)->get();
+					$absences = $absences->merge(VacationRequest::where('employee_id',$employee->id )->where('odobreno','DA')->whereYear('end_date', $god_select)->get());
+				}
+				
 				foreach($absences as $absence) {
 					$begin = new DateTime($absence->start_date);
 					$end = new DateTime($absence->end_date);

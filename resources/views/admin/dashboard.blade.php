@@ -29,7 +29,6 @@
 		</div>		
 
 </div>
-
 @if(count($posts))
 	<div class="dashboard_box">
 		<button class="collapsible">Primljene poruke</button>
