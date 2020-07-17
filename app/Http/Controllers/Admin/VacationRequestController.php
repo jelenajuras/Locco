@@ -142,6 +142,10 @@ class VacationRequestController extends GodisnjiController
 			}
 		} elseif(is_array($input['employee_id']) && count($input['employee_id'])>0) {   /* ZAHTJEV NA VIŠE DJELATNIKA */
 			foreach($input['employee_id'] as $employee_id){
+				if(Employee::find($employee_id)->registration->slDani == 0) {
+					$message = session()->flash('error', 'Za djelatnika nije moguće poslati zahtjev za slobodan dan');     /* AKO ZAHTJEV VEĆ POSTOJI VRATI PORUKU */
+					return redirect()->back()->withFlashMessage($message);
+				}
 				$data = array(
 				'zahtjev'  			=> $input['zahtjev'],
 				'employee_id'  		=> $employee_id,

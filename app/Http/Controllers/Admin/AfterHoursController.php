@@ -40,11 +40,18 @@ class AfterHoursController extends GodisnjiController
 		$koristeni_slobodni_dani = $this->koristeni_slobodni_dani($registration);/* računa iskorištene slobodne dane */
 		
 		if(Sentinel::inRole('administrator')){
-			$afterHours = AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->orderBy('employees.last_name','ASC')->orderBy('datum','DESC')->get();
+			$afterHours = AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->whereYear('datum',date('Y'))->orderBy('employees.last_name','ASC')->orderBy('datum','DESC')->get();
+			if(date('m') < 3) {
+				$afterHours =  $afterHours->merge(AfterHour::join('employees','after_hours.employee_id','employees.id')->select('after_hours.*','employees.first_name', 'employees.last_name')->whereYear('datum',date('Y')-1)->whereMonth('datum','>',10)->orderBy('employees.last_name','ASC')->orderBy('datum','DESC')->get());
+			}
 		} else {
-			$afterHours = AfterHour::where('employee_id',$employee->id)->where('odobreno','')->orderBy('datum','DESC')->orderBy('employees.last_name','ASC')->get();				
+			$afterHours = AfterHour::where('employee_id',$employee->id)->where('odobreno','')->orderBy('datum','DESC')->orderBy('employees.last_name','ASC')->get();
 		}
-		return view('admin.afterHours.index',['afterHours'=>$afterHours,'registration'=>$registration])->with('employee', $employee)->with('slobodni_dani', $slobodni_dani)->with('koristeni_slobodni_dani', $koristeni_slobodni_dani);
+		$months = $this->months_afterHour();
+	
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('employees.first_name','employees.last_name')->where('odjava', null)->orderBy('employees.last_name','ASC')->get();
+		
+		return view('admin.afterHours.index',['afterHours'=>$afterHours,'registration'=>$registration,'employee'=>$employee,'slobodni_dani'=>$slobodni_dani,'koristeni_slobodni_dani'=>$koristeni_slobodni_dani,'months'=>$months,'registrations'=>$registrations]);
     }
 
     /**
@@ -56,7 +63,7 @@ class AfterHoursController extends GodisnjiController
     {
         $user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('employees.first_name','employees.last_name')->where('odjava', null)->orderBy('employees.last_name','ASC')->get();
 		$projects = Project::where('active',1)->get();
 
 		return view('admin.afterHours.create',['employee'=> $employee,'projects'=>$projects,'registrations'=> $registrations]);
@@ -437,4 +444,42 @@ class AfterHoursController extends GodisnjiController
 
 		return redirect()->back();	
 	}
+
+	public function paidHours (Request $request) 
+	{
+
+		foreach ($request['id'] as $key => $id) {
+			$afterHour = AfterHour::find($id);
+			if( isset($request['paid'][$key] )) {
+				$paid = $request['paid'][$key];
+			} else {
+				$paid = 0;
+			}
+			$data = array(
+				'paid'  => $paid,
+			);
+			$afterHour->updateAfterHour($data);
+		}
+
+		$message = session()->flash('success', 'Podaci su spremljeni');
+		
+		return redirect()->back()->withFlashMessage($message);
+	}
+
+	public function months_afterHour()
+    {
+        $months = array();
+		$afterHours = AfterHour::whereYear('datum',date('Y'))->get();
+		$afterHours =  $afterHours->merge(AfterHour::whereYear('datum',date('Y')-1)->whereMonth('datum','>',6)->get());
+        foreach ($afterHours as $key => $afterHour) {
+           array_push($months, date('Y-m',strtotime($afterHour->datum )));
+		}
+		if( ! in_array(date('Y-m'), $months)) {
+			array_push($months, date('Y-m') );
+		}
+		$months = array_unique($months);
+		rsort($months);
+		
+        return $months;
+    }
 }

@@ -63,8 +63,18 @@
 		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
 		<script>
 		$(document).ready(function() {
+			var paging;
+			var lengthMenu;
+			var pageLength;
+			if ($('#table_id').hasClass('no_paging')) {
+				paging = false;
+				
+			} else {
+				paging = true;
+				
+			}
 			var table = $('#table_id').DataTable( {
-			"paging": true,
+			"paging": paging,
 			language: {
 				paginate: {
 					previous: 'Prethodna',

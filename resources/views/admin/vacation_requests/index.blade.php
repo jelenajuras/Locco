@@ -29,6 +29,9 @@
                     <thead>
                         <tr>
 							<th class="not_align">Ime i prezime</th>
+							@if(Sentinel::inRole('administrator'))
+								<th class="not_align">Slobodni dan</th>
+							@endif
 							<th class="not_align">Odjel</th>
 							<th >Staž Duplico <br>[g-m-d]</th>
 							<th >Staž ukupno <br>[g-m-d]</th>
@@ -42,12 +45,12 @@
 								@endif
 							@endforeach
 							<th >Ukupno neiskorišteno <br>dana  GO</th>
-							@if(Sentinel::inRole('administrator'))
-								<th >Ukupno prekovremenih sati <br></th>
-								<th >Ukupno izlazaka <br>sati [dana]</th>
-								<th >Ukupno slobodnih <br>dana</th>
-								<th >Korišteno slobodnih <br>dana</th>
-							@endif
+							
+							<th >Ukupno prekovremenih sati <br></th>
+							<th >Ukupno izlazaka <br>sati [dana]</th>
+							<th >Ukupno slobodnih <br>dana</th>
+							<th >Korišteno slobodnih <br>dana</th>
+							
 							<th >Neiskorišteni <br>slobodni <br>dani</th>							
                         </tr>
                     </thead>
@@ -82,6 +85,9 @@
 											{{ $registration->employee['last_name']  . ' '. $registration->employee['first_name']}}
 										</a>
 									</td>
+									@if(Sentinel::inRole('administrator'))
+										<td class="not-align">{!! $registration->slDani == 1 ? 'slobodni dani' : 'isplata' !!}</td>
+									@endif
 									<td class="not-align">{{  $registration->work['odjel'] }}</td>
 									<td>{{ $godina . '-' . $mjeseci . '-' . $dana  }}</td> 												<!-- staž Duplico -->
 									<td>{{ $godinaUk . '-' . $mjeseciUk . '-' .  $danaUk }}</td>										<!-- Ukupan staž -->
@@ -118,11 +124,22 @@
 										@endif																				
 									@endforeach
 									<td class="width_10">{{ $ukupno_GO - $ukupnoDani }}</td> <!-- Neiskorišteni dani GO -->
-									@if(Sentinel::inRole('administrator'))
-										<td >{{ $prekovremeni_sati }}</td> <!-- Prekovremeni sati  -->
-										<td class="width_10">{{ $izlasci_ukupno }} <br> [ {{ round(strstr($izlasci_ukupno, ':', true) /8, 0, PHP_ROUND_HALF_DOWN) }} ]</td> <!-- Izlasci -->
-										<td >{{ $slDani }} </td> <!--Ukupno slobodnih dana -->
-										<td >{{ $koristeni_slDani }} </td> <!-- korištenih slobodnih dana -->
+									@if(Sentinel::inRole('administrator') || $registration->slDani == 1)
+										
+											<td >{{ $prekovremeni_sati }}</td> <!-- Prekovremeni sati  -->
+											<td class="width_10">{{ $izlasci_ukupno }} <br> [ {{ round(strstr($izlasci_ukupno, ':', true) /8, 0, PHP_ROUND_HALF_DOWN) }} ]</td> <!-- Izlasci -->
+										@if ( $registration->slDani == 1)
+											<td >{{ $slDani }} </td> <!--Ukupno slobodnih dana -->
+											<td >{{ $koristeni_slDani }} </td> <!-- korištenih slobodnih dana -->
+										@else
+											<td></td>
+											<td></td>
+										@endif
+									@else
+											<td></td>
+											<td class="width_10">{{ $izlasci_ukupno }} <br> [ {{ round(strstr($izlasci_ukupno, ':', true) /8, 0, PHP_ROUND_HALF_DOWN) }} ]</td> <!-- Izlasci -->
+											<td></td>
+											<td></td>
 									@endif
 									<td class="width_10">@if($registration->slDani == 1){{ $slDani - $koristeni_slDani  }}@endif</td><!-- Neiskorišteni slobodni dani -->
 								</tr>

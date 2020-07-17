@@ -579,6 +579,7 @@ Route::get('admin/AllVacationRequest', ['as' => 'admin.AllVacationRequest', 'use
 Route::get('admin/confirmationAfter', ['as' => 'admin.confirmationAfter', 'uses' => 'Admin\AfterHoursController@storeConf']);
 Route::post('admin/confDirectorAfter', ['as' => 'admin.confDirectorAfter', 'uses' => 'Admin\AfterHoursController@confDirectorAfter']);
 Route::get('admin/confirmationAfter_show', ['as' => 'admin.confirmationAfter_show', 'uses' => 'Admin\AfterHoursController@confirmationAfter_show']);
+Route::post('paidHours', ['as' => 'paidHours', 'uses' => 'Admin\AfterHoursController@paidHours']);
 
 Route::get('admin/showKalendar', ['as' => 'admin.showKalendar', 'uses' => 'Admin\MeetingController@showKalendar']);
 

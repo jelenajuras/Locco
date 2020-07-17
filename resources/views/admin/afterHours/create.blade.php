@@ -7,26 +7,26 @@
 <div class="forma col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
 	<h2>Evidencija prekovremenog rada</h2>
 	<div class="panel-body">
-			<form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.afterHours.store') }}">
-				@if (Sentinel::inRole('administrator'))
-					<input 	name="role" hidden value="{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}"/>
-						<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
-							<label class="padd_10">Djelatnik</label>
-							<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
-								<option value="" disabled></option>
-								@foreach ($registrations as $djelatnik)
-									@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
-										<option name="employee_id" value="{{ $djelatnik->employee_id }}">{{ $djelatnik->last_name  . ' ' . $djelatnik->first_name }}</option>
-									@endif
-								@endforeach	
-							</select>
-							{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
-						<p class="padd_10 text1 ">moli da mu se potvrdi izvršen prekovremeni rad za projekt</p>
-				@else
-					<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se potvrdi izvršen prekovremeni rad dana</p>
-					<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
-				@endif
+		<form accept-charset="UTF-8" name="myForm" role="form" method="post" action="{{ route('admin.afterHours.store') }}">
+			@if (Sentinel::inRole('administrator'))
+				<input 	name="role" hidden value="{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}"/>
+					<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
+						<label class="padd_10">Djelatnik</label>
+						<select name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
+							<option value="" disabled></option>
+							@foreach ($registrations as $djelatnik)
+								@if(!DB::table('employee_terminations')->where('employee_id',$djelatnik->employee_id)->first() )
+									<option name="employee_id" value="{{ $djelatnik->employee_id }}">{{ $djelatnik->last_name  . ' ' . $djelatnik->first_name }}</option>
+								@endif
+							@endforeach	
+						</select>
+						{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
+					<p class="padd_10 text1 ">moli da mu se potvrdi izvršen prekovremeni rad za projekt</p>
+			@else
+				<p class="padd_10">Ja, {{ $employee->first_name . ' ' . $employee->last_name }} molim da mi se potvrdi izvršen prekovremeni rad dana</p>
+				<input name="employee_id" type="hidden" value="{{ $employee->id }}" />
+			@endif
 			
 			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
@@ -35,7 +35,6 @@
 						<option class="project_list" name="project_id" value="{{ intval($project->id) }}">{{ $project->erp_id  . ' ' . str_limit($project->naziv, 100)}}</option>
 					@endforeach	
 				</select>
-				
 			</div>
 			<div class="datum form-group">
 				<input name="datum" class="date form-control" type="date" value = "{{ old('datum')}}" id="date1" required>{{-- <i class="far fa-calendar-alt" ></i> --}}

@@ -45,7 +45,9 @@
 						<option class="editable4" value="NPL">korištenje neplaćenog dopusta za period od</option>
 						<option class="editable7" value="PL">korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK">oslobođenje od planiranog radnog vikenda</option>
-						<option class="editable5" value="SLD"  {{ ($slobodni_dani-$koristeni_slobodni_dani <= 0 && !Sentinel::inRole('administrator') ? 'disabled' : '' )  }} >korištenje slobodnih dana za period od</option>
+						@if ( Sentinel::inRole('administrator') || $employee->registration->slDani == 1 )
+							<option class="editable5" value="SLD" {!! $slobodni_dani-$koristeni_slobodni_dani <= 0 && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} >korištenje slobodnih dana za period od</option>
+						@endif
 					</select> 
 					{!! ($errors->has('zahtjev') ? $errors->first('zahtjev', '<p class="text-danger">:message</p>') : '') !!}	
 				</div>
@@ -58,14 +60,16 @@
 							Nemoguće je poslati zahtjev za godišnji odmor.
 					@endif
 				</p>
-				<p class="editOption5 iskorišteno display-none">
-					@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
-						Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
-					@else
-						Svi slobodni dani su iskorišteni! <br>
-						Nemoguće je poslati zahtjev za slobodni dan.
-					@endif
-				</p>
+				@if ($employee->registration->slDani == 1)
+					<p class="editOption5 iskorišteno display-none">
+						@if( ($slobodni_dani -  $koristeni_slobodni_dani) > 0)
+							Neiskorišteno {{ $slobodni_dani -  $koristeni_slobodni_dani }} slobodnih dana
+						@else
+							Svi slobodni dani su iskorišteni! <br>
+							Nemoguće je poslati zahtjev za slobodni dan.
+						@endif
+					</p>
+				@endif
 				<div class="datum form-group editOption1 display-none {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 					<label class="padd_10">Od datuma</label>
 					<input name="start_date" class="date form-control" type="date" value = "{{ old('start_date')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>

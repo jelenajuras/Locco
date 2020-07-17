@@ -518,7 +518,6 @@ class GodisnjiController extends Controller
 					$razlika_vremena = $razlika_vremena;
 				}
 				$razlika += $razlika_vremena;
-
 			}
 		}
 

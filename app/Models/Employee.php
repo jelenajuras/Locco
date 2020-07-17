@@ -21,6 +21,20 @@ class Employee extends Model
 	protected static $worksModel = 'App\Models\Work'; 
 	
 	/*
+	* The Eloquent registration model name
+	* 
+	* @var string
+	*/
+	protected static $registrationModel = 'App\Models\Registration'; 
+
+	/*
+	* The Eloquent employeeDepartment model names
+	* 
+	* @var string
+	*/
+	protected static $EmployeeDepartmentModel = 'App\Models\Employee_department';
+	
+	/*
 	* Returns the works relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -30,14 +44,17 @@ class Employee extends Model
 	{
 		return $this->belongsTo(static::$worksModel,'radnoMjesto_id');
 	}
-	
-	/*
-	* The Eloquent employeeDepartment model names
-	* 
-	* @var string
-	*/
-	protected static $EmployeeDepartmentModel = 'App\Models\Employee_department';
 
+	/*
+	* Returns the registration relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasOne
+	*/
+	
+	public function registration()
+	{
+		return $this->hasOne(static::$registrationModel,'employee_id');
+	}
 
 	/*
 	* Returns the comments relationship

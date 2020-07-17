@@ -459,6 +459,14 @@ header ul li a{
 	text-align: left;
 }
 
+#table_id #myTable tr td.paid_afterHour{
+	text-align: center;
+	
+}
+#table_id #myTable tr td.paid_afterHour input[type=checkbox] {
+	width: 20px;
+    height: 20px;
+}
 #table_id #myTable tr td:last-child {
 text-align: center;
 }
@@ -512,6 +520,7 @@ form {
 	width: 70%;
 	max-width: 300px;
 	margin: 20px auto;
+	overflow: hidden;
 }
 
 .dep-check{
@@ -1227,4 +1236,23 @@ input[name="returned"] {
 		max-width: 100%;
 		float: none;
 	}
+}
+
+.tr_after.is_visible {
+	display: table-row;
+}
+.tr_after.not_visible {
+	display: none;
+}
+
+.select_div {
+	line-height: 46px;
+}
+.select_div select {
+	padding: 5px;
+    margin-right: 15px;
+    border: none;
+}
+.select_div select option {
+	padding: 5px 0;
 }
