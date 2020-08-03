@@ -63,7 +63,7 @@ class AfterHoursController extends GodisnjiController
     {
         $user = Sentinel::getUser();
 		$employee = Employee::where('employees.last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('employees.first_name','employees.last_name')->where('odjava', null)->orderBy('employees.last_name','ASC')->get();
+		$registrations = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.employee_id','employees.first_name','employees.last_name')->where('odjava', null)->orderBy('employees.last_name','ASC')->get();
 		$projects = Project::where('active',1)->get();
 
 		return view('admin.afterHours.create',['employee'=> $employee,'projects'=>$projects,'registrations'=> $registrations]);

@@ -35,14 +35,14 @@
 				<!--<input name="montaza" type="hidden"  value="{{ $registration->work['job_description']}}" />-->
 				<div class="form-group {{ ($errors->has('zahtjev')) ? 'has-error' : '' }}">
 					<select class="{{ ($errors->has('zahtjev')) ? 'has-error' : '' }}" name="zahtjev" value="{{ old('zahtjev') }}" id="prikaz" oninput="this.className = ''" onchange="GO_value()" required>
-						<option disabled selected value></option>
+						<option disabled selected ></option>
 						<option class="editable1" value="GO">korištenje godišnjeg odmora za period od</option>
 						<option class="editable1" value="RD">rad od doma</option>
 						<option class="editable1" value="COVID-19">Oslobođenje od rada - COVID-19</option>
 						<option class="editable8" value="CEK">čekanje</option>
 						<option class="editable2" value="Bolovanje">bolovanje</option>
 						<option class="editable3" value="Izlazak">izlazak</option>
-						<option class="editable4" value="NPL">korištenje neplaćenog dopusta za period od</option>
+						<!-- <option class="editable4" value="NPL">korištenje neplaćenog dopusta za period od</option> -->
 						<option class="editable7" value="PL">korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK">oslobođenje od planiranog radnog vikenda</option>
 						@if ( Sentinel::inRole('administrator') || $employee->registration->slDani == 1 )
@@ -75,7 +75,6 @@
 					<input name="start_date" class="date form-control" type="date" value = "{{ old('start_date')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
 					{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-			
 				<div class="datum form-group editOption2 display-none">					
 					<label class="padd_10">Zaključno sa datumom</label>
 					<input name="end_date" class="date form-control" type="date" value ="{{ old('end_date')}}" id="date2"><i class="far fa-calendar-alt" ></i>
@@ -90,6 +89,7 @@
 					<textarea rows="4" id="napomena" name="napomena" type="text" maxlength="500" class="form-control" value="{{ old('napomena') }}" required></textarea>
 					{!! ($errors->has('napomena') ? $errors->first('napomena', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
+				<div id="div1"></div>
 				@if (Sentinel::inRole('administrator'))
 					<div class="form-group">
 						<label for="email">Slanje emaila:</label>
@@ -136,17 +136,43 @@
 				$('input[type=submit]').attr('disabled',false);
 			});
 			
-		</script>
-		<!-- izračun dana GO u zahtjevu -->
-		<script>
+		/* 	$('input[name=end_date]').change(function(){
+				var dan_1 = $('input[name=start_date]').val();
+				var dan_2 = $( this).val();
+				var zahtjev = $('select[name=zahtjev]').val();
+				var url =  location.origin +'/dani_GO';
+
+				if(zahtjev == 'GO') {
+					$.ajax({
+						url: url, 
+						post:"post",
+						data: {start_date: dan_1, end_date: dan_2},
+						success: function(response){
+							console.log("success");
+							console.log(response);
+						},
+						error(xhr,status,error) {
+							console.log("error");						
+							console.log(xhr);						
+						}
+					});
+
+				}
+			}); */
+
+		// izračun dana GO u zahtjevu 
 			function GO_dani(){
-				if(document.getElementById("prikaz").value == "GO" ){
+				if($("prikaz").value() == "GO" ){
 					var dan1 =  new Date(document.forms["myForm"]["start_date"].value);
 					var dan2 = new Date(document.forms["myForm"]["end_date"].value);
 					var person = {start_date:dan1, end_date:dan2};
-					
+					console.log(dan1);
+					console.log(dan2);
+					console.log(person);
+
 					//razlika dana
 					var datediff = (dan2 - dan1);
+					console.log(datediff);
 					document.getElementById('demo').innerHTML=(datediff / (24*60*60*1000)) +1;
 					//uvečava datum
 					dan1.setDate(dan1.getDate() + 1);
@@ -154,11 +180,8 @@
 				}
 				return false;
 			}
-		</script>
-		<!-- validator  -->
-		<script>
+		// validator
 			function validateForm() {
-				
 				var x = document.forms["myForm"]["zahtjev"].value;
 				var y = document.forms["myForm"]["Dani"].value;
 				var z = document.forms["myForm"]["start_date"].value;
@@ -182,5 +205,4 @@
 		</script>
 		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
 		<script src="{{ asset('js/go_value.js') }}"></script>
-		
 @stop

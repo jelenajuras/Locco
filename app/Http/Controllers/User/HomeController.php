@@ -123,19 +123,21 @@ class HomeController extends GodisnjiController
 				}
 	
 				$events = Event::whereYear('date1', $god_select)->get();
-				
-				foreach($events as $event) {
-					$begin1 = new DateTime($event->date1);
-					$end1 = new DateTime($event->date2);
-					$end1->setTime(0,0,1);
-					$interval1 = DateInterval::createFromDateString('1 day');
-					$period1 = new DatePeriod($begin1, $interval1, $end1);
-					foreach ($period1 as $dan1) {
-						if(date_format($dan,'Y') >= $god_select) {  // ako je trenutna godina
-							array_push($dataArr, ['name' => 'event', 'type' => $event->type, 'date' => date_format($dan1,'Y-m-d'), 'employee' => $event->employee['first_name']  . ' ' .  $event->employee['last_name'], 'title' => $event->title,'time' => date( 'G:i',(strtotime($event->time1))) . '-' . date( 'G:i',(strtotime($event->time2))) ]);
+				if(count($events)> 0) {
+					foreach($events as $event) {
+						$begin1 = new DateTime($event->date1);
+						$end1 = new DateTime($event->date2);
+						$end1->setTime(0,0,1);
+						$interval1 = DateInterval::createFromDateString('1 day');
+						$period1 = new DatePeriod($begin1, $interval1, $end1);
+						foreach ($period1 as $dan1) {
+							if(date_format($dan1,'Y') >= $god_select) {  // ako je trenutna godina
+								array_push($dataArr, ['name' => 'event', 'type' => $event->type, 'date' => date_format($dan1,'Y-m-d'), 'employee' => $event->employee['first_name']  . ' ' .  $event->employee['last_name'], 'title' => $event->title,'time' => date( 'G:i',(strtotime($event->time1))) . '-' . date( 'G:i',(strtotime($event->time2))) ]);
+							}
 						}
 					}
 				}
+				
 	
 				return view('user.home', ['reg_employee' => $reg_employee,'ech' => $ech,'employee' => $employee,'zahtjevi_neodobreni' => $zahtjevi_neodobreni,'zahtjevi_odobreni' => $zahtjevi_odobreni,'ova_godina' => $ova_godina,'afterHours' => $afterHours,'questionnaires' => $questionnaires,'educations' => $educations, 'dataArr' => $dataArr, 'ads' => $ads, 'employee_tasks' => $employee_tasks, 'presentations' => $presentations,'catalog_manufacturers' => $catalog_manufacturers ]);
 			} else if ( $temporary ) {

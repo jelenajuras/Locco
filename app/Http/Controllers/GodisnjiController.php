@@ -432,6 +432,7 @@ class GodisnjiController extends Controller
 	// Računa broj radnih dana između dva datuma
 	public static function daniGO($zahtjev)
 	{
+		
 		$begin = new DateTime($zahtjev['start_date']);
 		$end = new DateTime($zahtjev['end_date']);
 		$end->setTime(0,0,1);
@@ -439,7 +440,6 @@ class GodisnjiController extends Controller
 		$period = new DatePeriod($begin, $interval, $end);
 		
 		$brojDana = 0;
-		
 		foreach ($period as $dan) {
 			if( date_format($dan,'N') < 6 &&
 			date_format($dan,'d-m') != '01-01' &&
@@ -463,6 +463,7 @@ class GodisnjiController extends Controller
 				$brojDana += 1;
 			}
 		}
+		
 		return $brojDana;
 	}
 	

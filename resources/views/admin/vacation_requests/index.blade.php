@@ -56,7 +56,6 @@
                     </thead>
                     <tbody id="myTable">
 						@foreach ($registrations as $registration)
-
 							<?php 
 								$prijenos_zahtjeva = 0;								
 								/* Staž Duplico */
@@ -94,8 +93,10 @@
 									@foreach ($godine as $godina)
 										@php
 											$razmjeranGO_PG = GodisnjiController::razmjeranGO_PG($registration, $godina); // razmjerni dani zadana godina
-											if ($godina == $prosla_godina ) {   //  ako je danas mjesec manji od 7
-												$ukupno_GO += $razmjeranGO_PG;
+											if ($godina == $prosla_godina  ) {   //  ako je danas mjesec manji od 7
+												if( date('m') < 7 ) {
+													$ukupno_GO += $razmjeranGO_PG;
+												}
 											} elseif ( $godina == $ova_godina ){
 												$ukupno_GO += $razmjeranGO_PG;
 											}
@@ -109,7 +110,7 @@
 											} else {
 												$prijenos_zahtjeva = 0;
 											} 
-											if ( $godina == $ova_godina ||$godina == $prosla_godina  ){
+											if ( $godina == $ova_godina || ($godina == $prosla_godina && date('m') < 7 ) ){
 												$ukupnoDani += count ($zahtjeviSveGodine[$godina]);
 											}
 										@endphp

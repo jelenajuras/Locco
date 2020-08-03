@@ -91,7 +91,7 @@ class PostController extends Controller
 				$nadredjeni_id = $registration->user_id;
 			}
 			
-			$nadredjeni_mail = Employee::where('id', $nadredjeni_id)->first()->email;
+			
 
 			if($input['datum'] === '') {
 				$message = session()->flash('error', 'Nemoguće poslati zahtjev, nije upisan datum');
@@ -111,7 +111,12 @@ class PostController extends Controller
 			$post->savePost($data);
 
 			$mailovi = ['koordinacija@duplico.hr','uprava@duplico.hr']; 
-			// $mailovi = ['uprava@duplico.hr', $nadredjeni_mail];
+			$nadredjeni = Employee::where('id', $nadredjeni_id)->first();
+			if($nadredjeni) {
+				$nadredjeni_mail = $nadredjeni->email;
+				// $mailovi = ['uprava@duplico.hr', $nadredjeni_mail];
+
+			}
 			// $mailovi = ['jelena.juras@duplico.hr','jelena.juras@duplico.hr'];
 			$link = 'http://administracija.duplico.hr/admin/posts/' . $post->id;
 			

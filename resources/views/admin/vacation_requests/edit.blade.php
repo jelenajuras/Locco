@@ -15,7 +15,7 @@
 						<option class="editable8" value="CEK"  {!! ($vacationRequest->zahtjev == 'CEK' ? 'selected ': '') !!} >čekanje</option>
 						<option class="editable2" value="Bolovanje" {!! ($vacationRequest->zahtjev == 'Bolovanje' ? 'selected ': '') !!}>bolovanje</option >
 						<option class="editable3"  value="Izlazak" {!! ($vacationRequest->zahtjev == 'Izlazak' ? 'selected ': '') !!}>Prijevremeni izlaz dana</option >
-						<option class="editable4" value="NPL" {!! ($vacationRequest->zahtjev == 'NPL' ? 'selected ': '') !!}>korištenje neplaćenog dopusta za period od</option>
+						<!-- <option class="editable4" value="NPL" {!! ($vacationRequest->zahtjev == 'NPL' ? 'selected ': '') !!}>korištenje neplaćenog dopusta za period od</option> -->
 						<option class="editable7" value="PL" {!! ($vacationRequest->zahtjev == 'PL' ? 'selected ': '') !!}>korištenje plaćenog dopusta za period od</option>
 						<option class="editable6" value="VIK" {!! ($vacationRequest->zahtjev == 'VIK' ? 'selected ': '') !!}>oslobođenje od planiranog radnog vikenda</option>
 						<option class="editable5" value="SLD"  {!! ($slobodni_dani-$koristeni_slobodni_dani <= 0 ? 'disabled' : '' )  !!} {!! ($vacationRequest->zahtjev == 'SLD' ? 'selected ': '') !!} >korištenje slobodnih dana za period od</option>

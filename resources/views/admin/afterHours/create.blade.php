@@ -57,7 +57,9 @@
 	</div>
 </div>
 <script>
-console.log( ! $('.role_admin').text());
+	$(document).ready(function () {
+		$('#select-state').selectize();
+	});
 	$( ".date.form-control" ).change(function() {
 		if( ! $('.role_admin').text()) {
 			var date = $( this ).val();
@@ -78,9 +80,5 @@ console.log( ! $('.role_admin').text());
 			}
 		}
 	});
-	$(document).ready(function () {
-		$('#select-state').selectize();
-	});
 </script>
 @stop
-
