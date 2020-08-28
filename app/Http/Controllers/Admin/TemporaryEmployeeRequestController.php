@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TemporaryEmployeeRequest;
 use App\Models\TemporaryEmployee;
 use App\Models\Employee;
+use App\Models\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\GodisnjiController;
 use Mail;
@@ -412,8 +413,11 @@ class TemporaryEmployeeRequestController extends Controller
 			}
 			
 			$work =  $employee->work;   //radno mjesto zaposlenika
-			$department = $work->department; 							// odjel kojem pripada radno mjesto
-			$department_nadredjeni = $department->employee; 			 // nadređeni odjela
+            $department = $work->department; 							// odjel kojem pripada radno mjesto
+            if( ! $department) {
+                $department = Department::where('name',$work->odjel)->first();
+            }
+            $department_nadredjeni = $department->employee; 			 // nadređeni odjela
 			$work_nadredjeni = $work->nadredjeni;    					// glavni nadređeni radnog mjesta - član uprave
 			$work_voditelj = $work->prvi_nadredjeni;    				// voditelj radnog mjesta
 			$email_work_nadredjeni = $work_nadredjeni->email;				// email glavnog nadređenog
@@ -434,7 +438,7 @@ class TemporaryEmployeeRequestController extends Controller
                                 function ($message) use ($mail, $employee, $subject) {
                                     $message->to($mail)
                                         ->from('info@duplico.hr', 'Duplico')
-                                        ->subject($subject . ' - ' .  $employee->employee['first_name'] . ' ' . $employee->employee['last_name']);
+                                        ->subject($subject . ' - ' .  $employee->first_name . ' ' . $employee->last_name);
                                 }
                             );
                         }

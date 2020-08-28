@@ -97,7 +97,7 @@ class HomeController extends GodisnjiController
 					}
 				}			
 
-				if(Sentinel::inRole('superadmin') || Sentinel::inRole('uprava')) {
+				if(Sentinel::inRole('superadmin') || Sentinel::inRole('uprava')  || Sentinel::inRole('calendar_view')) {
 					$absences = VacationRequest::where('odobreno','DA')->whereYear('start_date', $god_select)->get();
 					$absences = $absences->merge(VacationRequest::where('odobreno','DA')->whereYear('end_date', $god_select)->get());
 				} else {

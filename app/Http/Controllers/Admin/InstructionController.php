@@ -157,14 +157,15 @@ class InstructionController extends Controller
         $instruction = Instruction::find($id);
         $employee = Employee::where('first_name', Sentinel::getUser()->first_name)->where('last_name', Sentinel::getUser()->last_name)->first();
         $uprava = false;
-        
-        $employee_departments = array();
-        foreach ( $employee->departments as $employee_department) {
-            array_push($employee_departments,$employee_department->department['name']);
-        }
-
-        if(in_array('Uprava', $employee_departments)) {
-            $uprava = true;
+        if($employee) {
+            $employee_departments = array();
+            foreach ( $employee->departments as $employee_department) {
+                array_push($employee_departments,$employee_department->department['name']);
+            }
+    
+            if(in_array('Uprava', $employee_departments)) {
+                $uprava = true;
+            }
         }
        
         return view('admin.instructions.show', ['instruction'=>$instruction, 'uprava'=> $uprava]);

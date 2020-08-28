@@ -131,8 +131,8 @@ class VacationRequestController extends GodisnjiController
 			}
 		} elseif(is_array($input['employee_id']) && count($input['employee_id'])>0) {   /* ZAHTJEV NA VIŠE DJELATNIKA */
 			foreach($input['employee_id'] as $employee_id){
-				if( $input['zahtjev'] == 'SLD' && Employee::find($employee_id)->registration->slDani == 0) {
-					$message = session()->flash('error', 'Za djelatnika nije moguće poslati zahtjev za slobodan dan');     /* AKO ZAHTJEV VEĆ POSTOJI VRATI PORUKU */
+				if( ! Sentinel::inRole('administrator') && ($input['zahtjev'] == 'SLD' && Employee::find($employee_id)->registration->slDani == 0) ) {
+					$message = session()->flash('error', 'Za djelatnika nije moguće poslati zahtjev za slobodan dan');     
 					return redirect()->back()->withFlashMessage($message);
 				}
 				$data = array(
@@ -643,8 +643,8 @@ class VacationRequestController extends GodisnjiController
 			$data = array(
 				'zahtjev'  			=> $input['zahtjev'],
 				'employee_id'  		=> $input['employee_id'],
-				'start_date'    		=> date("Y-m-d", strtotime($input['start_date'])),
-				'end_date'		=> date("Y-m-d", strtotime($input['end_date'])),
+				'start_date'    	=> date("Y-m-d", strtotime($input['start_date'])),
+				'end_date'			=> date("Y-m-d", strtotime($input['end_date'])),
 				'start_time'  		=> $input['start_time'],
 				'end_time'  		=> $input['end_time'],
 				'napomena'  		=> $input['napomena']
@@ -787,8 +787,8 @@ class VacationRequestController extends GodisnjiController
 	{
 		$datum = new DateTime('now');
 		$vacationRequest = VacationRequest::find($request['id']);
-		$nadredjeni_uprava_id = $vacationRequest->employee->work->nadredjeni->id;
-		$nadredjeni_voditelj_id = $vacationRequest->employee->work->prvi_nadredjeni ? $vacationRequest->employee->work->prvi_nadredjeni->id : null;
+		/* $nadredjeni_uprava_id = $vacationRequest->employee->work->nadredjeni->id; */
+		/* $nadredjeni_voditelj_id = $vacationRequest->employee->work->prvi_nadredjeni ? $vacationRequest->employee->work->prvi_nadredjeni->id : null; */
 
 		$user = Sentinel::getUser(); 	// prijavljena osoba - odobrava
 		$odobrio_user = Employee::where('employees.first_name', $user->first_name)->where('employees.last_name', $user->last_name)->first(); // prijavljeni djelatnik - odobrava

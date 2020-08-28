@@ -12,15 +12,15 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.works.update', $work1->id) }}">
-					<div class="form-group {{ ($errors->has('employee_id'))  ? 'has-error' : '' }}">
+					<div class="form-group {{ ($errors->has('odjel_id'))  ? 'has-error' : '' }}">
                         <label>Odjel</label>
-						<select class="form-control" name="odjel" id="sel1" value="{{ $work->odjel }}">
-							<option selected="selected" name="pravilnik" value="{{ $work->odjel}}">{{ $work->odjel}}</option>
-							<option name="odjel">{{ 'Zajednički poslovi' }}</option>
-							<option name="odjel">{{ 'Odjel informatičkih tehnologija' }}</option>
-							<option name="odjel">{{ 'Inženjering'  }}</option>
+						<select class="form-control" name="odjel_id" id="sel1" value="{{ old('odjel_id') }}">
+							<option disabled selected></option>
+							@foreach ($departments as $department)
+								<option value="{{ $department->id }}" {!! $work->odjel_id && $department->id == $work->odjel_id ? 'selected' : '' !!}>{{ $department->name }}</option>
+							@endforeach
 						</select>
-						{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
+						{!! ($errors->has('odjel_id') ? $errors->first('odjel_id', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					<div class="form-group {{ ($errors->has('ime')) ? 'has-error' : '' }}">
 						<label>Naziv radnog mjesta:</label>

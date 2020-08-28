@@ -72,7 +72,7 @@
 				@endif
 				<div class="datum form-group editOption1 display-none {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 					<label class="padd_10">Od datuma</label>
-					<input name="start_date" class="date form-control" type="date" value = "{{ old('start_date')}}" id="date1" required><i class="far fa-calendar-alt"  ></i>
+					<input name="start_date" class="date form-control" type="date" value ="{{ old('start_date')}}" id="date1" required><i class="far fa-calendar-alt" ></i>
 					{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 				<div class="datum form-group editOption2 display-none">					
@@ -134,32 +134,20 @@
 		<script>
 			$('#prikaz').change(function(){
 				$('input[type=submit]').attr('disabled',false);
-			});
-			
-		/* 	$('input[name=end_date]').change(function(){
-				var dan_1 = $('input[name=start_date]').val();
-				var dan_2 = $( this).val();
-				var zahtjev = $('select[name=zahtjev]').val();
-				var url =  location.origin +'/dani_GO';
-
-				if(zahtjev == 'GO') {
-					$.ajax({
-						url: url, 
-						post:"post",
-						data: {start_date: dan_1, end_date: dan_2},
-						success: function(response){
-							console.log("success");
-							console.log(response);
-						},
-						error(xhr,status,error) {
-							console.log("error");						
-							console.log(xhr);						
-						}
-					});
-
+				
+				if( $('#rola').val() == 'basic' ) {
+					var date = new Date();
+					date.setDate(date.getDate() + 1);
+					console.log(date);
+					var tomorrow = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
+					if( $( this ).val() == 'Izlazak' ) {
+						$( '#date1').attr('min', tomorrow);
+					} else {
+						$( '#date1').removeAttr('min');
+					}
 				}
-			}); */
-
+			});
+		
 		// izračun dana GO u zahtjevu 
 			function GO_dani(){
 				if($("prikaz").value() == "GO" ){
@@ -202,7 +190,34 @@
 					}
 				}
 			}
+
+			/* 	$('input[name=end_date]').change(function(){
+				var dan_1 = $('input[name=start_date]').val();
+				var dan_2 = $( this).val();
+				var zahtjev = $('select[name=zahtjev]').val();
+				var url =  location.origin +'/dani_GO';
+
+				if(zahtjev == 'GO') {
+					$.ajax({
+						url: url, 
+						post:"post",
+						data: {start_date: dan_1, end_date: dan_2},
+						success: function(response){
+							console.log("success");
+							console.log(response);
+						},
+						error(xhr,status,error) {
+							console.log("error");						
+							console.log(xhr);						
+						}
+					});
+
+				}
+			}); */
+
+
 		</script>
 		<script src="{{ asset('js/vacation_req_show.js') }}"></script>
 		<script src="{{ asset('js/go_value.js') }}"></script>
+		
 @stop

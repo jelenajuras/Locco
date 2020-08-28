@@ -54,7 +54,7 @@ $(document).ready(function() {
 			text: 'Izradi XLS',
 			exportOptions: {
 				columns: ":not(.not-export-column)",
-				rows: ':visible'
+				/* rows: ':visible' */
 			}
 			},
 			],

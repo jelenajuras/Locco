@@ -121,13 +121,14 @@ class AfterHoursController extends GodisnjiController
 								->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
 						}
 					);
+				
 					if ( isset($drugi_voditelj) && $drugi_voditelj->employee['last_name'] == 'Novosel') {
 						Mail::queue(
 							'email.zahtjevAfterHour_info',
 							['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
 							function ($message) use ($employee, $nadredjeni_voditelj) {
 								$message->to($nadredjeni_voditelj->email)
-										->from('info@duplico.hr', 'Duplico')
+										->from('info@duplico.hr', 'Duplico')										
 										->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
 							}
 						);
@@ -197,23 +198,23 @@ class AfterHoursController extends GodisnjiController
 								->subject('Zahtjev');
 						}
 					);
-					if ( isset($drugi_voditelj) && $drugi_voditelj->employee['last_name'] == 'Novosel') {
-						Mail::queue(
-							'email.zahtjevAfterHour_info',
-							['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
-							function ($message) use ($employee, $nadredjeni_voditelj) {
-								$message->to($nadredjeni_voditelj->email)
-										->from('info@duplico.hr', 'Duplico')
-										->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
-							}
-						);
-					}
-					
+
 				} catch (Exception $e) {
 					$message = session()->flash('error', 'Mail nije poslan, došlo je do problema.');
 				
 					return redirect()->back()->withFlashMessage($message);
 				} 
+				if ( isset($drugi_voditelj)) {
+					Mail::queue(
+						'email.zahtjevAfterHour_info',
+						['employee' => $employee,'afterHour' => $afterHour,'nadredjeni1' => $nadredjeni1,'vrijeme' => $vrijeme, 'interval' => $interval ],
+						function ($message) use ($employee, $nadredjeni_voditelj) {
+							$message->to($nadredjeni_voditelj->email)
+									->from('info@duplico.hr', 'Duplico')
+									->subject('Zahtjev za odobrenje prekovremenog rada - ' .  $employee->first_name . ' ' .  $employee->last_name);
+						}
+					);
+				}
 			}
 		}
 		$message = session()->flash('success', 'Zahtjev je poslan');

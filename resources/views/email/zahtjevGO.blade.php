@@ -67,6 +67,18 @@
 				<input class="odobri" type="submit" value="Pošalji">
 
 			</form>
+			<form name="contactform" method="get" target="_blank" action="{{ route('admin.confirmation') }}">
+				<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="razlog" value=""><br>
+				<input type="hidden" name="id" value="{{$vacationRequest->id}}"><br>
+				<input type="radio" name="odobreno" value="DA" checked> Odobreno
+				<input type="radio" name="odobreno" value="NE" style="padding-left:20px;"> Nije odobreno<br>
+				
+				<input type="hidden" name="datum_odobrenja" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"><br>
+	
+				<input class="odobri" type="submit" value="Pošalji">
+	
+			</form>
+			
 			@endif
 	</body>
 </html>

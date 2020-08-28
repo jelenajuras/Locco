@@ -187,6 +187,7 @@
 						<h4>Ukupno prekovremenih sati {{ round(GodisnjiController::prekovremeni_sati( $registration ),0,1) }}</h4>
 						<h4>Ukupno izlazaka {{ GodisnjiController::izlasci_ukupno( $registration ) }} </h4>
 						<h4>Ukupno slobodnih dana {{ GodisnjiController::prekovremeni_bez_izlazaka( $registration ) }} </h4>
+						<h4>Preostalo slobodnih dana  {{ GodisnjiController::prekovremeni_bez_izlazaka( $registration ) - $iskorišteno_SLD }} </h4>
 					</div>
 		
 				@else

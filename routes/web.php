@@ -14,6 +14,12 @@ Route::get('/', function () {
     return view('Welcome');
 });
 
+Route::get('/down', function(){
+    $exitCode = Artisan::call('down');
+});
+
+
+Route::get('/', ['as' => 'under_construction', 'uses' => 'IndexController@under_construction']);
 // Index page
 Route::get('/', ['as' => 'index', 'uses' => 'IndexController@index']);
 // Home page
@@ -544,7 +550,18 @@ Route::group(['prefix' => 'admin'], function () {
 		'update'		=> 'admin.temporary_employee_requests.update', 
 		'destroy'		=> 'admin.temporary_employee_requests.destroy'
 	]]);
+	Route::resource('api_erp', 'ApiController', ['names' => [
+		'index' 		=> 'admin.api_erp.index', 
+		'create' 		=> 'admin.api_erp.create', 
+		'store' 		=> 'admin.api_erp.store', 
+		'show' 			=> 'admin.api_erp.show', 
+		'edit' 			=> 'admin.api_erp.edit',  
+		'update'		=> 'admin.api_erp.update', 
+		'destroy'		=> 'admin.api_erp.destroy'
+	]]);
+	
 });
+
 
 Route::get('visitors/{id}', ['as' => 'visitors', 'uses' => 'Admin\VisitorController@visitors_show']);
 Route::get('en/visitors/{id}', ['as' => 'en.visitors', 'uses' => 'Admin\VisitorController@visitors_show_en']);

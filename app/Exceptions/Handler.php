@@ -5,6 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Mail\ErrorMail;
+use Illuminate\Support\Facades\Mail;
+use Sentinel;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +47,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if (Sentinel::check()) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+    
+            Mail::to($email)->send(new ErrorMail( $exception->getMessage(), $url)); 
+
+        }
         return parent::render($request, $exception);
     }
 

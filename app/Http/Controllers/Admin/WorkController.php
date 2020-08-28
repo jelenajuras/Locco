@@ -7,6 +7,7 @@ use App\Models\Users;
 use App\Models\Employee;
 use App\Models\Registration;
 use App\Models\Termination;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkRequest;
@@ -40,8 +41,9 @@ class WorkController extends Controller
     {
       $users = Registration::join('employees','registrations.employee_id', '=', 'employees.id')->select('registrations.*','employees.first_name','employees.last_name')->orderBy('employees.last_name','ASC')->get();
       $terminations = Termination::get();
+      $departments = Department::where('level',1)->get();
 
-      return view('admin.works.create',['users'=>$users, 'terminations'=>$terminations]);
+      return view('admin.works.create',['users'=>$users, 'terminations'=>$terminations, 'departments'=>$departments]);
     }
 
     /**
@@ -55,7 +57,8 @@ class WorkController extends Controller
       $input = $request->except(['_token']);
 
       $data = array(
-        'odjel'  => $input['odjel'],
+        'odjel_id'  => $input['odjel_id'],
+        'odjel'  => Department::find($input['odjel_id'])->name,
         'naziv'  => $input['naziv'],
         'job_description'  => $input['job_description'],
         'pravilnik'  => $input['pravilnik'],
@@ -63,10 +66,10 @@ class WorkController extends Controller
         'user_id'  => $input['user_id']
       );
       
-      if($input['prvi_userId']){
+      if(isset($input['prvi_userId'])){
         $data += ['prvi_userId' => $input['prvi_userId']];
       }
-      if($input['drugi_userId']){
+      if(($input['drugi_userId'])){
         $data += ['drugi_userId' => $input['drugi_userId']];
       }
       
@@ -101,13 +104,13 @@ class WorkController extends Controller
     public function edit($id)
     {
 		$work1 = Work::find($id);
-		
+    $departments = Department::where('level',1)->get();
 		$work = Work::leftjoin('employees','employees.id','works.user_id')->find($id);
 		$users = Registration::join('employees','registrations.employee_id','employees.id')->select('registrations.*','employees.last_name','employees.first_name')->orderBy('last_name','ASC')->get();
 
 	    $terminations = Termination::get();
 	   
-		return view('admin.works.edit',['work' => $work, 'work1' => $work1, 'users' => $users, 'terminations' => $terminations]);
+		return view('admin.works.edit',['work' => $work, 'work1' => $work1, 'users' => $users, 'terminations' => $terminations,'departments'=>$departments]);
     }
 
     /**
@@ -123,7 +126,8 @@ class WorkController extends Controller
         $input = $request->except(['_token']);
 
         $data = array(
-          'odjel'  => $input['odjel'],
+          'odjel_id'  => $input['odjel_id'],
+          'odjel'  => Department::find($input['odjel_id'])->name,
           'naziv'  => $input['naziv'],
           'job_description'  => $input['job_description'],
           'pravilnik'  => $input['pravilnik'],

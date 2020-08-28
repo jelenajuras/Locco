@@ -17,6 +17,7 @@
 @if(Sentinel::check())
 	@if(isset($dataArr) && ! Sentinel::inRole('erp_test'))
 		<section class="calendar col-sm-12 col-md-12 col-lg-12">
+			<a class="" href="{{ route('admin.api_erp.index') }}" ><span>api</span></a>
 			<div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>		
 			<div class="calender_view col-sm-12 col-md-12 col-lg-6"></div>
 			

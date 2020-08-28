@@ -32,7 +32,7 @@ input {
                  <table id="table_id" class="display" style="width: 100%;">
                     <thead>
                         <tr>
-							<th width="100" onclick="sortTable(0)">Ime i prezime</th>
+							<th width="100" onclick="sortTable(0)">Prezime i ime</th>
 							<th width="100" onclick="sortTable(1)">Telefon</th>
 							<th width="100" onclick="sortTable(1)">Privatan telefon</th>
 							<th width="100" onclick="sortTable(2)">E-mail</th>

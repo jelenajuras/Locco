@@ -58,7 +58,7 @@ class Probni extends Command
 					$mail->to('uprava@duplico.hr')
 						->cc('andrea.glivarec@duplico.hr')
 						->cc('jelena.juras@duplico.hr')
-						->cc('petrapaola.bockor@duplico.hr')
+						->cc('matija.barberic@duplico.hr')
 						->from('info@duplico.hr', 'Duplico')
 						->subject('Probni ' . ' ' . ' rok ' . $djelatnik->first_name . ' ' . $djelatnik->last_name);
 				});

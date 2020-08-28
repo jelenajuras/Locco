@@ -77,7 +77,6 @@ class PostController extends Controller
 
 		$employee_departments = Employee_department::get();
 		
-		
 		// zahtjev za raspored
 		if(isset($input['tip']) && $input['tip'] == 'raspored'){
 			$nadredjeni_id = '';
@@ -91,8 +90,6 @@ class PostController extends Controller
 				$nadredjeni_id = $registration->user_id;
 			}
 			
-			
-
 			if($input['datum'] === '') {
 				$message = session()->flash('error', 'Nemoguće poslati zahtjev, nije upisan datum');
 				return redirect()->back()->withFlashMessage($message);
@@ -110,7 +107,7 @@ class PostController extends Controller
 			$post = new Post();
 			$post->savePost($data);
 
-			$mailovi = ['koordinacija@duplico.hr','uprava@duplico.hr']; 
+			$mailovi = ['uprava@duplico.hr']; 
 			$nadredjeni = Employee::where('id', $nadredjeni_id)->first();
 			if($nadredjeni) {
 				$nadredjeni_mail = $nadredjeni->email;

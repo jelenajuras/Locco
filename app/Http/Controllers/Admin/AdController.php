@@ -33,14 +33,18 @@ class AdController extends Controller
     public function index(Request $request)
     {
 		$user = Sentinel::getUser();
-		$employee = Employee::where('last_name',$user->last_name)->where('employees.first_name',$user->first_name)->first();
-
+		$employee = Employee::where('last_name', $user->last_name)->where('employees.first_name',$user->first_name)->first();
+		
 		if(Sentinel::inRole('administrator')) {
 			//$ads = Ad::where('category_id',$request->id )->orderBy('created_at','DESC')->get();
 			$ads = Ad::orderBy('created_at','DESC')->get();
 		} else {
 			//$ads = Ad::where('category_id',$request->id )->orderBy('created_at','DESC')->where('employee_id',$employee->id )->get();
-			$ads = Ad::orderBy('created_at','DESC')->where('employee_id',$employee->id )->get();
+			if($employee) {
+				$ads = Ad::orderBy('created_at','DESC')->where('employee_id',$employee->id )->get();
+			} else {
+				$ads = array();
+			}
 		}
 		
 	//	$category_id = $request->id;

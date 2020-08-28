@@ -13,14 +13,14 @@
 			<div class="panel-body">
 				 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('admin.works.store') }}">
 				 
-					<div class="form-group {{ ($errors->has('odjel'))  ? 'has-error' : '' }}">
+					<div class="form-group {{ ($errors->has('odjel_id'))  ? 'has-error' : '' }}">
                         <label>Odjel</label>
-						<select class="form-control" name="odjel" id="sel1" value="{{ old('odjel') }}">
-							<option name="odjel">{{ 'Zajednički poslovi' }}</option>
-							<option name="odjel">{{ 'Odjel informatičkih tehnologija' }}</option>
-							<option name="odjel">{{ 'Inženjering'  }}</option>
+						<select class="form-control" name="odjel_id" id="sel1" value="{{ old('odjel_id') }}">
+							@foreach ($departments as $department)
+								<option name="odjel_id" value="{{ $department->id }}">{{ $department->name }}</option>
+							@endforeach
 						</select>
-						{!! ($errors->has('odjel') ? $errors->first('odjel', '<p class="text-danger">:message</p>') : '') !!}
+						{!! ($errors->has('odjel_id') ? $errors->first('odjel_id', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
 					<div class="form-group {{ ($errors->has('naziv')) ? 'has-error' : '' }}">
 						<label>Naziv radnog mjesta:</label>
